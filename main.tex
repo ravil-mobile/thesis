@@ -4,8 +4,13 @@
 %\documentclass[headsepline,footsepline,footinclude=false,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,BCOR=12mm,DIV=12]{scrbook} % two-sided
 \documentclass[headsepline,footsepline,footinclude=false,oneside,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc]{scrbook} % one-sided
 
+
+\usepackage{multicol}
+
 % TODO: change citation style in settings
 \input{./settings.tex}
+
+
 
 % TODO: change thesis information
 \newcommand*{\getUniversity}{Technische Universität München}
@@ -43,6 +48,7 @@
 \mainmatter{}
 \input{chapters/roadmap}
 \input{chapters/01_introduction}
+\input{chapters/01_chapter}
 % TODO: add more chapters here
 
 \appendix{}

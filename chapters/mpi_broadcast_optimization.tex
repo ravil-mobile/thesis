@@ -1,0 +1,5 @@
+The implementations of the broadcast operation in MPICH [3] and Open MPI [4] are typically based on linear, binary,
+binomial and pipelined algorithms [5]. The linear algorithms are not good for large numbers of processes, the binary and
+binomial algorithms are not efficient for large data sizes. On the other hand, pipelined algorithms are more efficient for larger
+numbers of processes and data sizes. Other widely used broadcast algorithms are scatter-ring-allgather and scatterrecursive-doubling-allgather
+[6], which have been implemented in MPICH

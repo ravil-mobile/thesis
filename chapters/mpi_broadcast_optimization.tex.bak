@@ -1,0 +1,26 @@
+https://pdfs.semanticscholar.org/2bef/7a4ee45b205be064e211df07968b3ac4e04f.pdf//
+
+The implementations of the broadcast operation in MPICH [3] and Open MPI [4] are typically based on linear, binary,
+binomial and pipelined algorithms [5]. The linear algorithms are not good for large numbers of processes, the binary and
+binomial algorithms are not efficient for large data sizes. On the other hand, pipelined algorithms are more efficient for larger
+numbers of processes and data sizes. Other widely used broadcast algorithms are scatter-ring-allgather and scatterrecursive-doubling-allgather
+[6], which have been implemented in MPICH
+
+
+IBM BlueGene comes with its own platform specific optimizations of MPI collectives [10]. A comprehensive
+overview of optimization techniques for collectives on heterogeneous HPC platforms using broadcast as a use case can be
+found in [11].
+
+
+Theoretically optimal MPI broadcast algorithms have been an active research subject as well. One of the early results
+in this area is the spanning binomial tree algorithm proposed by Jonson and Ho [13]. Later, the research work in [14]
+introduced another theoretically optimal broadcast algorithm based on fractional trees. The work in [15] is similar to the
+algorithm of Jonson and Ho when the number of processes is a power of two and extends it to an arbitrary number of
+processes.
+
+
+This section recalls eight MPI broadcast algorithms implemented in MPICH and Open MPI, namely flat, linear, pipelined,
+binary, split-binary, binomial tree, scatter-ring-allgather, and scatter-recursive-doubling-allgather broadcast algorithms.
+The first six algorithms are implemented in Open MPI and the last three algorithms are implemented in MPICH. The
+derivations of the theoretical costs of these algorithms are not the original contribution of this work and can be found
+in

@@ -23,7 +23,7 @@ The company consists of multiple management and scientific departments where eac
 
 Some applications can work together or with other external libraries and applications during a simulation with the aim of solving some multi-physical problems. Figure \ref{fig:applications} schematically shows an example of application coupling for an involved severe accident simulation.
 
-As one can imagine each of those applications listed above needs a numerical solver to perform simulations. [solvers fast and parallel] Moreover, each scientific group has to keep developing and maintaining their own solvers which can be seen at the first glance as a work duplication. For that reason GRS made a decision to develop a so-called Numerical Toolkit (NuT) which was supposed to become a universal collection of different numerical solvers
+As one can imagine each of those applications listed above needs a numerical solver to perform simulations. [solvers fast and parallel] Moreover, each scientific group has to keep developing and maintaining their own solvers which can be seen at the first glance as a work duplication. For that reason GRS made a decision to develop a so-called Numerical Toolkit (NuT) which had to become a universal collection of different and highly efficient numerical solvers. [That idea is not new and it has been use quite long time ago... something about PetSc]
 
 \begin{figure}[htpb]
   \centering
