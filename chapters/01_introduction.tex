@@ -23,13 +23,38 @@ The company consists of multiple management and scientific departments where eac
 
 Some applications can work together or with other external libraries and applications during a simulation with the aim of solving some multi-physical problems. Figure \ref{fig:applications} schematically shows an example of application coupling for an involved severe accident simulation.\par
 
-As one can imagine each of those applications listed above needs a numerical solver to perform simulations. [solvers fast and parallel] Moreover, each scientific group has to keep developing and maintaining their own solvers which can be seen at the first glance as a work duplication. For that reason GRS made a decision to develop a so-called Numerical Toolkit (NuT) which had to become a universal collection of different and highly efficient numerical solvers. [That idea is not new and it has been use quite long time ago... something about PetSc]\par
-
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/grs-application-coupling.png}
   \caption{An example of application coupling} \label{fig:applications}
 \end{figure}
+
+As one can imagine each of those applications listed above need numerical solvers to perform different types of simulations. Each solver must be high efficient and parallel. It means that each scientific group has to keep developing and maintaining their own solvers which can be seen at the first glance as work duplication. For that reason GRS decided to develop and adopt so-called Numerical Toolkit (NuT) which had to become a universal collection of different and highly efficient numerical algorithms and solvers.\par
+
+%https://en.wikipedia.org/wiki/Portable,_Extensible_Toolkit_for_Scientific_Computation
+The idea itself is not something new and it has already been developed by so called PETCs project which stands for Portable, Extensible Toolkit for Scientific Computing. PETSc is a suite of data structures and routines developed by Argone National Laboratory for the scalable (parallel) solution of scientific applications modeled by partial differential quations [reference]. That is actually the main reason why NuT is based on PETSc. However, NuT provides some additional services to the user apart from just being a collection of different numerical solvers.\par
+
+One of the most important services is resource distribution (management): NuT allows several independent processes (clients) to concurrently use its resources (MPI processes) in order to perform their computing tasks. The second important feature is NuT stands as a wrapper. It aggregates several numerical libraries together such as PETCs, METIS, etc and provides a common interface to the user. As the results a numerical solver or an entire library can be replaced easily without any harm for the user. That approach also allows to create hybrid numerical solvers as a combination of several well-known ones. As an example the solution of the first solver can be used as a pre-conditioner for the second one and so on. 
+
+\section{NuT architecture}
+To handle the services mentioned above NuT uses a specific client-server architecture where communication between clients and server is done using Message Passing Interface (MPI).\par
+
+
+%https://www.mpich.org/static/docs/v3.2/www3/MPI_Comm_split.html
+The NuT server consists of several MPI processes that can be given to clients. The resource distribution only happens at the star-up and it cannot be reconfigured afterwards. It is done by \textbf{MPI\_Comm\_split} command which creates new communicators based on colors and keys [reference].
+
+NuT allocates two communicators for each client which we will call a process group. The first communicator contains only NuT processes which a client requests to perform parallel computation. The second communicator contains both the NuT processes and the client itself. The client uses the second communicator in order to distribute data to NuT processes, however, the first one is only used for parallel computation using PETSc as a "backend". The most important feature in this architecture is that a process group contains a so-called NuT head process (or master) which a client speaks to. The client sends commands to the head when it wants to execute a particular task, for instance, assemble a matrix, send data, solve a system of equations, perform graph coloring and so on. Then the head is responsible to transform the rest of NuT processes within the first communicator (slaves) into the same state and only after that they can perform a task all together in parallel.\par
+
+The most outstanding feature of NuT is that it poses a rule with respect to resource management and distribution to utilize the available resources as efficient as possible. \par
+The rule, as it is shown in figure [reference], allows a NuT processes to be in multiple process groups. 
+
+
+
+
+As it can be seen each NuT process within a process group has references to both communicators which allows the processes work together within the first communicator or to talk to the client using the second one when it is needed (for example, to send a result back) \par
+A noticeable thing of that architecture allows disjoined 
+
+
 
 
 
