@@ -1,7 +1,12 @@
 *.log
+*.lot
 *.aux
 *.lof
 *.log
 *.out
 *.pdf
 *.toc
+*.bcf
+*.gz
+*.bbl
+*.blg

@@ -1,0 +1,87 @@
+\chapter{Solver selection and configuration}
+\label{chapter:solver configuration}
+% from numerical integration to system of linear equations
+Numerical integration of time dependent partial differential equations can be achieved using different numerical schemes, namely: Runge-Kutta methods. In numerical analysis, the Runge–Kutta methods are a family of implicit and explicit iterative methods \cite{wiki:runge-kutta}.  \\
+
+
+Implicit and explicit methods have their advantages and disadvantages which can be found in the corresponding literature.
+% reference on something
+
+ In general, implicit methods are robust in case of stiff equations, however, on another hand they are more expensive in terms of computational cost since they introduce a non-linear part that has to be solve using the Newton's method as an example. There is also a class of integration methods called semi-implicit that were designed to reduce the cost of implicit ones and be able to cope with stiff equations. But in all cases numerical integration boils down to solution of a couple systems of linear equations of a type:
+
+\begin{equation} \label{eq:slq}
+	Ax = b
+\end{equation}
+
+ where $A \in \mathbb{R^{N \times N}}$ is an invertible square matrix, $b \in \mathbb{R^{N}}$ represents the right-hand side, and $x \in \mathbb{R^{N}}$ is the solution vector. At this point we refer to a system of linear equations as just a system and we will use these two terms interchangeably. \\
+ 
+In some cases, especially in case of implicit or semi-implicit methods, we have to compute several systems to perform one step of numerical integration. Thus, solution of a system \ref{eq:slq} is the computational core of any time integration scheme. In fact, it is the most expensive part and it is primary source of code optimization. \\ 
+
+There are three major ways to solve a system of linear equations, namely: direct dense methods, sparse direct methods and iterative methods.\\
+
+In the following sections \ref{subseq:direct methods}, \ref{subseq:iterative methods}, \ref{subseq:sparse methods} we are briefly going to review all of these three types of numerical solvers as well as their advantages and disadvantages and some aspects of their parallel implementations with a strong focus on their strong scaling properties. Strong scaling is important for this research since we want to find a solver and its configuration to solve a certain system with a fixed number of equations as fast as possible. This review is important because our final choice, so-called "hybrid" solver, is a combination of all of these three types. 
+
+
+% TODO: observation of all possible methods to solve Ax = b. At this section you have to come to a conclusion that we have to use sparse direct methods
+
+\section{Direct dense methods} \label{subseq:direct methods}
+Direct methods are more numerically stable, however, their computational complexity of $O(n^3)$ and storage requirements of $O(n^2)$ make them not suitable for computation of large system with number more than $\sim 10^3$. \\
+
+
+However, algorithms of direct dense solvers have direct memory access and are based on dense linear algebra subroutines. As a result, implementation of these methods can exploit such programming techniques like cache blocking, tiling, data prefetching,  utilization of hardware vector units and so on. All of these together make it possible to achieve more than 75\% performance of modern CPUs \cite{articles:blas-performance}. \\
+
+A general way to solve a system of a type \ref{eq:slq} is to perform $LU$ factorization where a matrix $A$ can be viewed as a product of a lower and upper triangular matrices. 
+
+\begin{equation} \label{eq:lu}
+	Ax = LUx = b
+\end{equation}
+
+Having computed matrices $L$ and $U$, two additional steps, forward and backward substitutions, are required to compute the solution vector $x$.
+
+\begin{align} \label{eq:bk}
+	Ly = b \\
+	Ux = y
+\end{align}
+
+The main idea of parallel $LU$ decomposition is based on block structure of a matrix $A$. Any given matrix $A$ can be represented as a combination of sub-matrices $A_{ij}$. This allows to develop algorithms that can compute $LU$ decomposition of the full matrix $A$ in parallel updating and solving triangular systems of small sub-matrices.
+
+% list of packages: blas, lapack, scalapack, 
+  
+\section{Iterative methods}
+\label{subseq:iterative methods}
+On another hand, the iterative methods are well known for their relatively low storage requirements $O(nnz)$ and computation cost $O(N^2)$ in case of sparse linear system of equations and good condition number. It turns out that sometimes it might be only one way to solve huge systems with millions unknowns. The most well known methods are Conjugate Gradient (CG) for symmetric positive definite matrices, Minimal Residual Method (MINRES) for symmetric indefinite systems, Generalized Minimal Residual Method (GMRES) for non-symmetric systems of linear equations as well as different variants of GMRES such Biconjugate Gradient Method (BiCG), Biconjugate Gradient Stabilized Method (BiCGSTAB) and so on.\\ 
+
+The most important criteria of all of these methods is convergence rate. The convergence rate of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, equation [below] shows dependence of the rate from the matrix condition number. It can be clearly seen that a big condition number can lead to very slow. bla bla bla \\
+
+% condition number proportional to number of equations
+
+An obvious solution of such a problem is to reduce the condition number. For that purpose, the original system of equation can be multiplied from both left and right sides with a matrix $M$ which can lower the condition number of a product $MA$. That tequnic is well known and called preconditioning. 
+
+
+\section{Direct sparse methods}
+\label{subseq:sparse methods}
+% it can be seen that it's easy to apply, however, it is not the case
+
+% problems with a good preconditioner
+
+% show motivation to use sparce direct methods: show a plot whith MUMPS and 100 interation of GMRES
+
+% Give me the most popular sparce direct methods and compare them (goal: show that MUMPS it the most suitable package)
+
+% Introduction to Multifrontal method: describe all three phases
+
+% Parallelism for Multifrontal method: put stress on importance of elimination tree
+
+% where and how we can exploid multi-threding
+
+% show a result where multithreding works
+
+% Choice of blas labraries
+\section{Choice and Motivation}
+\label{subseq:choice and motivation}
+
+
+
+\section{Multifrontal Method}
+\label{subseq:multifrontal method}
+
