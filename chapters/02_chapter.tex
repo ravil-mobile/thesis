@@ -19,16 +19,26 @@ In some cases, especially in case of implicit or semi-implicit methods, we have 
 
 There are three major ways to solve a system of linear equations, namely: direct dense methods, sparse direct methods and iterative methods.\\
 
-In the following sections \ref{subseq:direct methods}, \ref{subseq:iterative methods}, \ref{subseq:sparse methods} we are briefly going to review all of these three types of numerical solvers as well as their advantages and disadvantages and some aspects of their parallel implementations with a strong focus on their strong scaling properties. Strong scaling is important for this research since we want to find a solver and its configuration to solve a certain system with a fixed number of equations as fast as possible. This review is important because our final choice, so-called "hybrid" solver, is a combination of all of these three types. 
+In the following sections \ref{subseq:direct methods}, \ref{subseq:iterative methods}, \ref{subseq:sparse methods} we are briefly going to review all three types of numerical solvers as well as their advantages and disadvantages and some aspects of their parallel implementations with a strong focus on their strong scaling behavior. Strong scaling is important for this research since we want to find a solver and its configuration to solve a certain system with a fixed size as fast as possible. Additionally to that, due to a large number of numerical integration steps, we want to find a robust solver to avoid any application crash during simulations.
 
+At this point we can state requirements for a solver that we are looking for:
+
+\begin{itemize}
+	\item efficiency
+	\item robustness
+	\item numerical stability
+	\item open source licenses
+\end{itemize}
 
 % TODO: observation of all possible methods to solve Ax = b. At this section you have to come to a conclusion that we have to use sparse direct methods
 
 \section{Direct dense methods} \label{subseq:direct methods}
-Direct methods are more numerically stable, however, their computational complexity of $O(n^3)$ and storage requirements of $O(n^2)$ make them not suitable for computation of large system with number more than $\sim 10^3$. \\
+Direct methods have very good numerical stability properties. They do not require to modify a system of equations as it is necessary for iterative methods. Sometimes we only need to permute some rows and columns in order to avoid small absolute values along the matrix diagonal, which can have their negative effect on numerical accuracy, in case of direct methods. However, this operation can be considered relatively cheap. \\
+
+On another hand, the computational complexity of $O(n^3)$ and storage requirements of $O(n^2)$ make direct methods not suitable for computation of large systems with more than $\sim 10^3$ number of equations. \\
 
 
-However, algorithms of direct dense solvers have direct memory access and are based on dense linear algebra subroutines. As a result, implementation of these methods can exploit such programming techniques like cache blocking, tiling, data prefetching,  utilization of hardware vector units and so on. All of these together make it possible to achieve more than 75\% performance of modern CPUs \cite{articles:blas-performance}. \\
+Another good property of direct dense solvers is they have direct memory access and they are based on dense linear algebra subroutines. As a result, implementation of these methods can exploit such programming techniques like cache blocking, tiling, data prefetching,  utilization of hardware vector units and so on. All of these together make it possible to achieve more than 75\% hardware performance of modern CPUs \cite{articles:blas-performance} due to a high ratio of floating point operations per memory access. \\
 
 A general way to solve a system of a type \ref{eq:slq} is to perform $LU$ factorization where a matrix $A$ can be viewed as a product of a lower and upper triangular matrices. 
 
@@ -43,13 +53,155 @@ Having computed matrices $L$ and $U$, two additional steps, forward and backward
 	Ux = y
 \end{align}
 
-The main idea of parallel $LU$ decomposition is based on block structure of a matrix $A$. Any given matrix $A$ can be represented as a combination of sub-matrices $A_{ij}$. This allows to develop algorithms that can compute $LU$ decomposition of the full matrix $A$ in parallel updating and solving triangular systems of small sub-matrices.
+The main idea of parallel $LU$ decomposition is based on block structure of a matrix $A$. Any given matrix $A$ can be represented as a combination of sub-matrices $A_{ij}$.
 
-% list of packages: blas, lapack, scalapack, 
-  
+$$
+A = 
+\Bigg[\begin{array}{c|c|c}
+A_{11} & A_{12} & A_{13} \\ \hline
+A_{21} & A_{22} & A_{23} \\ \hline
+A_{31} & A_{32} & A_{33}
+\end{array}\Bigg]
+$$
+
+This allows to develop algorithms that can compute $LU$ decomposition of the full matrix $A$ in parallel using sub-matrices with three main routines i.e. matrix-matrix multiply, triangular solve with multiple right hand sides and the unblock $LU$ factorization for operation within a block column \cite{netlib:lapack-1}.\\
+
+There exist three well known parallel approaches based on left, right and Crout decomposition forms. All of these three approaches have similar overall performance, with a slight advantage to the right-looking and Crout variants \cite{netlib:lapack-1}. 
+
+% example
+
+Let's consider right-looking algorithm as an example. The algorithm can be written as following:
+
+\begin{equation} \label{eq:RightLookingLu}
+\Bigg[\begin{array}{c c}
+A_{11} & A_{12} \\
+A_{21} & A_{22} \\
+\end{array}\Bigg]
+=
+\Bigg[\begin{array}{c c}
+L_{11} & 0 \\
+L_{21} & L_{22} \\
+\end{array}\Bigg]
+\cdot
+\Bigg[\begin{array}{c c}
+U_{11} & U_{12} \\
+0 & U_{22} \\
+\end{array}\Bigg]
+\end{equation}
+
+The algorithm starts with an assumption that both matrices $L_{11}$ and $U_{11}$ have already been computed. 
+% size of the matrix is proportional to the size of the cache
+
+Given equation \ref{eq:RightLookingLu}, we can write expressions for $A_{12}$ and $A_{21}$ matrices:
+
+\begin{align} \label{eq:RightLookingLuFirstUpdate}
+A_{12} = L_{11} \cdot U_{12} \\
+A_{21} = L_{21} \cdot U_{11}
+\end{align}
+
+To compute \ref{eq:RightLookingLuFirstUpdate} we only have to perform two triangular solves since matrices $L_{11}$ and $U_{11}$ are known. These two tasks are current and they can be computed in parallel. Additionally we can notice the triangular solve routine can be computed in parallel too. The next step is to perform $\hat{A_{22}}$ matrix update and block structure re-odering:
+
+\begin{equation} \label{eq:RightLookingLuSecondUpdate}
+\hat{A_{22}} = A_{22} - L_{21} \cdot U_{12}
+\end{equation}
+
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.65\textwidth]{figures/chapter-2/right-looking-reodering.png}
+\caption{Right-looking parallel LU decomposition: block reodering \cite{netlib:lapack-scalapack-general-view}}
+\label{fig:RightLookingLuReodering}
+\end{figure}
+
+
+% Show limited parallelism
+It is clear the algorithm is purely sequential at the first and last steps, regardless whatever block size we choose. Therefore, it has significant effect on algorithm strong scaling behavior. It should be mentioned that all three parallel implementations have the same problem i.e. they have an inherently sequential part and the beginning and the end. In figure [] one can observe a result of strong scaling perform for a $1000 \times 1000$ Poisson matrix using OpenBLAS library [reference] as an example.
+
+% results of strong scaling
+
+Both left, right and Crout parallel matrix factorizations have been efficiently implemented in LAPACK (for shared-memory machines) and ScaLAPACK (distributed-memory machines) libraries. Both 
+% where were there developer (or Who developed them + they are opensource)
+
+They are built on top of Basic Linear Algebra Subprograms (BLAS) library. Figure \ref{fig:blas-lapack-scalapack} shows how these three libraries are coupled together.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.65\textwidth]{figures/chapter-2/lapack-scalapack-blas.png}
+\caption{A general view on BLAS, LAPACK and ScaLAPACK libraries \cite{netlib:lapack-scalapack-general-view}}
+\label{fig:blas-lapack-scalapack}
+\end{figure}
+
+It is worth noting that BLAS can be considered as a foundation of LAPACK and ScaLAPACK libraries and, thus, it is the primary source of performance improvement. In particular we have to consider DGEMM, DTRSM BLAS subroutines performance because they, together with unblocked $LU$ factorization, compose the core of parallel $LU$ factorization algorithms as we discussed earlier.\\
+
+There exist special-purpose, hardware-specific BLAS implementations developed by the hardware vendors i.e. IBM, Cray, Intel, AMD as well as open-source tuned implementations such as ATLAS, OpenBLAS, etc. We will come back to that discussion later and pay our close attention to a specific choice of a tuned BLAS library in subsection \ref{subseq:blas-comparison}.
+
+
 \section{Iterative methods}
 \label{subseq:iterative methods}
-On another hand, the iterative methods are well known for their relatively low storage requirements $O(nnz)$ and computation cost $O(N^2)$ in case of sparse linear system of equations and good condition number. It turns out that sometimes it might be only one way to solve huge systems with millions unknowns. The most well known methods are Conjugate Gradient (CG) for symmetric positive definite matrices, Minimal Residual Method (MINRES) for symmetric indefinite systems, Generalized Minimal Residual Method (GMRES) for non-symmetric systems of linear equations as well as different variants of GMRES such Biconjugate Gradient Method (BiCG), Biconjugate Gradient Stabilized Method (BiCGSTAB) and so on.\\ 
+Iterative methods, especially Krylov subspace methods that we are going to discuss in this section, are well known for their relatively low storage requirements $O(nnz)$ and computation cost $O(N^2)$ in case of sparse linear systems of equations and good condition number. It turns out that sometimes it might be only one way to solve huge systems with millions unknowns.\\
+
+The most well known methods are Conjugate Gradient (CG) for symmetric positive definite matrices, Minimal Residual Method (MINRES) for symmetric indefinite systems, Generalized Minimal Residual Method (GMRES) for non-symmetric systems of linear equations as well as different variants of GMRES such Biconjugate Gradient Method (BiCG), Biconjugate Gradient Stabilized Method (BiCGSTAB) and so on.\\
+
+All Krylov methods solve a system of equation as a minimization problem. For example, the goal of CG algorithm is to minimize the energy functional $f(x) = 0.5 x^T A x - b^T x + c$, whereas, MINRES and GMRES tries to minimize residual norm $r_{j}$ for $x_{j}$ in a subspace. \\
+
+%$j$th Krylov subspace $\mathcal{K}_{j}$. \\
+
+The methods construct an approximate solution of a system as a linear combination of vectors $b$, $Ab$, $A^2b$, $A^3b$ and so on which defines the Krylov subspace. At each iteration we expand the subspace adding and evaluating a next vector in the combination.\\
+
+Let's consider GMRES, as the most popular and general iterative solver, without preconditioning to just analyze its strong scaling behavior and potential problems. \\ 
+
+As we mentioned above GMRES minimizes the residual norm in a subspace $U_m$.
+
+\begin{equation} \label{eq:Gmres-1}
+	\underset{x \in U_m}{min}||Ax - b||^2
+\end{equation}
+
+We can consider a solution vector $x$ in the subspace $U_m$ in a form $x=U_m y$. Thus, equation \ref{eq:Gmres-1} can be written as following:
+
+\begin{equation} \label{eq:Gmres-2}
+	\underset{x \in U_m}{min}||AU_m y - b||^2
+\end{equation}
+
+The most natural way to choose a proper subspace $U_m$ is the corresponding Krylov subspace $\mathcal{K}_m$ because it can be easily generated on the fly. However, decomposition of vector $x$ in that subspace can be a problem. Since the subspace $\mathcal{K}_m$ is spanned by the sequence of $b$, $Ab$, $A^2b$, ..., $A^{m-1}b$ and due to round-off error the sequence can become linear dependent. Therefore, we have to compute and use the orthonormal base of the given Krylov subspace. Saad and Schultz in their work \cite{sparse-la:gmrese-origin} used Arnoldi process for constructing an $l_2$-orthogonal basis. As the results equation \ref{eq:Gmres-2} can be written in the following form:  \\
+
+\begin{equation} \label{eq:Gmres-3}
+	\underset{x \in U_m}{min}||U_{m+1}H_{m+1,m} y - ||b||u_1||^2 = \\
+	\underset{x \in U_m}{min}||H_{m+1,m} y - ||b||e_1||^2 
+\end{equation}
+
+where $H_m$ is an upper Hessenberg matrix. We can apply Givens rotation to compute $QR$ decomposition to convert $H_m$ to a strictly upper triangular matrix. Thus,
+
+ 
+\begin{equation} \label{eq:Gmres-4}
+	\underset{x \in K_m}{min}||Ax - b||^2 = \\
+	\underset{x \in U_m}{min}||Q^TRy - ||b||e_1||^2 = \\
+	\underset{x \in U_m}{min}||R_m y - \tilde{b}||^2
+\end{equation}
+
+% listing of GMRES
+
+% Given's rotation + Triangular solve = problems
+
+% second your statment with A High Performance Two Dimensional Scalable Parallel Algorithm for Solving Sparse Triangular Systems
+
+% show picture of strong scaling form your experiments
+
+% also mention about processes distribution
+
+% maybe above we have to mention inderect memory access and its effect on performance
+
+
+It is worth mentioning that the CG algorithm, for example, scales much better. there exist a recurrent expression to find a next residual vector, hence, a next search direction. boils down to simple operations: dot product and matrix vector multiplication
+
+% show results of CG
+
+% start discussion about preconditioning
+
+
+
+The most important aspect of parallelization of these algorithms is their implementation consist of a couple of simple operations at each iteration such as dot products and matrix vector multiplications. \\
+
+This operations can be efficiently implemented in distributed-memory machines due to easiness of data distribution. As a results we can expect good strong scaling behavior.
 
 The most important criteria of all of these methods is convergence rate. The convergence rate of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, equation [below] shows dependence of the rate from the matrix condition number. It can be clearly seen that a big condition number can lead to very slow. bla bla bla \\
 
@@ -57,6 +209,8 @@ The most important criteria of all of these methods is convergence rate. The con
 
 An obvious solution of such a problem is to reduce the condition number. For that purpose, the original system of equation can be multiplied from both left and right sides with a matrix $M$ which can lower the condition number of a product $MA$. That tequnic is well known and called preconditioning. 
 
+% show effect of memory chennels!!
+% certain type of matrices can fail in terms of preconditioners but some time all preconditioner methods can works well
 
 \section{Direct sparse methods}
 \label{subseq:sparse methods}
@@ -84,4 +238,7 @@ An obvious solution of such a problem is to reduce the condition number. For tha
 
 \section{Multifrontal Method}
 \label{subseq:multifrontal method}
+
+\section{Choice of BLAS library}
+\label{subseq:blas-comparison}
 
