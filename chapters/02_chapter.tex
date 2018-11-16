@@ -57,11 +57,11 @@ The main idea of parallel $LU$ decomposition is based on block structure of a ma
 
 $$
 A = 
-\Bigg[\begin{array}{c|c|c}
+\Bigg(\begin{array}{c|c|c}
 A_{11} & A_{12} & A_{13} \\ \hline
 A_{21} & A_{22} & A_{23} \\ \hline
 A_{31} & A_{32} & A_{33}
-\end{array}\Bigg]
+\end{array}\Bigg)
 $$
 
 This allows to develop algorithms that can compute $LU$ decomposition of the full matrix $A$ in parallel using sub-matrices with three main routines i.e. matrix-matrix multiply, triangular solve with multiple right hand sides and the unblock $LU$ factorization for operation within a block column \cite{netlib:lapack-1}.\\
@@ -73,20 +73,20 @@ There exist three well known parallel approaches based on left, right and Crout 
 Let's consider right-looking algorithm as an example. The algorithm can be written as following:
 
 \begin{equation} \label{eq:RightLookingLu}
-\Bigg[\begin{array}{c c}
+\Bigg(\begin{array}{c c}
 A_{11} & A_{12} \\
 A_{21} & A_{22} \\
-\end{array}\Bigg]
+\end{array}\Bigg)
 =
-\Bigg[\begin{array}{c c}
+\Bigg(\begin{array}{c c}
 L_{11} & 0 \\
 L_{21} & L_{22} \\
-\end{array}\Bigg]
+\end{array}\Bigg)
 \cdot
-\Bigg[\begin{array}{c c}
+\Bigg(\begin{array}{c c}
 U_{11} & U_{12} \\
 0 & U_{22} \\
-\end{array}\Bigg]
+\end{array}\Bigg)
 \end{equation}
 
 The algorithm starts with an assumption that both matrices $L_{11}$ and $U_{11}$ have already been computed. 
@@ -169,40 +169,77 @@ The most natural way to choose a proper subspace $U_m$ is the corresponding Kryl
 	\underset{x \in U_m}{min}||H_{m+1,m} y - ||b||e_1||^2 
 \end{equation}
 
-where $H_m$ is an upper Hessenberg matrix. We can apply Givens rotation to compute $QR$ decomposition to convert $H_m$ to a strictly upper triangular matrix. Thus,
+where $H_m$ is an upper Hessenberg matrix. We can apply Givens rotation algorithm to compute $QR$ decomposition to convert $H_m$ to a strictly upper triangular matrix. Thus,
 
  
 \begin{equation} \label{eq:Gmres-4}
 	\underset{x \in K_m}{min}||Ax - b||^2 = \\
 	\underset{x \in U_m}{min}||Q^TRy - ||b||e_1||^2 = \\
-	\underset{x \in U_m}{min}||R_m y - \tilde{b}||^2
+	\underset{x \in U_m}{min}||\Big(\begin{array}{c c}R_m \\ 0 \\\end{array}\Big) y - \Big(\begin{array}{c c} \tilde{b_m} \\ \tilde{b_{n-m}} \\\end{array}\Big)||^2
 \end{equation}
 
-% listing of GMRES
+Given \ref{eq:Gmres-4}, we can compute the solution as following:
 
-% Given's rotation + Triangular solve = problems
+\begin{equation} \label{eq:Gmres-5}
+	R_m y = \tilde{b_m}
+\end{equation}
 
-% second your statment with A High Performance Two Dimensional Scalable Parallel Algorithm for Solving Sparse Triangular Systems
 
-% show picture of strong scaling form your experiments
+\begin{equation} \label{eq:Gmres-6}
+	x_m = U_m y  
+\end{equation}
 
-% also mention about processes distribution
+Because of large computational and storage costs, in case of evaluation of the full Krylov subspace, only small a subspace is computed, typically first 20 - 50 column vectors. Then the algorithm is restarted using the computed approximate solution as a initial guess for the next iteration.\\
+
+We can see that some operations, for example \ref{eq:Gmres-6}, can be efficiently done in parallel. However, operatiopns like sparse triangular solve \ref{eq:Gmres-5} can introduce some effect on strong scaling behavior. Figure \ref{fig:sparse-triangular-solve-performance} shows strong scaling performance results of a sparse parallel triangular solver with a two dimensional matrix distribution. Performance considerations of the solver can be found in \cite{sparse-la:triangular-solve}.\\
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/chapter-2/sparse-triangular-solve-performance.png}
+\caption{Performance of sparse triangular solve \cite{sparse-la:triangular-solve}}
+\label{fig:sparse-triangular-solve-performance}
+\end{figure}
+
+
+It is interesting to notice that performance of the triangular solver depends on a matrix sparsity structure as well as the matrix size. \\
+
+Triangular solve \ref{eq:Gmres-5} can be computed in a single processor because matrix $R_m$ is usually small and depends on the number iterations before the restart. In this case the triangular solve can become a bottleneck again. \\
+
+Figure \ref{fig:gmres-strong-scaling-speed-up} shows strong scaling performance results of the default GMRES solver from the PETSc library. The solver was set up without any preconditioner and 50 iterations as the restart. Additionally no stop criteria was specified except the maximum number iterations which was equal to 100. Four different matrices with different sparsity patterns were examined for the test. The information about the matrices is summarized in table \ref{table:matrix-info-1}. As we expected we can observe strong deviation of our test cases from the ideal speed-up when the number of processes exceeds 10.\\
+
+It should be mentioned that parallelization overheads, introduced by such MPI operations as MPI\_Send, MPI\_Recv, MPI\_Allreduce, etc., also have their impact on performance of the algorithm.\\
+
+\begin{table}[htpb]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+Matrix Name & n       & nnz      & nnz / n \\ \hline
+k3-18       & 1155955 & 7204723  & 6.2327  \\ \hline
+k3-2        & 130101  & 13906057 & 6.0568  \\ \hline
+cube-645    & 1000045 & 787997   & 13.9054 \\ \hline
+cube-64     & 100657  & 1388993  & 13.7992 \\ \hline
+\end{tabular}
+\caption{Basic information about matrices used in figure \ref{fig:gmres-strong-scaling-speed-up}}
+\label{table:matrix-info-1}
+\end{table}
+
+Other Krylov methods such as CG, for example, scales much better than GMRES. Because of the nature of the CG algorithm the next search direction can be found using a recurrent expression and the algorithms boils down to simple operations such as dot products and matrix vector multiplications. These operations can be easily parallelized and drop of performance comes only from MPI overheads. A quite comprehensive study about parallel CG algorithm performance can be found in \cite{sparse-la:cg}. The authors also introduced a deeply pipelined version of CG algorithm that scales even better due to overlapping the time-consuming global communication phase, induced by parallel dot product computations, with useful independent computations \cite{sparse-la:cg}.\\
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/chapter-2/gmres-strong-scaling-speedup.png}
+\caption{GMRES strong scaling speed-up}
+\label{fig:gmres-strong-scaling-speed-up}
+\end{figure}
+
 
 % maybe above we have to mention inderect memory access and its effect on performance
 
 
-It is worth mentioning that the CG algorithm, for example, scales much better. there exist a recurrent expression to find a next residual vector, hence, a next search direction. boils down to simple operations: dot product and matrix vector multiplication
 
-% show results of CG
+ 
 
 % start discussion about preconditioning
-
-
-
-The most important aspect of parallelization of these algorithms is their implementation consist of a couple of simple operations at each iteration such as dot products and matrix vector multiplications. \\
-
-This operations can be efficiently implemented in distributed-memory machines due to easiness of data distribution. As a results we can expect good strong scaling behavior.
-
 The most important criteria of all of these methods is convergence rate. The convergence rate of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, equation [below] shows dependence of the rate from the matrix condition number. It can be clearly seen that a big condition number can lead to very slow. bla bla bla \\
 
 % condition number proportional to number of equations

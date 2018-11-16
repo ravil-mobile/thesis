@@ -10,3 +10,12 @@
 *.gz
 *.bbl
 *.blg
+
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.ilg
+*.ist
+*.nlo
+*.nls
