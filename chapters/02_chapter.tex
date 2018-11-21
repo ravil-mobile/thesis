@@ -233,21 +233,43 @@ Other Krylov methods such as CG, for example, scales much better than GMRES. Bec
 \end{figure}
 
 
-% maybe above we have to mention inderect memory access and its effect on performance
-
-
-
- 
 
 % start discussion about preconditioning
-The most important criteria of all of these methods is convergence rate. The convergence rate of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, equation [below] shows dependence of the rate from the matrix condition number. It can be clearly seen that a big condition number can lead to very slow. bla bla bla \\
+The most important criteria of Krylov methods is convergence rate. The convergence rate of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, equation \ref{eq:Gmres-7} shows dependence of the convergence rate from the matrix condition number. It can be clearly seen that a big condition number leads to very slow error reduction and, as the results, to huge number of iterations.\\
+
+\begin{equation} \label{eq:Gmres-7}
+	|| e^i ||_A \leq 2 ( \frac{\sqrt k - 1}{\sqrt k + 1} )^i || e^0 ||_A
+\end{equation}
+
+where $k = \frac{\lambda_{max}}{lambda_{min}}$ - condition number of the corresponding matrix. \\
+
+A general method to cope with the problem mentioned above is to transform the original system \ref{eq:slq} in such a way that the conditional number of the transformed system gets significantly smaller. The transformation of \ref{eq:slq} can be done from the left side \ref{eq:pcn-1} or from the right one \ref{eq:pcn-2}.
+
+\begin{equation} \label{eq:pcn-1}
+	PAx = Pb
+\end{equation}
+
+
+\begin{equation} \label{eq:pcn-2}
+	AP(P^{-1}x) = b
+\end{equation}
+
+where matrix $P$ is called preconditioner (PCN).
 
 % condition number proportional to number of equations
 
-An obvious solution of such a problem is to reduce the condition number. For that purpose, the original system of equation can be multiplied from both left and right sides with a matrix $M$ which can lower the condition number of a product $MA$. That tequnic is well known and called preconditioning. 
-
-% show effect of memory chennels!!
 % certain type of matrices can fail in terms of preconditioners but some time all preconditioner methods can works well
+
+
+
+An obvious solution of such a problem is to reduce the condition number. For that purpose, the original system of equation must be multiplied. 
+
+from both left and right sides with a matrix $M$ which can lower the condition number of a product $MA$. That tequnic is well known and called preconditioning. 
+
+
+% maybe above we have to mention inderect memory access and its effect on performance
+
+
 
 \section{Direct sparse methods}
 \label{subseq:sparse methods}
