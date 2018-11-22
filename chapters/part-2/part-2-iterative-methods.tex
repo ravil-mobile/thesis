@@ -103,9 +103,9 @@ The most important criteria of Krylov methods is convergence rate. The convergen
 	|| e^i ||_A \leq 2 ( \frac{\sqrt k - 1}{\sqrt k + 1} )^i || e^0 ||_A
 \end{equation}
 
-where $k = \frac{\lambda_{max}}{lambda_{min}}$ - condition number of the corresponding matrix. \\
+where $k = \frac{\lambda_{max}}{\lambda_{min}}$ - condition number of the corresponding matrix. \\
 
-A general method to cope with the problem mentioned above is to transform the original system \ref{eq:slq} in such a way that the conditional number of the transformed system gets significantly smaller. The transformation of \ref{eq:slq} can be done from the left side \ref{eq:pcn-1} or from the right one \ref{eq:pcn-2}.
+An obvious solution of such a problem is to reduce the condition number of the original system \ref{eq:slq}. A general method is to transform the original system in such a way that the conditional number of the transformed system gets significantly smaller. The transformation of \ref{eq:slq} can be done from the left side \ref{eq:pcn-1} or from the right one \ref{eq:pcn-2}.
 
 \begin{equation} \label{eq:pcn-1}
 	PAx = Pb
@@ -116,19 +116,30 @@ A general method to cope with the problem mentioned above is to transform the or
 	AP(P^{-1}x) = b
 \end{equation}
 
-where matrix $P$ is called preconditioner (PCN).\\
-
-As an example
-
-% condition number proportional to number of equations
-
-% certain type of matrices can fail in terms of preconditioners but some time all preconditioner methods can works well
+where matrix $P$ is called preconditioner.\\
 
 
+As an extreme example we can consider the inverse matrix $A^{-1}$ as the best preconditioner since it directly leads to the solution of the problem \ref{eq:slq} and, thus, it requires only one iteration. However, it is obvious that computation of inverse $A^{-1}$ is extremely expensive operation and it is not an objective of any iterative methods. That example helps understand and set requirements for preconditioners, namely:
 
-An obvious solution of such a problem is to reduce the condition number. For that purpose, the original system of equation must be multiplied. 
+\begin{enumerate}
+	\item cheap to compute e.g. a 5-10 iterations of the corresponding Krylov solver
+	\item should lead to a small conditioner number of the transposed system
+	\item should be sparse, otherwise storage requirements will considerably increase
+\end{enumerate}
 
-from both left and right sides with a matrix $M$ which can lower the condition number of a product $MA$. That tequnic is well known and called preconditioning. 
 
+There exist numerous techniques to compute preconditioners given a matrix $A$ e.g. (point) Jacobi, Block-Jacobi, incomplete $LU$ decomposition (ILU), multilevel ILU (ILU(p)), threshold ILU (ILUT), incomplete Cholesky factorization (IC), sparse approximate inverse (SPAI), multigrid as a preconditioner, etc. Almost all methods listed above have some tuning parameters which allow to get a better preconditioner i.e. a smaller condition number of the transformed system. However, it usually leads to increase of computational and storage costs. \\
+
+Some methods can works particularly well for matrices derived from certain PDEs e.g. Poisson, Navier\-Stokes, etc. problems discretized using the cartesian grid. However sometimes it can take a considerable amount of time to choice right parameters for a certain preconditioning algorithm. It can become a challenge to fulfill all requirements 1, 2, 3 mentioned above. \\
+
+Table \todo{Table with comparisons of different preconditioning for our test cases}
+
+Table [] shows results of different preconditioning algorithms application to our test case. It can be seen that some algorithms failed even after tuning. \\
+
+It interesting to notice that \citeauthor{wsmp} came to approximately the same results working on their set of matrices in their work \cite{wsmp}. They observed that preconditioned iterative solvers worked efficiently only for 2 out 5 cases in contrast to direct sparse solvers.\\
+
+We can summarize that it is vital to perform careful parameter tuning of any preconditioning algorithms combining results from [table] and \cite{wsmp}. In general the  search can take a considerable amount of time. Moreover, it becomes impractical for time integration problems where topology of an underlying problem and, as the results, the computational mesh, discretization, Jacobian matrix can be changed over time of a simulation. It is obvious that parameters chosen for a particular time step can become not optimal for consecutive steps and, at the end, it can lead to divergence. If divergence happens at any time step the entire time integration algorithm fails and the simulation has to be restarted with different preconditioning parameters or with a different preconditioning algorithm.\\
+
+By and large we come to a conclusion that preconditioned iterative solvers are not robust and thus cannot fully fulfill requirements listed in section \ref{chapter:solver configuration}.\\
 
 % maybe above we have to mention inderect memory access and its effect on performance
