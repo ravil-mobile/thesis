@@ -55,6 +55,8 @@ Because of large computational and storage costs, in case of evaluation of the f
 
 We can see that some operations, for example \ref{eq:Gmres-6}, can be efficiently done in parallel. However, operatiopns like sparse triangular solve \ref{eq:Gmres-5} can introduce some effect on strong scaling behavior. Figure \ref{fig:sparse-triangular-solve-performance} shows strong scaling performance results of a sparse parallel triangular solver with a two dimensional matrix distribution. Performance considerations of the solver can be found in \cite{sparse-la:triangular-solve}.\\
 
+\figpointer{\ref{fig:sparse-triangular-solve-performance}}
+
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/chapter-2/sparse-triangular-solve-performance.png}
@@ -87,6 +89,8 @@ cube-64     & 100657  & 1388993  & 13.7992 \\ \hline
 
 Other Krylov methods such as CG, for example, scales much better than GMRES. Because of the nature of the CG algorithm the next search direction can be found using a recurrent expression and the algorithms boils down to simple operations such as dot products and matrix vector multiplications. These operations can be easily parallelized and drop of performance comes only from MPI overheads. A quite comprehensive study about parallel CG algorithm performance can be found in \cite{sparse-la:cg}. The authors also introduced a deeply pipelined version of CG algorithm that scales even better due to overlapping the time-consuming global communication phase, induced by parallel dot product computations, with useful independent computations \cite{sparse-la:cg}.\\
 
+
+\figpointer{\ref{fig:gmres-strong-scaling-speed-up}}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/chapter-2/gmres-strong-scaling-speedup.png}

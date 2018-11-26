@@ -14,6 +14,8 @@ In order to understand and analyze strong scaling behavior of the algorithm we h
 
 The algorithm usually starts with symbolic factorization to predict sparsity pattern of both $A$ and $L$. Once it is done a corresponding elimination tree has to be constructed.\\
 
+\figpointer{\ref{fig:sparsity-pattern-example-mm}}
+
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/chapter-2/sparsity-pattern-example-mm.png}
@@ -36,6 +38,9 @@ It is important to notice that node $p$ represents elimination process of the co
 
 
 Given definition \ref{eq:elimination-tree-1} we can build the corresponding elimination tree as it is shown in figure \ref{fig:elimination-tree-mm}.\\
+
+
+\figpointer{\ref{fig:elimination-tree-mm}}
 
 \begin{figure}[htpb]
   \centering
@@ -165,7 +170,7 @@ l_{i_1,k} & \dots & l_{i_1,k}
 
 Together with the frontal $F_{j}$ and update $\hat{U_j}$ matrices, the update column matrix $U_{j}$ forms the key concepts of the multifrontal method. To consider the importance of sub-matrix $U_{j}$ let's consider and example illustrated in Figure \ref{fig:information-float}.\\
 
-
+\figpointer{\ref{fig:information-float}}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.45\textwidth]{figures/chapter-2/information-flow.png}
@@ -241,6 +246,7 @@ Up to this point we have already seen all key concepts of the multifrontal metho
 
 The elimination tree, in fact, represents dependencies among columns. Conversely, the tree also shows independent and thus current steps of elimination process. Hence we can consider the tree as a source of task parallelism. For instance figure \ref{fig:elimination-tree-mm-parallel-steps} shows task parallelism where each color represents tasks that can be done in parallel.\\
 
+\figpointer{\ref{fig:elimination-tree-mm-parallel-steps}}
 
 \begin{figure}[htpb]
   \centering
@@ -257,6 +263,29 @@ We can observe the amount of task parallelism is rapidly decreasing while moving
 
 
 We developed two simple models based on perfectly balanced binary trees to better understand strong scaling of the algorithm. The main concept of the models is so-called cost per level. This idea is similar to the recursion trees in \cite{recursion-tree} which explains and computes complexity of recurrent algorithms.\\
+
+Let's assume 
+
+\figpointer{\ref{fig:mm-parallel-model-tree}}
+
+\begin{figure}[htpb]
+ 	\centering
+	\begin{subfigure}[b]{0.65\textwidth}
+		\includegraphics[width=1.0\textwidth]{figures/chapter-2/mm-parallel-model-tree-1.png}
+		\caption{Model 1: equal cost per level}
+	\end{subfigure}
+
+
+	\begin{subfigure}[b]{0.65\textwidth}
+		\includegraphics[width=1.0\textwidth]{figures/chapter-2/mm-parallel-model-tree-2.png}
+		\caption{Model 2: quadratically decreasing cost per level}
+	\end{subfigure}
+
+
+  
+\caption{Simple parallel models of the multifrontal method}
+\label{fig:mm-parallel-model-tree}
+\end{figure}
 
 
 % Data parallelism
