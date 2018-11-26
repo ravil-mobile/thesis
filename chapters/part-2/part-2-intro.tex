@@ -1,6 +1,8 @@
 \chapter{Solver selection and configuration}
 \label{chapter:solver configuration}
 
+\todo{from PDEs discretization to ODE}
+
 % from numerical integration to system of linear equations
 Numerical integration of time dependent partial differential equations can be achieved using different numerical schemes, namely: Runge-Kutta methods. In numerical analysis, the Runge–Kutta methods are a family of implicit and explicit iterative methods \cite{wiki:runge-kutta}.  \\
 
@@ -9,6 +11,7 @@ Implicit and explicit methods have their advantages and disadvantages which can 
 % reference on something
 
  In general, implicit methods are robust in case of stiff equations, however, on another hand they are more expensive in terms of computational cost since they introduce a non-linear part that has to be solve using the Newton's method as an example. There is also a class of integration methods called semi-implicit that were designed to reduce the cost of implicit ones and be able to cope with stiff equations. But in all cases numerical integration boils down to solution of a couple systems of linear equations of a type:
+
 
 \begin{equation} \label{eq:slq}
 	Ax = b
@@ -32,3 +35,5 @@ At this point we can set requirements for a solver that we are looking for:
 \end{itemize}
 
 % TODO: observation of all possible methods to solve Ax = b. At this section you have to come to a conclusion that we have to use sparse direct methods
+
+\todo{include hardware spec}
