@@ -1,0 +1,16 @@
+\section{Choice of Multifrontal Library}
+\label{subseq:library-choice}
+% talk about relative pivoting in case of multifrontal method
+% which dense operations we use [unnecessary inria report]
+
+
+
+
+% Give me the most popular sparce direct methods and compare them (goal: show that MUMPS it the most suitable package)
+
+
+% to conclusion
+There exist different implementations of multifrontal method on the market. Some implementations are open-source libraries (MUMPS, SuperLU, PaStiX, PSPASES, UMFPACK) and some of them are commercial packages (WSMP, PARDISO, etc.).
+Some libraries can only handle Symmetric Positive Definite (SPD) matrices (PSPASES), some can run only sequentially (UMFPACK).\\
+
+We can see from the primary documentations and literature review that MUMPS, PaStiX and SuperLU are open-source libraries and they can run on distributed environments in parallel. Both PaStiX and SuperLU are supernodal version of multifrontal method, whereas, MUMPS is the standard (classical) multifrontal implementation. [] showed in [] that MUMPS outperformed SuperLU \\

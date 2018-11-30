@@ -6,35 +6,55 @@
 \input{chapters/part-2/part-2-iterative-methods}
 
 \input{chapters/part-2/part-2-direct-sparse-methods}
-
-
-
-
 % Introduction to Multifrontal method: describe all three phases
 
 
 
-% show motivation to use sparce direct methods: show a plot whith MUMPS and 100 interation of GMRES
 
 
 
-% Parallelism for Multifrontal method: put stress on importance of elimination tree
 
-% where and how we can exploid multi-threding
 
-% show a result where multithreding works
+
+
+
+
+
 
 % Choice of blas labraries
-\section{Choice and Motivation}
+\section{Hybrid Solver}
 \label{subseq:choice and motivation}
+% hybryd approach
+% show motivation to use sparce direct methods: show a plot whith MUMPS and 100 interation of GMRES
+% show all phases
 
 
 
-\section{Multifrontal Method}
+
+\section{Choice of Multifrontal Library}
 \label{subseq:multifrontal method}
+% talk about relative pivoting in case of multifrontal method
+% which dense operations we use [unnecessary inria report]
 
-\section{Choice of BLAS library}
+
+
+\section{Overview of MUMPS Library}
+\label{subseq:multifrontal method}
+% where and how we can exploid multi-threding
+% show a result where multithreding works
+
+
+\section{Choice of BLAS Library}
 \label{subseq:blas-comparison}
+
+
+
+\section{MPI-OpenMP Tuning of MUMPS Library}
+\label{subseq:mpi-openmp}
+
+
+\section{Conclusions}
+\label{subseq:conclusions}
 
 
 % hybrid: we thought it was a hard-ware specific problem, but it turned out it was algoritymic problem!
