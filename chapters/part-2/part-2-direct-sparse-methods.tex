@@ -444,24 +444,10 @@ Figure \ref{fig:mumps-task-data-parallelism} shows an example of two types of pa
 All the techniques mentioned above were designed to improve strong scaling behavior by splitting the most intensive parts among all available processors. Going back to our models, we can also think about that in a slightly different way, namely: \textit{data parallelism helps to re-distribute cost per node/level on the corresponding elimination tree}. However, we have to notice that efficiency of data parallelism totally depends on sizes of frontal matrices at the top part of the tree. In case of skinny sparse matrices, oversubscription of processing elements can lead to strong performance penalties as we could see from section \ref{subseq:direct methods}. A machine-dependent minimal frontal matrix size was introduced in MUMPS in order to control whether to use ScaLAPACK at the root node or not \cite{mumps-manual}. It can happen that the algorithm uses only task parallelism, due to the threshold, and, as a results, scaling will only depend on the tree structure that can be deep and unbalanced.\\
 
 
-Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{cant}} done with using MUMPS library. The matrix has been downloaded from SuiteSparse Matrix Collection \cite{sparse-matrix-collection:1}, \cite{sparse-matrix-collection:2}. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:cant-matrix-sparsity-pattern}. Parameters of the matrix are listed in table \ref{table:matrix-cant-parameters}.
+Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{cant}} (Table \ref{table:suite-sparse-matrix-set}) done with using MUMPS library. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:cant-matrix-sparsity-pattern}. 
 
 
-\begin{table}[htpb]
-\centering
-\begin{tabular}{|c|c|c|c|}
-
-\hline
-Matrix Name     & n     & nnz     & nnz / n \\ \hline
-cant & 62451 & 4007383 & 64.1684 \\ \hline
-
-\end{tabular}
-\caption{Parameters of the matrix \textit{\textbf{cant}}}
-\label{table:matrix-cant-parameters}
-\end{table}
-
-
-\figpointer{\ref{fig:model-1-vs-mumps}}
+\figpointer{\ref{fig:model-1-vs-mumps}. Show standard deviation}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.65\textwidth]{figures/chapter-2/model-1-vs-mumps.png}
@@ -497,28 +483,4 @@ Secondly, we can see the algorithm requires many pre-processing steps to be done
 
 
 Lastly, the algorithm can fail due to incorrect  working space prediction. As a results, factorization has to be restarted with some modification of input solver parameters.\\
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

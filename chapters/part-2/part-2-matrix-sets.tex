@@ -1,0 +1,91 @@
+\section{Matrix sets} \label{subseq:matrix-sets}
+
+During the stiudy, we are going to use two matrix sets: GRS and SuiteSparse. In our case, the SiteSparse matrix set is, in fact, few matrices downloaded from SuiteSparse Matrix Collection \cite{sparse-matrix-collection:1}, \cite{sparse-matrix-collection:2}. We tried to choose different matrices from the collection with respect to both the number of equations $n$ in a system and ratio $R$ between the number of non-zero elements $nnz$ and the number of equations.\\ 
+
+
+\todo{describe what ATHLET is}
+To generate GRS matrix set, we ran the most common GRS simulations in ATHLET and stopped the simulations somewhere in the middle saving corresponding shifted Jacobian matrices in the PETSc binary format.\\
+\todo{describe what a shifted Jacobian matrix is}
+
+Tables \ref{table:grs-matrix-set}  and \ref{table:suite-sparse-matrix-set} shows matrix properties of both matrix sets.\\
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+Name     & n       & nnz      & nnz / n \\ \hline
+pwr-3d   & 6009    & 117897   & 19.6200 \\ \hline
+cube-5   & 9325    & 117897   & 6.0568  \\ \hline
+cube-64  & 100657  & 1388993  & 13.7993 \\ \hline
+cube-645 & 1000045 & 13906057 & 13.9054 \\ \hline
+k3-2     & 130101  & 787997   & 6.0568  \\ \hline
+k3-18    & 1155955 & 7204723  & 6.2327  \\ \hline
+\end{tabular}
+\caption{GRS matrix set}
+\label{table:grs-matrix-set}
+\end{table}
+
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Name        & n       & nnz      & nnz / n & Field                      \\ \hline
+cant        & 62451   & 4007383  & 64.1684 & 2D/3D Problem              \\ \hline
+consph      & 83334   & 6010480  & 72.1251 & 2D/3D Problem              \\ \hline
+CurlCurl\_3 & 1219574 & 13544618 & 11.1060 & Model Reduction Problem    \\ \hline
+Geo\_1438   & 1437960 & 63156690 & 43.9210 & 2D/3D Problem              \\ \hline
+memchip     & 2707524 & 13343948 & 4.9285  & Circuit Simulation Problem \\ \hline
+nlpkkt80    & 1062400 & 28192672 & 26.5368 & Optimization Problem       \\ \hline
+PFlow\_742  & 742793  & 37138461 & 49.9984 & 2D/3D Problem              \\ \hline
+pkustk10    & 80676   & 4308984  & 53.4110 & Structural Problem         \\ \hline
+torso3      & 259156  & 4429042  & 7.0903  & 2D/3D Problem              \\ \hline
+x104        & 108384  & 8713602  & 80.3956 & Structural Problem         \\ \hline
+\end{tabular}
+\caption{SuiteSparse matrix set}
+\label{table:suite-sparse-matrix-set}
+\end{table}
+
+
+From now, we are going to introduce and use a definition of \textbf{skinny sparse matrices}. It is matrices with relatively low  ration $R$ i.e. less than 15. \\ 
+
+
+The objective of this study is to find and configure a solver which can fulfill all requirements listed above for the GRS matrix set. From time to time, we will use the SuiteSparse set for comparison reasons. It seems to us that GRS matrix set is different because of some specifics of 1D pipeline discretization. For example, GRS matrices are skinny and blocked, where each block is a small, approximately 3-by-3, dense matrix. Additionally, some rows can contain only one element i.e. on the diagonal. It is a result of dynamic pipeline switching of a reactor cooling system. As we will see in section \ref{subseq:sparse methods}, sparse direct solvers can be quite sensitive to the sparse structure of a matrix.\\
+
+
+We used different hardware to measure performance of different solvers. The first machine was the GRS cluster (HW1) which was our main target. We used a LRZ Linux cluster (HW2) every time when we got some ambiguous results in order to check whether a problem was hardware or software specific. Table \ref{table:hardware-spec} shows a single node specification of both machines. 
+
+
+\todo{fill in the tables \ref{table:hardware-spec}}
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+                    & HW1 (GRS) & HW2 (LRZ Linux) \\ \hline
+Architecture        &           &                 \\ \hline
+CPU(s)              &           &                 \\ \hline
+On-line CPU(s) list &           &                 \\ \hline
+Thread(s) per core  &           &                 \\ \hline
+Core(s) per socket  &           &                 \\ \hline
+Socket(s)           &           &                 \\ \hline
+NUMA node(s)        &           &                 \\ \hline
+Model               &           &                 \\ \hline
+Model name          &           &                 \\ \hline
+Stepping            &           &                 \\ \hline
+CPU MHz             &           &                 \\ \hline
+CPU max MHz         &           &                 \\ \hline
+CPU min MHz         &           &                 \\ \hline
+Virtualization      &           &                 \\ \hline
+L1d cache           &           &                 \\ \hline
+L1i cache           &           &                 \\ \hline
+L2 cache            &           &                 \\ \hline
+L3 cache            &           &                 \\ \hline
+NUMA node0 CPU(s)   &           &                 \\ \hline
+\end{tabular}
+\caption{Hardware specification}
+\label{table:hardware-spec}
+\end{table}
+
+\newpage

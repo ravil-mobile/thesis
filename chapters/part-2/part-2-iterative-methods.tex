@@ -69,23 +69,11 @@ It is interesting to notice that performance of the triangular solver depends on
 
 Triangular solve \ref{eq:Gmres-5} can be computed in a single processor because matrix $R_m$ is usually small and depends on the number iterations before the restart. In this case the triangular solve can become a bottleneck again. \\
 
-Figure \ref{fig:gmres-strong-scaling-speed-up} shows strong scaling performance results of the default GMRES solver from the PETSc library. The solver was set up without any preconditioner and 50 iterations as the restart. Additionally no stop criteria was specified except the maximum number iterations which was equal to 100. Four different matrices with different sparsity patterns were examined for the test. The information about the matrices is summarized in table \ref{table:matrix-info-1}. As we expected we can observe strong deviation of our test cases from the ideal speed-up when the number of processes exceeds 10.\\
+Figure \ref{fig:gmres-strong-scaling-speed-up} shows strong scaling performance results of the default GMRES solver from the PETSc library. The solver was set up without any preconditioner and 50 iterations as the restart. Additionally no stop criteria was specified except the maximum number iterations which was equal to 100. For matrices were chosen form GRS matrix set for the test, namely: cube-64, cube-645, k3-2 and k3-18. The information about the matrices is summarized in table \ref{table:grs-matrix-set}. As we expected we can observe strong deviation of our test cases from the ideal speed-up when the number of processes exceeds 10.\\
+
+\figpointer{\ref{fig:gmres-strong-scaling-speed-up}}
 
 It should be mentioned that parallelization overheads, introduced by such MPI operations as MPI\_Send, MPI\_Recv, MPI\_Allreduce, etc., also have their impact on performance of the algorithm.\\
-
-\begin{table}[htpb]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-Matrix Name & n       & nnz      & nnz / n \\ \hline
-k3-18       & 1155955 & 7204723  & 6.2327  \\ \hline
-k3-2        & 130101  & 13906057 & 6.0568  \\ \hline
-cube-645    & 1000045 & 787997   & 13.9054 \\ \hline
-cube-64     & 100657  & 1388993  & 13.7992 \\ \hline
-\end{tabular}
-\caption{Basic information about matrices used in figure \ref{fig:gmres-strong-scaling-speed-up}}
-\label{table:matrix-info-1}
-\end{table}
 
 Other Krylov methods such as CG, for example, scales much better than GMRES. Because of the nature of the CG algorithm the next search direction can be found using a recurrent expression and the algorithms boils down to simple operations such as dot products and matrix vector multiplications. These operations can be easily parallelized and drop of performance comes only from MPI overheads. A quite comprehensive study about parallel CG algorithm performance can be found in \cite{sparse-la:cg}. The authors also introduced a deeply pipelined version of CG algorithm that scales even better due to overlapping the time-consuming global communication phase, induced by parallel dot product computations, with useful independent computations \cite{sparse-la:cg}.\\
 

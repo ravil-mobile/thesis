@@ -1,13 +1,9 @@
-\chapter{Solver selection and configuration}
-\label{chapter:solver configuration}
+\section{Problem statement} \label{subseq:problem-statement}
 
 \todo{from PDEs discretization to ODE}
 
 % from numerical integration to system of linear equations
-Numerical integration of time dependent partial differential equations can be achieved using different numerical schemes, namely: Runge-Kutta methods. In numerical analysis, the Runge–Kutta methods are a family of implicit and explicit iterative methods \cite{wiki:runge-kutta}.  \\
-
-
-Implicit and explicit methods have their advantages and disadvantages which can be found in the corresponding literature.
+Numerical integration of time dependent partial differential equations can be achieved using different numerical schemes, namely: Runge-Kutta methods. In numerical analysis, the Runge–Kutta methods are a family of implicit and explicit iterative methods \cite{wiki:runge-kutta}. Implicit and explicit methods have their advantages and disadvantages which can be found in the corresponding literature.\\
 % reference on something
 
  In general, implicit methods are robust in case of stiff equations, however, on another hand they are more expensive in terms of computational cost since they introduce a non-linear part that has to be solve using the Newton's method as an example. There is also a class of integration methods called semi-implicit that were designed to reduce the cost of implicit ones and be able to cope with stiff equations. But in all cases numerical integration boils down to solution of a couple systems of linear equations of a type:
@@ -17,15 +13,18 @@ Implicit and explicit methods have their advantages and disadvantages which can 
 	Ax = b
 \end{equation}
 
+
  where $A \in \mathbb{R^{N \times N}}$ is an invertible square matrix, $b \in \mathbb{R^{N}}$ represents the right-hand side, and $x \in \mathbb{R^{N}}$ is the solution vector. At this point we refer to a system of linear equations as just a system and we will use these two terms interchangeably. \\
+
  
 In some cases, especially in case of implicit or semi-implicit methods, we have to compute several systems to perform one step of numerical integration. Thus, solution of a system \ref{eq:slq} is the computational core of any time integration scheme. In fact, it is the most expensive part and it is primary source of code optimization. \\ 
 
+
 There are three major ways to solve a system of linear equations, namely: direct dense methods, sparse direct methods and iterative methods.\\
 
-In the following sections \ref{subseq:direct methods}, \ref{subseq:iterative methods}, \ref{subseq:sparse methods} we are briefly going to review all three types of numerical solvers as well as their advantages and disadvantages and some aspects of their parallel implementations with a strong focus on their strong scaling behavior. Strong scaling is important for this research since we want to find a solver and its configuration to solve a certain system with a fixed size as fast as possible. Additionally to that, due to a large number of numerical integration steps, we want to find a robust solver to avoid any application crash during simulations.
+In the following sections \ref{subseq:direct methods}, \ref{subseq:iterative methods}, \ref{subseq:sparse methods} we are briefly going to review all three types of numerical solvers as well as their advantages and disadvantages and some aspects of their parallel implementations with a strong focus on their strong scaling behavior. Strong scaling is important for this research since we want to find a solver and its configuration to solve a certain system with a fixed size as fast as possible. Additionally to that, due to a large number of numerical integration steps, we want to find a robust solver to avoid any application crash during simulations.\\
 
-At this point we can set requirements for a solver that we are looking for:
+At this point we can set requirements for a solver that we are looking for:\\
 
 \begin{itemize}
 	\item efficiency
@@ -34,6 +33,4 @@ At this point we can set requirements for a solver that we are looking for:
 	\item open source licenses
 \end{itemize}
 
-% TODO: observation of all possible methods to solve Ax = b. At this section you have to come to a conclusion that we have to use sparse direct methods
 
-\todo{include hardware spec}
