@@ -5,7 +5,7 @@
 % show motivation to use sparce direct methods: show a plot whith MUMPS and 100 interation of GMRES
 % show all phases
 
-We have observed all the method available and we can see that non of them can fulfill all our requirements at once, namely:
+We have observed almost all the method available and we can see that none of them can fully cover all our requirements at once, namely:
 
 \begin{itemize}
 	\item robustness
@@ -14,12 +14,17 @@ We have observed all the method available and we can see that non of them can fu
 	\item open source licenses
 \end{itemize}
 
-The analysis from sections \ref{} and \ref{} shows that iterative methods scale much better in contrast to direct sparse ones. However, we cannot use them without preconditioning. Table \ref{} shows condition numbers for our GRS matrix set. It 
 
-% tune preconditioners and then do comparison
-
-NEW SECTION!!!!
+The analysis from sections \ref{subseq:iterative methods} and \ref{subseq:iterative methods} shows that iterative methods scale much better in contrast to sparse direct ones. However, they are only efficient with very well preconditioned systems. We showed in section \ref{subseq:iterative methods} that search of preconditioning parameters usually takes lots of time and efforts. Additionally, we cannot guarantee that the settings fond for our GRS matrix set will always work well in subsequent steps of time integration.\\
 
 
+Sparse direct methods do not have such a problem. They always produce the right solution. The methods can only fail in case of underestimation of the working space due to numerical pivoting during the numerical factorization phase. In order to cope with that problems, almost all implementations of direct sparse methods provide two options to the user, namely: to increase predicted working space by some factor e.g. 2, 3, 4, etc. or to lower constrains of numerical pivoting which allows small numerical values to stay on the diagonal.\\
 
-\newpage
+
+The drawback of the second option is that it can lead to out-of-core execution with using the secondary memory which makes numerical factorization significantly slow. While the second option has lower chance of out-of-core factorization it can lead to a numerically inaccurate solution. \\
+
+
+After many considerations we decided to stick to sparse direct solvers because \textbf{robustness} had the highest priority in our case. To circumvent problems mentioned above, we proposed a so-called hybrid solver, in spite of the fact that the definition of \textit{hybrid linear solvers} had already been use in scientific computing community in a slightly different way [reference]. The idea is to switch off numerical pivoting (or significantly lower the constrains) of sparse direct solvers and use the resultant $LU$ decomposition as a preconditioner for an iterative method, for example GMRES.\\
+
+
+According to our primary tests, the hybrid approach showed us that, in general, it required from 1 to 5 iterations of the GMRES solver on average to converge to a desired residual.\\
