@@ -1,0 +1,63 @@
+\section{Choice of Multifrontal Library}
+\label{subseq:mm-library-choice}
+
+%Fair to say, there is no single algorithm or software that is best for all types of linear systems.
+
+
+Nowadays there exist many different sparse direct solvers on the market. Some of them are tunned for specific linear systems i.e. symmetric positive definite, systems with symmetric sparsity pattern, system with complex numbers, etc., some are targeted for the most general cases. Some packages can handle data parallelism in different ways even within the same library depending on the system size and other criteria. Hence, parallel performance highly depends on specific implementation of a method. Table \ref{table:mm-library-spec} displays a short summary of almost all available and well-known packages, at the time of writing, in this field based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
+
+
+
+\todo{add footnotes of Open*}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Package & Method             & Matrix Types                 & PETSc Interface & License      \\ \hline
+Clique       & Multifrontal       & Symmetric      & Not officially  & Open  \\ \hline
+MF2          & Multifrontal       & Symmetric pattern & No              & -            \\ \hline
+DSCPACK      & Multifrontal       & SPD                          & No              & Open* \\ \hline
+MUMPS        & Multifrontal       & General                      & Yes             & Open  \\ \hline
+PaStiX       & Left-Right looking & General                      & Yes             & Open  \\ \hline
+PSPASES      & Multifrontal       & SPD                          & No              & Open* \\ \hline
+SPOOLES      & Left-looking       & Symmetric pattern & No              & Open* \\ \hline
+Super\_DIST & Right-looking      & General                      & Yes             & Open  \\ \hline
+symPACK      & Left-Right looking & SPD                          & No              & Open  \\ \hline
+S+           & Right-lookin       & General                      & No              & -            \\ \hline
+
+PARDISO         & Multifrontal       & General                      & No              & Commercial   \\ \hline
+
+WSMP         & Multifrontal       & General                      & No              & Commercial   \\ \hline
+\end{tabular}
+\caption{List of packages to solve sparse linear systems using direct methods on distributed memory parallel machines \cite{list-of-sparse-direct-solvers}, \cite{petsc-web-page}}
+\label{table:mm-library-spec}
+\end{table}
+
+
+We only listed libraries that can run on distributed memory parallel machines. Almost all of them also support shared memory environment in some degree. Nonetheless there also exist libraries that  run either only sequentially (UMFPACK, SPARSE, TAUCS) or only on shared memory machines (PanelLLT, SuperLU\_MT).\\
+
+
+From table \ref{table:mm-library-spec} we can see that only MUMPS, PaStiX and Super\_DIST cover our initial requirements: open-source license and direct interface to the PETSc library, and that is the reason why we decided to choose these libraries for our primary test. We chose the following matrices from both matrix sets, namely: ... (GRS) and ... (SuiteSparse)\\
+
+
+Before testing, we downloaded and configured these libraries within the PETSc environment with their default settings. As a profiling tool, we used the internal PETSc profiler that could measure individual steps of numerical factorization for external packages. During the test we gradually increased the process count and measured the following PETSc parameters: 
+
+\begin{itemize}
+
+	\item MatLUFactorSym - time spent on symbolic factorization only (analysis phase)
+	
+	\item MatLUFactorNum - time spent on numerical factorization only
+	
+	\item PCSetUP - total time spent on $LU$ decomposition including all steps and overheads 
+	
+	\item PCApply - time spent on forward and backward substitutions
+\end{itemize}
+
+Results of our test are shown in figures [bla] and table [bar]. 
+
+
+According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and  PaStiX libraries for all our test cases. A review of works [bla] and [bra] shows similar outcome [reference]. Therefore, we chose MUMPS library as a sparse direct solver for our hybrid approach. An overview of the MUMPS documentation also shows some room for performance tuning that we are going to discuss in detail in sections [bla], [bla] and  [bla].\\
+
+
+However, it should be mentioned that we cannot exclude that SuperLU\_DIST  and PaStiX can give similar performance results as the MUMPS library with appropriate parameters tuning.\\

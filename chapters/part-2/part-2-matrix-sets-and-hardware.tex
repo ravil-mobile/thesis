@@ -55,7 +55,9 @@ From now, we are going to introduce and use a definition of \textbf{skinny spars
 The objective of this study was to find and configure a solver which could fulfill all requirements listed above for the GRS matrix set. From time to time, we used the SuiteSparse set for comparison reasons. It seems to us that GRS matrix set was different because of some specifics of 1D pipeline discretization. For example, GRS matrices are skinny and blocked, where each block is a small, approximately 3-by-3, dense matrix. Additionally, some rows can contain only one element i.e. on the diagonal. It is a result of dynamic pipeline switching of a reactor cooling system. As we will see in section \ref{subseq:sparse methods}, sparse direct solvers can be quite sensitive to the sparse structure of a matrix.\\
 
 
-We used different hardware to measure performance of different solvers. The first machine was the GRS cluster (HW1) which was our main target. We used a LRZ CoolMUC-2 Linux cluster (HW2) every time when we got some ambiguous results in order to check whether a problem was hardware or software specific. Table \ref{table:hardware-spec} shows a single node specification of both machines. 
+We used different hardware to measure performance of different solvers. The first machine was the GRS cluster (HW1) which was our main target. We used a LRZ CoolMUC-2 Linux cluster (HW2) every time when we got some ambiguous results in order to check whether a problem was hardware or software specific. Table \ref{table:hardware-spec} shows a single node specification of both machines.\\
+
+% process pinning: example (skript)
 
 
 \begin{table}[ht]
@@ -90,8 +92,28 @@ NUMA node3 CPU(s)   & - &  21-27 \\ \hline
 \end{table}
 
 
-We decided to stick to the OpenMPI library which is an implementation of the MPI standard. OpenMPI is an open-source project and it is very well documented. The library has many options for processes pinning which was crucial in our study because we had to deal with multi-socket machines which, in turn, had multiple NUMA domains.\\
+We decided to stick to the OpenMPI library which is an implementation of the MPI standard. OpenMPI is an open-source project and it is very well documented. The library has many options for processes pinning which was a crucial part in our study because we had to deal with multi-socket machines which, in turn, had multiple NUMA domains.\\
 
-\textbf{Intel 18.2} compiler was chosen for this study as the newest and the most efficient Intel compiler at the time of writing.\\
 
-\newpage
+To make process pinning deterministic, we developed a python script which automatically generated rank-files based on the number of MPI processes, OpenMP threads per MPI process, the maximum number of processing elements and the number of NUMA domains.
+The scrip always leaves appropriate gaps between MPI processes to allow each process to fork the corresponding number of threads within a parallel region.\\
+
+
+A rank-file specifies explicit mapping between MPI processes (ranks) and actual processing elements (cores) within a machine. The script has two modes, namely: \textit{spread} and \textit{close}. Given a certain number of ranks, the spread mode tries to distribute them as spread as possible across available NUMA domains in round-robin fashion. In contrast to the spread strategy, the close mode groups ranks as close as possible to keep the maximum number of ranks within a single NUMA domain. Figure \ref{fig:python-script-rankfile-example} shows an example of how these two modes work in case of 5 MPI ranks, 2 OpenMP threads per rank, on a compute node equipped with 20 cores and 2 NUMA domains (HW1).\\
+
+
+
+\figpointer{\ref{fig:python-script-rankfile-example}}
+\begin{figure}
+\centering
+	\begin{tabular}{cc}
+			\subfloat[\textit{Spread} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/spread-mode.png}} &
+		\subfloat[\textit{Close} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/close-mode.png}} \\
+	\end{tabular}
+	\caption{An example of process pinning of 5 MPI processes with 2 OpenMP threads per rank in case of HW1}
+	\label{fig:python-script-rankfile-example}
+\end{figure}
+
+
+
+We chose \textbf{Intel 18.2} compiler for this study as the newest and the most efficient Intel compiler at the time of writing.\\

@@ -69,7 +69,12 @@ It is interesting to notice that performance of the triangular solver depends on
 
 Triangular solve \ref{eq:Gmres-5} can be computed in a single processor because matrix $R_m$ is usually small and depends on the number iterations before the restart. In this case the triangular solve can become a bottleneck again. \\
 
-Figure \ref{fig:gmres-strong-scaling-speed-up} shows strong scaling performance results of the default GMRES solver from the PETSc library. The solver was set up without any preconditioner and 50 iterations as the restart. Additionally no stop criteria was specified except the maximum number iterations which was equal to 100. For matrices were chosen form GRS matrix set for the test, namely: cube-64, cube-645, k3-2 and k3-18. The information about the matrices is summarized in table \ref{table:grs-matrix-set}. As we expected we can observe strong deviation of our test cases from the ideal speed-up when the number of processes exceeds 10.\\
+
+Figure \ref{fig:gmres-strong-scaling-speed-up} shows strong scaling performance results of the default GMRES solver from the PETSc library. The solver was set up without any preconditioner and 50 iterations as the restart. Additionally no stop criteria was specified except the maximum number iterations which was equal to 100. The \textit{spread} process pinning strategy, described in section \ref{subseq:matrix-sets-and-hardware}, was used. It is well-known that all iterative methods are memory bound due to indirect memory addressing caused by sparse matrix storage schemes. Hence equal process distribution can help reduce the load on memory channels since it is an obvious bottleneck for this type of applications. \\
+
+
+Four matrices were chosen form the GRS matrix set for the tests, namely: cube-64, cube-645, k3-2 and k3-18. The information about the matrices is summarized in table \ref{table:grs-matrix-set}. As we expected, we can observe strong deviation of our results from the ideal speed-up line when the number of processes exceeds 10.\\
+
 
 \figpointer{\ref{fig:gmres-strong-scaling-speed-up}}
 
