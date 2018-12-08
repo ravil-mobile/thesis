@@ -45,6 +45,7 @@ We only listed libraries that can run on distributed memory parallel machines. A
 
 We can see, from table \ref{table:mm-library-spec}, that only MUMPS, PaStiX and SuperLU\_DIST cover all our initial requirements: open-source license and direct interface to the PETSc library. However, these libraries implement different sparse direct methods, namely: multifrontal, left-looking and right-locking, respectively. Moreover, they handle partial pivoting in different ways.\\
 
+
 It is known that partial pivoting is necessary to achieve a good numerical accuracy during Gaussian Elimination. It interchanges rows and columns of a matrix in such a way to avoid small numerical values along the diagonal. In case of sparse direct solvers, the numerical pivoting, in run-time, usually distorts all predictions that have been made during the analysis phase and can lead to significant fill-in and load unbalanced, with respect to floating-point operations, during factorization. Hence, implementation of numerical pivoting, especially during parallel execution, plays the most important role in performance for this group of methods.\\
 
 
@@ -187,16 +188,23 @@ MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ 
 
 % conclusion of the results
 
-% Descibe the time-outs and crashes
 
 We ran into a few problems with the SuperLU\_DIST library during the tests. Firstly, factorization exceeded the set time limit in case of bla, bla and bla matrices. Secondly, we noticed the library crashed during processing of bla and bla matrices. A debugging process showed that a segmentation fault occurred in \textit{pdgstrf} function during the numerical factorization phase. We still keep working on this problem together with the PETSc team in order to find a solution. \\
 
 % FOR PRESENTATION: it can be due to wrong matrix representation in binary PETSc files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
 
 
-To complete and perform a fair comparison, an additional flat-MPI test was conducted with a 5-point stencil matrix and 100000 equations. We think this test can partially allow us to estimate parallel performance of systems like \textbf{k3-18}, \textbf{cube-645} where SuperLU\_DIST crashed. The results of the test are given in figure [bla].\\
+To complete and perform a fair comparison, an additional flat-MPI test was conducted with a 5-point stencil Poisson matrix with 100000 equations. We think this test can partially allow us to estimate parallel performance of systems like \textbf{k3-18}, \textbf{cube-645} where SuperLU\_DIST crashed. The results of the test are given in figure \ref{fig:5-point-stencil-solvers-comparison}.\\
 
-\todo{insert the graph}
+\figpointer{\ref{fig:5-point-stencil-solvers-comparison}}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figures/chapter-2/solvers-comparison-5-point-stencil.png}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and a 5 point-stencil Poisson matrix (1000000  equations)}
+\label{fig:5-point-stencil-solvers-comparison}
+\end{figure}
+
+
 
 According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and PaStiX. A literature review showed that \citeauthor{wsmp}, in paper \cite{wsmp}, came to nearly the same results comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries with respect to execution time for their matrix set. However, paper \cite{mm-comparison-of-packages} showed an almost opposite outcome. According to \citeauthor{mm-comparison-of-packages}, SuperLU\_DIST spent less time on factorization and solution phases, which almost always determine the total execution time, and, even more interesting, it scaled much better overall. We must note that both research groups used different machines and matrix sets. This fact actually seconds our idea that a choice of a suitable library can depend heavily on data and hardware.\\
 
