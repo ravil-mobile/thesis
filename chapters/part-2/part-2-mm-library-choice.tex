@@ -118,34 +118,90 @@ In spite of obvious complexity of dynamic partial pivoting, MUMPS allows the use
 PETSc (version 3.10) provides the full interface to both SuperLU\_DIST and MUMPS, whereas the interface to the PasTiX library is quite limited. In fact, in case of PasTiX, the user can only control the number of threads per MPI process and a level of verbosity, which makes this library to be less interesting for our subsequent (following) research.\\
 
 
-In order to evaluate the overall performance of the libraries, we performed a test with a few matrices from the GRS matrix set, namely: bla bla bla. 
-Before testing, we downloaded and configured the libraries within the PETSc environment with their default settings. As a profiling tool, we used the internal PETSc profiler. Time-out of 15 minutes was set up for each test case to prevent blocking of a compute node in case if out-of-memory execution during the factorization phase. Results of the test are summarized in table [bar]. \\
+In order to evaluate the overall parallel performance of the libraries, we performed a few flat-MPI tests with the GRS matrix using the HW1 machine. Before testing, we downloaded and configured the libraries within the PETSc environment with their \textbf{default settings}. As a profiling tool, we used the internal PETSc profiler. A time limit of 15 minutes was set up for each test case to prevent blocking of a compute node in case if out-of-core execution. Results of the tests are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and appendix in \ref{app:app-lc}. Numerical values in tables are given in \textbf{seconds}.\\
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|c|l|c|c|c|c|}
+\cline{1-4} \cline{6-9}
+MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \\ \cline{1-4} \cline{6-9} 
+1   & 7.02E-02 & 8.72E-02 & 3.17E+00 &  & 11  & 7.55E-02 & 8.89E-02 & 5.82E-01 \\ \cline{1-4} \cline{6-9} 
+2   & 6.73E-02 & 7.10E-02 & 1.43E+00 &  & 12  & 7.61E-02 & 1.06E-01 & 4.37E-01 \\ \cline{1-4} \cline{6-9} 
+3   & 6.36E-02 & 7.01E-02 & 1.07E+00 &  & 13  & 7.84E-02 & 9.72E-02 & 5.43E-01 \\ \cline{1-4} \cline{6-9} 
+4   & 6.28E-02 & 7.11E-02 & 8.17E-01 &  & 14  & 8.06E-02 & 1.02E-01 & 4.22E-01 \\ \cline{1-4} \cline{6-9} 
+5   & 6.50E-02 & 7.15E-02 & 7.51E-01 &  & 15  & 8.20E-02 & 1.19E-01 & 3.91E-01 \\ \cline{1-4} \cline{6-9} 
+6   & 6.72E-02 & 7.62E-02 & 6.15E-01 &  & 16  & 8.07E-02 & 1.19E-01 & 4.44E-01 \\ \cline{1-4} \cline{6-9} 
+7   & 6.91E-02 & 7.69E-02 & 6.48E-01 &  & 17  & 8.38E-02 & 1.22E-01 & 5.19E-01 \\ \cline{1-4} \cline{6-9} 
+8   & 6.89E-02 & 8.17E-02 & 5.41E-01 &  & 18  & 8.40E-02 & 1.26E-01 & 3.77E-01 \\ \cline{1-4} \cline{6-9} 
+9   & 7.50E-02 & 8.28E-02 & 5.02E-01 &  & 19  & 8.58E-02 & 1.33E-01 & 5.47E-01 \\ \cline{1-4} \cline{6-9} 
+10  & 7.22E-02 & 8.52E-02 & 4.64E-01 &  & 20  & 8.64E-02 & 1.49E-01 & 3.39E-01 \\ \cline{1-4} \cline{6-9} 
+\end{tabular}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textbf{cube-5} (9352 equations)}
+\label{table:lc-cube-5-result}
+\end{table}
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|c|l|c|c|c|c|}
+\cline{1-4} \cline{6-9}
+MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \\ \cline{1-4} \cline{6-9} 
+1   & 1.36E+00 & 1.39E+00 & time-out &  & 11  & 7.75E-01 & 8.15E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+2   & 1.00E+00 & 9.82E-01 & time-out &  & 12  & 7.81E-01 & 8.10E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+3   & 8.83E-01 & 1.06E+00 & time-out &  & 13  & 7.85E-01 & 8.35E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+4   & 8.17E-01 & 8.74E-01 & time-out &  & 14  & 7.85E-01 & 8.18E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+5   & 7.85E-01 & 8.50E-01 & time-out &  & 15  & 7.88E-01 & 8.46E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+6   & 8.06E-01 & 8.52E-01 & time-out &  & 16  & 7.81E-01 & 8.23E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+7   & 7.71E-01 & 8.33E-01 & time-out &  & 17  & 6.83E-01 & 8.49E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+8   & 7.66E-01 & 8.33E-01 & time-out &  & 18  & 7.96E-01 & 8.44E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+9   & 7.93E-01 & 8.35E-01 & time-out &  & 19  & 8.04E-01 & 8.65E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+10  & 8.07E-01 & 8.15E-01 & time-out &  & 20  & 6.85E-01 & 8.87E-01 & time-out \\ \cline{1-4} \cline{6-9} 
+\end{tabular}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textbf{cube-64} (100657 equations)}
+\label{table:lc-cube-64-result}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|l|c|c|c|c|}
+\cline{1-4} \cline{6-9}
+MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ \cline{1-4} \cline{6-9} 
+1   & 1.55E+02 & 6.44E+01 & crashed &  & 11  & 1.77E+01 & 3.81E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+2   & 6.28E+01 & 4.84E+01 & crashed &  & 12  & 1.60E+01 & 3.75E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+3   & 5.06E+01 & 5.02E+01 & crashed &  & 13  & 1.42E+01 & 3.58E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+4   & 4.17E+01 & 4.50E+01 & crashed &  & 14  & 1.45E+01 & 3.59E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+5   & 2.52E+01 & 3.98E+01 & crashed &  & 15  & 1.47E+01 & 3.57E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+6   & 2.58E+01 & 4.29E+01 & crashed &  & 16  & 1.41E+01 & 3.52E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+7   & 2.65E+01 & 4.30E+01 & crashed &  & 17  & 1.54E+01 & 3.45E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+8   & 2.59E+01 & 3.73E+01 & crashed &  & 18  & 1.52E+01 & 3.31E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+9   & 1.95E+01 & 4.08E+01 & crashed &  & 19  & 1.52E+01 & 3.31E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+10  & 1.91E+01 & 3.81E+01 & crashed &  & 20  & 1.38E+01 & 3.16E+01 & crashed \\ \cline{1-4} \cline{6-9} 
+\end{tabular}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textbf{k3-18} (1155955 equations)}
+\label{table:lc-k3-18-result}
+\end{table}
+
 
 
 % conclusion of the results
 
+% Descibe the time-outs and crashes
+
+We ran into a few problems with the SuperLU\_DIST library during the tests. Firstly, factorization exceeded the set time limit in case of bla, bla and bla matrices. Secondly, we noticed the library crashed during processing of bla and bla matrices. A debugging process showed that a segmentation fault occurred in \textit{pdgstrf} function during the numerical factorization phase. We still keep working on this problem together with the PETSc team in order to find a solution. \\
+
+% FOR PRESENTATION: it can be due to wrong matrix representation in binary PETSc files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
 
 
-% during the test we noriced that SUPERLU consumes almost all avaliable memory on the system 126 GB during factorizationm which actually makes it is impossible to compare the resiluts
+To complete and perform a fair comparison, an additional flat-MPI test was conducted with a 5-point stencil matrix and 100000 equations. We think this test can partially allow us to estimate parallel performance of systems like \textbf{k3-18}, \textbf{cube-645} where SuperLU\_DIST crashed. The results of the test are given in figure [bla].\\
+
+\todo{insert the graph}
+
+According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and PaStiX. A literature review showed that \citeauthor{wsmp}, in paper \cite{wsmp}, came to nearly the same results comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries with respect to execution time for their matrix set. However, paper \cite{mm-comparison-of-packages} showed an almost opposite outcome. According to \citeauthor{mm-comparison-of-packages}, SuperLU\_DIST spent less time on factorization and solution phases, which almost always determine the total execution time, and, even more interesting, it scaled much better overall. We must note that both research groups used different machines and matrix sets. This fact actually seconds our idea that a choice of a suitable library can depend heavily on data and hardware.\\
 
 
+Taking into consideration the results of our primary flat-MPI tests, the MUMPS library was chosen as a sparse direct solver for our hybrid approach. Furthermore, an overview of the MUMPS documentation also showed some room for performance tuning that we were going to discuss in detail in sections [bla], [bla] and  [bla].\\
 
 
-%At the moment of writing, we could not manage to run SuperLU\_DIST on the HW1 machine which our main target as we describe in section \ref{subseq:matrix-sets-and-hardware}. During  a debugging process we noticed that a segmentation fault occurred in \textit{pdgstrf} function during the numerical factorization phase. We still keep working on that and looking for a way to circumvent the problem.\\
-
-
-
-% memory crashes of SUPERLU_DIST
-
-
-\todo{don't forget to put the results}
-
-
-
-\todo{don't forget to add citing and references}
-According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and  PaStiX. A review of works \cite{mm-comparison-of-packages} and [bra] shows similar outcome within the same similar range of problems. Therefore, we chose MUMPS library as a sparse direct solver for our hybrid approach. An overview of the MUMPS documentation also shows some room for performance tuning that we are going to discuss in detail in sections [bla], [bla] and  [bla].\\
-
-
-% the work bla shows MUMPS rocks but the guys bra came to an opposite conclusion. It additioanlly proves that the coive of a particular library depends of a invesigated matrix set. These works were done on different machine and with different matrix sets.
-
-However, it should be mentioned that we cannot exclude that SuperLU\_DIST  and PaStiX can give similar or even better performance results as the MUMPS library with appropriate parameters tuning or for another matrix set.\\
+However, it should be mentioned that we cannot exclude that SuperLU\_DIST  and PaStiX can give similar or even better performance results as the MUMPS library with appropriate parameters tuning or for other matrix sets.\\

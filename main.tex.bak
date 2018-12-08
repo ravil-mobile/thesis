@@ -6,13 +6,19 @@
 
 
 \usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{bbding}
+\usepackage{subfig}
+
 
 % TODO: change citation style in settings
-\input{./settings.tex}
+\input{settings}
+
+% todo commnad
 
 
-
-% TODO: change thesis information
+% TODO: change thsesis information
 \newcommand*{\getUniversity}{Technische Universität München}
 \newcommand*{\getFaculty}{Department of Informatics}
 \newcommand*{\getTitle}{Thesis title}
@@ -24,7 +30,12 @@
 \newcommand*{\getSubmissionDate}{Submission date}
 \newcommand*{\getSubmissionLocation}{Munich}
 
+\newcommand{\extendadd}{\mbox{\: \CrossClowerTips \:}}
+\newcommand\figpointer[1]{\todo[color=blue!40]{place for figure #1}}
+
 \begin{document}
+
+
 
 % TODO: decide on used language
 %\selectlanguage{ngerman}
@@ -41,17 +52,26 @@
 \input{pages/disclaimer}
 \input{pages/acknowledgements}
 \input{pages/abstract}
+
+
+\input{list-of-abbreviations.tex}
+\printnomenclature
+
+
 \microtypesetup{protrusion=false}
 \tableofcontents{}
 \microtypesetup{protrusion=true}
 
 \mainmatter{}
-\input{chapters/roadmap}
-\input{chapters/01_introduction}
-\input{chapters/01_chapter}
+%\input{chapters/roadmap}
+%\input{chapters/01_introduction}
+%\input{chapters/01_chapter}
+\input{chapters/02_chapter}
 % TODO: add more chapters here
 
 \appendix{}
+\input{chapters/appendices.tex}
+
 
 \microtypesetup{protrusion=false}
 \listoffigures{}
