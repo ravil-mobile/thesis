@@ -17,7 +17,7 @@ We have observed almost all available methods and we could see that none of them
 The analysis from sections \ref{subseq:iterative methods} and \ref{subseq:iterative methods} shows that iterative methods scale much better in contrast to sparse direct ones. However, they are only efficient in case of very well preconditioned systems. We showed in section \ref{subseq:iterative methods} that search of preconditioning parameters usually takes lots of time and efforts. Additionally, we cannot guarantee that the settings fond for our GRS matrix set will always work well in subsequent steps of time integration or for other different simulations.\\
 
 
-Sparse direct methods do not have such a problem. They always produce the right solution. The methods can only fail in case of underestimation of the working space due to numerical pivoting during the numerical factorization phase. In order to cope with that problems, almost all implementations of direct sparse methods provide two options to the user, namely: to increase predicted working space by some factor e.g. 2, 3, 4, etc. or to lower constrains of numerical pivoting which allows small numerical values to stay on the diagonal.\\
+Sparse direct methods do not have such a problem. They always produce the right solution. The methods can only fail in case of underestimation of the working space due to numerical pivoting during the numerical factorization phase. In order to cope with that problems, some implementations of direct sparse methods provide two options to the user, namely: to increase predicted working space by some factor e.g. 2, 3, 4, etc. or to lower constrains of numerical pivoting which allows small numerical values to stay on the diagonal.\\
 
 
 The drawback of the second option is that it can lead to out-of-core execution with using the secondary memory which makes numerical factorization significantly slow. While the second option has lower chance of out-of-core factorization it can lead to a numerically inaccurate solution. \\
@@ -25,17 +25,28 @@ The drawback of the second option is that it can lead to out-of-core execution w
 
 After many considerations we decided to stick to the sparse direct solvers because \textbf{robustness} criteria had the highest priority in our case. To circumvent problems mentioned above, we proposed a so-called hybrid solver, in spite of the fact that the definition of \textit{hybrid linear solvers} had already been used in scientific computing literature in a slightly different way \cite{shylu-hybrid-solver}. \textbf{\textit{The idea is to switch off numerical pivoting (or significantly lower the constrains) of sparse direct solvers and use the resultant $LU$ decomposition as a preconditioner for an iterative method, for example GMRES}}.\\
 
-\todo{inset pseudo-code}
+\begin{lstlisting}[language=python, caption={A pseudo-code of the Hybrid approach}, frame=single]
+# compute LU decomposition with a sparse direct solver
+LU = SparseDirectSolver(matrix=A, relative_pivot=1e-4)
 
+# compute inverse of A using backward-forward substitutions
+# sovle: LU * A_inv = I
+A_inv = ComputeInverse(decomposition=LU)
 
+# apply a Krylov method i.e 
+# A_inv * A * x = A_inv * b
+GMRES(matrix=A, rhs=b, preconditione=A_inv)
+\end{lstlisting}
+
+\todo{write which solver we used}
 According to our primary tests, the hybrid approach showed us that it required from 1 to 5 iterations of the GMRES solver on average to converge to a desired residual.\\
 
 
 The main problem of our approach is parallel efficiency because sparse $LU$ decomposition takes the most of computational time. We discussed reasons of possible bad strong scaling behavior of sparse direct solvers in section \ref{subseq:sparse methods}. We could see, in case of the multifrontal method, these methods consist of multiple steps and implementation of each step has its strong effect on parallel performance. We also mentioned that the main source of performance improvement is data parallelism and it can be achieved in many different ways. Hence, performance of the same method can vary form library to library.\\
 
 
-In the next section we are going to investigate all available open-source implementations of sparse direct solvers, compare their efficiency and choose one of them. At the beginning, we will only consider libraries that have their interface to PETSc \cite{petsc-web-page}. PETSc is a scientific numerical library that contains various algorithms and methods, especially the Krylov methods. It is highly efficient in parallel and provides numerous interfaces to other libraries such as MUMPS, SuperLU, Hypre, PaStiX, ViennaCL and etc.\\ 
+In the next section we are going to investigate all available open-source implementations of sparse direct solvers, compare their efficiency and choose one of them. At the beginning, we will only consider libraries that have their direct interface to PETSc \cite{petsc-web-page}. PETSc is a scientific numerical library that contains various algorithms and methods, especially the Krylov methods. It is highly efficient in parallel and provides numerous interfaces to other libraries such as MUMPS, SuperLU, Hypre, PaStiX, ViennaCL and etc.\\ 
 
 
 \todo{proofreading}
-The subsequent sections will be dedicated to tuning and optimization of a specific library with the aim of execution time reduction. \\
+The subsequent sections will be dedicated to tuning and optimization of a specific library with the aim to reduce execution time. \\
