@@ -6,7 +6,7 @@ Direct sparse methods combine main advantages of direct and iterative methods i.
 The most widely known sparse direct method is multifrontal method introduced by \citeauthor{mult-frontal-original:1} in their work \cite{mult-frontal-original:1}. Multifrontal method is an improved extension of a frontal method \cite{frontal-original} that can compute independent fronts in parallel. A front, or also called frontal matrix, can be considered as small dense matrix which is a result of Gaussian Elimination for a particular column. The algorithm, in fact, is as a variant of Gaussian Elimination process. There also exist left-looking and right-looking sparse direct methods. The difference between all of them is explained and can be found in \cite{elimination-tree}.\\
 
 
-In order to understand and analyze strong scaling behavior of the algorithm we have to briefly discuss the theory of the multifrontal method. For simplicity we will assume that matrix $A$ is real symmetric and $LU$ decomposition boils down to the Cholesky factorization \ref{eq:chol-1}. It allows us to focus on the Cholesky factor $L$ and its sparsity pattern only.
+In order to understand and analyze strong scaling behavior of the algorithm we have to briefly discuss the theory of the method. For simplicity we will assume that matrix $A$ is real symmetric and $LU$ decomposition boils down to the Cholesky factorization \ref{eq:chol-1}. It allows us to focus on the Cholesky factor $L$ and its sparsity pattern only.
 
 \begin{equation} \label{eq:chol-1}
 	A = LDL^T
@@ -133,7 +133,7 @@ As it can be easily seen that equations \ref{eq:mm-5} and \ref{eq:mm-2} are iden
 
 We can also notice from equation \ref{eq:mm-3} that the frame matrix $Fr_{j}$ corresponds to the block matrix $C$ and brings information from the original matrix $A$ whereas matrix $\hat{U_{j}}$ adds information about the columns that have already been factorized.\\
 
-As soon as the frontal matrix $F_{j}$ is assembled i.e. we have complete update of column $j$, we can perform elimination of the first column and get non-zero entries of factor column $L_{*j}$.\\
+As soon as the frontal matrix $F_{j}$ is assembled i.e. we have the complete update of column $j$, we can perform elimination of the first column and get non-zero entries of factor column $L_{*j}$.\\
 
 Let's denote $\hat{F_{j}}$ as a result of the first column factorization of the frontal matrix $F_{j}$. Then we can express the results as following:\\
 
@@ -268,11 +268,20 @@ A tree postordering means that a node is ordered before its parent and, addition
 We can see the algorithm requires to perform some preprocessing steps in order to estimate the size of working space for matrix manipulations. If the working space has not been predicted correctly the algorithm will terminate during factorization. Additionally it can happen that even with the correct estimation we can be run out of space in the main memory, in case of huge sparse matrices. This fact can require to use the secondary memory and, as a result, the execution time will increase significantly. Therefore, different optimal postordering schemes have been proposed which allow to shrink the amount of space needed during factorization \cite{mm:optimal-tree-postordering} \cite{mm:elimination-tree-rotations}. Some schemes, for example elimination tree rotations \cite{mm:elimination-tree-rotations}, can lead to deep and unbalanced trees which might have their negative effect on task parallelism as we will see later.\\
 
 
-In general, the estimation of working space can be tricky due to pivoting. Because pivoting happens only during the numerical factorization phase it is not always possible to estimate enough space correctly during the analysis one. There exist some heuristics which allow to use some numerical matrix information during symbolic factorization to better predict the amount of required space \cite{wsmp:direct-solution-of-general-system}.\\
+In general, the estimation of working space can be tricky due to pivoting. Because pivoting happens only during the numerical factorization it is not always possible to estimate enough space correctly beforehand. There exist some heuristics which allow to use some numerical matrix information during symbolic factorization to better predict the amount of required space \cite{wsmp:direct-solution-of-general-system}.\\
+
+
+
+It can be clearly observed the method consists of three distinct phases, namely: analysis, numerical factorization and solution. The analysis phase includes all pre-processing steps that have been discussed above i.e. fill-in reduction, postordering, symbolic factorization, building elimination tree an so on. During the numerical factorization phase the $L$ and $D$ (or $U$) parts of a matrix $A$ are computed based on sequence of dense factorization on frontal matrices. At the solution step, the solution vector $x$ is computed by means of backward and forward substitutions (equations \ref{eq:lu} and \ref{eq:bk}).\\
 
 
 % supernodal
 In practice, an improved version of multifrontal method, called supernodal method, is used. The idea of the supernodal method is to shrink the final elimination tree by grouping some particular nodes/columns in one computational unit. As a result, more useful floating point operations per memory access can be performed by eliminating few columns at once within the same frontal matrix.\\
+
+
+% FOR PRESENTATION: Working on supernodes instead of individual variables is essential in order to speed-up the computations and use high-level BLAS [72] (Basic Linear Algebra Subprograms): supernodes lead to a higher flops to memory access ratio, and this allows a better usage of memory hierarchy and better performance thanks to the blocking techniques used in BLAS routines.
+
+
 
 A supernode is formed by a set of contiguous columns with identical off-diagonal sparsity structure forms. Thus, a supernode has few important properties. Firstly, it can be expressed as a set of indices, namely: $\{j, \: j+1, \: \dots, \:j + t\}$, where node $j + k$ is	parent of $j + k - 1$ in the elimination tree. Secondly, the size of the supernodal frontal matrix is equal to the frontal matrix of the $j$th column within a supernode. As an example, Figure \ref{fig:supernodal-method-postordering-and-etree} shows a postordered matrix $A$ and its Cholesky factor $L$ as well as the corresponding supernodal elimination tree.
 
@@ -446,7 +455,7 @@ All the techniques mentioned above were designed to improve strong scaling behav
 
 Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{cant}} (Table \ref{table:suite-sparse-matrix-set}) done with using MUMPS library. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:cant-matrix-sparsity-pattern}. 
 
-
+\todo{add some examples to the appendix}
 \figpointer{\ref{fig:model-1-vs-mumps}. Show standard deviation}
 \begin{figure}[htpb]
   \centering

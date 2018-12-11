@@ -2,6 +2,49 @@
 \section{Review of MUMPS Library}
 \label{subseq:mumps-review}
 
+Originally MUMPS library was a part of the PARASOL Project. It was an ESPRIT IV Long Term Research Project whose main goal was to build and test a portable library for solving large sparse systems of equations on distributed memory systems \cite{PARASOL}. An important aspect of the PARASOL project was the strong link between the developers of the sparse solvers and the industrial end users, who provided a range of test problems and evaluated the solvers \cite{MUMPS:description}. Since 2000 MUMPS had continued as an ongoing research and, by the moment of writing, there have been almost 5 main releases of the package.\\
+
+
+
+It was mentioned in section \ref{subseq:mm-library-choice} that MUMPS is an implementation of the multifrontal method. Hence MUMPS sequentially performs all three phases: analysis, numerical factorization and solution. The numerical factorization and solution phases were fully described in detail in section \ref{subseq:sparse methods}. It is important to examine the analysis phase of MUMPS library because this phase varies from library to library and plays a significant role on parallel performance.\\
+
+
+According to the documentation, the MUMPS analysis phases consists of several pre-processing steps:
+
+\begin{enumerate}
+  \item Fill-reducing pivot order \label{mumps:analysis-steps:1}
+  \item Symbolic factorization \label{mumps:analysis-steps:2}
+  \item Scaling \label{mumps:analysis-steps:3}
+  \item Amalgamantion \label{mumps:analysis-steps:4}
+  \item Mapping \label{mumps:analysis-steps:5}
+\end{enumerate}
+
+% Fill-reducing pivot order
+\ref{mumps:analysis-steps:1}) To handle both symmetric and unsymmetric cases, MUMPS performs fill-in reordering based on $\boldsymbol{A} + \boldsymbol{A^T}$ sparsity pattern. The library provides numerous sequantial algorithms for reordering such as Approximate Minimum Degree (AMD) \cite{reordering:AMD}, Approximate Minimum Fill (AMF), Approximate Minimum Degree with automatic quasi-dense row detection (QAMD) \cite{reordering:QAMD}, Bottom-up and Top-down Sparse Reordering (PORD) \cite{reordering:PORD}, Nested Dissection coupled with AMD (Scotch) \cite{reordering:SCOTCH}, Multilevel Nested Dissection coupled with Multiple Minimum Degree (METIS) \cite{reordering:METIS}. Additionally, MUMPS can work together with ParMETIS and PT-Scotch which are extensions of METIS and Scotch libraries for parallel execution. MUMPS also provides the user with an automatic choice option where an appropriate reordering algorithm is selected in run-time based on matrix type and size and the number of processors \cite{mumps-manual}.
+
+
+% Symbolic factorization
+\ref{mumps:analysis-steps:2})
+
+% Scaling
+\ref{mumps:analysis-steps:3})
+
+% Amalgamantion
+\ref{mumps:analysis-steps:4})
+
+
+% Mapping
+\ref{mumps:analysis-steps:5})
+
+
+
+% Amalgamantion basically means to construct supernodes
+
+% Typically, BLAS 3 routines (TRSM, GEMM) will be used during the factorization
+
+
+
+
 
 % different libraris for reodering: ParMetis, PROD, PtScotch
 
@@ -12,5 +55,3 @@
 
 % Introduction to Multifrontal method: describe all three phases
 
-
-NEW SECTION!!

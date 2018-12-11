@@ -119,7 +119,7 @@ In spite of obvious complexity of dynamic partial pivoting, MUMPS allows the use
 PETSc (version 3.10) provides the full interface to both SuperLU\_DIST and MUMPS, whereas the interface to the PasTiX library is quite limited. In fact, in case of PasTiX, the user can only control the number of threads per MPI process and a level of verbosity, which makes this library to be less interesting for our subsequent (following) research.\\
 
 
-In order to evaluate the overall parallel performance of the libraries, we performed a few flat-MPI tests with the GRS matrix using the HW1 machine. Before testing, we downloaded and configured the libraries within the PETSc environment with their \textbf{default settings}. As a profiling tool, we used the internal PETSc profiler. A time limit of 15 minutes was set up for each test case to prevent blocking of a compute node in case if out-of-core execution. Results of the tests are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and appendix in \ref{app:app-lc}. Numerical values in tables are given in \textbf{seconds}.\\
+In order to evaluate the overall parallel performance of the libraries, we performed a few flat-MPI tests with the GRS matrix using the HW1 machine. Before testing, we downloaded and configured the libraries, MUMPS version 5.1.2, PasTiX version 6.0.0, SuperLU\_DIST version 5.4, within the PETSc environment with their \textbf{default settings}. As a profiling tool, we used the internal PETSc profiler. A time limit of 15 minutes was set up for each test case to prevent blocking of a compute node in case if out-of-core execution. Results of the tests are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc}. Numerical values in tables are given in \textbf{seconds}.\\
 
 
 \begin{table}[ht]
@@ -186,10 +186,7 @@ MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ 
 
 
 
-% conclusion of the results
-
-
-We ran into a few problems with the SuperLU\_DIST library during the tests. Firstly, factorization exceeded the set time limit in case of bla, bla and bla matrices. Secondly, we noticed the library crashed during processing of bla and bla matrices. A debugging process showed that a segmentation fault occurred in \textit{pdgstrf} function during the numerical factorization phase. We still keep working on this problem together with the PETSc team in order to find a solution. \\
+We ran into a few problems with the SuperLU\_DIST library during the tests. Firstly, factorization exceeded the set time limit in case of \textbf{cube-64} and \textbf{k3-2} matrices. Secondly, we noticed the library crashed during processing of \textbf{k3-18}, \textbf{cube-645} and (partially) \textbf{pwr-3d} matrices. A debugging process showed that a segmentation fault occurred in \textit{pdgstrf} function during the numerical factorization phase. We still keep working on this problem together with the PETSc team in order to find a solution. \\
 
 % FOR PRESENTATION: it can be due to wrong matrix representation in binary PETSc files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
 
@@ -204,12 +201,13 @@ To complete and perform a fair comparison, an additional flat-MPI test was condu
 \label{fig:5-point-stencil-solvers-comparison}
 \end{figure}
 
+% FOR PRESENTATION: we think that 
 
 
-According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and PaStiX. A literature review showed that \citeauthor{wsmp}, in paper \cite{wsmp}, came to nearly the same results comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries with respect to execution time for their matrix set. However, paper \cite{mm-comparison-of-packages} showed an almost opposite outcome. According to \citeauthor{mm-comparison-of-packages}, SuperLU\_DIST spent less time on factorization and solution phases, which almost always determine the total execution time, and, even more interesting, it scaled much better overall. We must note that both research groups used different machines and matrix sets. This fact actually seconds our idea that a choice of a suitable library can depend heavily on data and hardware.\\
+According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and PaStiX. A literature review showed that \citeauthor{wsmp}, in paper \cite{wsmp}, came to nearly the same results comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries with respect to execution time for their matrix set. However, paper \cite{mm-comparison-of-packages} showed an almost opposite outcome. According to \citeauthor{mm-comparison-of-packages}, SuperLU\_DIST spent less time on factorization and solution phases, which almost always determines the total execution time, and, even more interesting, it scaled much better overall. We must note that both research groups used different machines and matrix sets. This fact actually seconds our idea that a choice of a suitable library can depend heavily on data and hardware.\\
 
 
-Taking into consideration the results of our primary flat-MPI tests, the MUMPS library was chosen as a sparse direct solver for our hybrid approach. Furthermore, an overview of the MUMPS documentation also showed some room for performance tuning that we were going to discuss in detail in sections [bla], [bla] and  [bla].\\
+Taking into consideration the results of our primary flat-MPI tests, the MUMPS library was chosen as a sparse direct solver for our hybrid approach and the following study. Furthermore, an overview of the MUMPS documentation also showed some room for performance tuning that we were going to discuss in detail in sections [bla], [bla] and  [bla].\\
 
 
-However, it should be mentioned that we cannot exclude that SuperLU\_DIST  and PaStiX can give similar or even better performance results as the MUMPS library with appropriate parameters tuning or for other matrix sets.\\
+However, it should be mentioned that we cannot exclude that SuperLU\_DIST  and PaStiX can perform similar, or even better, as the MUMPS library with appropriate parameters tuning or for another matrix set.\\

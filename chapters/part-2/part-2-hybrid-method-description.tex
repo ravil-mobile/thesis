@@ -27,14 +27,14 @@ After many considerations we decided to stick to the sparse direct solvers becau
 
 \begin{lstlisting}[language=python, caption={A pseudo-code of the Hybrid approach}, frame=single]
 # compute LU decomposition with a sparse direct solver
-LU = SparseDirectSolver(matrix=A, relative_pivot=1e-4)
+LU = SparseDirectSolver(matrix=A, pivoting="switch_off")
 
 # compute inverse of A using backward-forward substitutions
 # sovle: LU * A_inv = I
 A_inv = ComputeInverse(decomposition=LU)
 
-# apply a Krylov method i.e 
-# A_inv * A * x = A_inv * b
+# apply a Krylov method to a preconditioned system 
+# i.e A_inv * A * x = A_inv * b
 GMRES(matrix=A, rhs=b, preconditione=A_inv)
 \end{lstlisting}
 
