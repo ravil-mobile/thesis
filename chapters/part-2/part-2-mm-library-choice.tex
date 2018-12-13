@@ -115,6 +115,8 @@ The most important feature which MUMPS introduces is so-called delayed pivots. I
 
 In spite of obvious complexity of dynamic partial pivoting, MUMPS allows the user to explicitly control run-time behavior of the algorithm due to partial threshold pivoting strategy. This provides an opportunity for optimization and tuning in some degree.\\
 
+\todo{data parallelism difference between MUMPS and SuperLU}
+
 
 PETSc (version 3.10) provides the full interface to both SuperLU\_DIST and MUMPS, whereas the interface to the PasTiX library is quite limited. In fact, in case of PasTiX, the user can only control the number of threads per MPI process and a level of verbosity, which makes this library to be less interesting for our subsequent (following) research.\\
 
