@@ -1,4 +1,7 @@
 \section{Direct dense methods} \label{subseq:direct methods}
+
+\todo{MUST BE ONLY 2D Scalapack EXAMPLE HERE}
+
 Direct methods have very good numerical stability properties. They do not require to modify a system of equations as it is necessary for iterative methods. Sometimes we only need to permute some rows and columns in order to avoid small absolute values along the matrix diagonal, which can have their negative effect on numerical accuracy, in case of direct methods. However, this operation can be considered relatively cheap. \\
 
 On another hand, the computational complexity of $O(n^3)$ and storage requirements of $O(n^2)$ make direct methods not suitable for computation of large systems with more than $\sim 10^3$ number of equations. \\

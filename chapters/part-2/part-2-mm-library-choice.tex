@@ -14,14 +14,14 @@ Fair to say, there is no single algorithm or software that is best for all types
 \centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Package & Method             & Matrix Types                 & PETSc Interface & License      \\ \hline
-Clique       & Multifrontal       & Symmetric      & Not officially  & Open  \\ \hline
-MF2          & Multifrontal       & Symmetric pattern & No              & -            \\ \hline
+Package & Method             & Matrix Types                 & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}PETSc\\ Interface\end{tabular}} & License      \\ \hline
+Clique       & Multifrontal       & Symmetric      & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Not \\ Officially\end{tabular}} & Open  \\ \hline
+MF2          & Multifrontal       & \begin{tabular}[c]{@{}c@{}}Symmetric\\ pattern\end{tabular} & No              & -            \\ \hline
 DSCPACK      & Multifrontal       & SPD                          & No              & Open* \\ \hline
 MUMPS        & Multifrontal       & General                      & Yes             & Open  \\ \hline
 PaStiX       & Left looking & General                      & Yes             & Open  \\ \hline
 PSPASES      & Multifrontal       & SPD                          & No              & Open* \\ \hline
-SPOOLES      & Left-looking       & Symmetric pattern & No              & Open* \\ \hline
+SPOOLES      & Left-looking       & \begin{tabular}[c]{@{}c@{}}Symmetric\\ pattern\end{tabular} & No              & Open* \\ \hline
 SuperLU\_DIST & Right-looking      & General                      & Yes             & Open  \\ \hline
 symPACK      & Left-Right looking & SPD                          & No              & Open  \\ \hline
 S+           & Right-lookin       & General                      & No              & -            \\ \hline
