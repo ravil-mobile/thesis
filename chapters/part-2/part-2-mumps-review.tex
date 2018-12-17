@@ -40,7 +40,7 @@ According to the documentation, the MUMPS analysis phases consists of several pr
 \ref{mumps:analysis-steps:5}) A host process, chosen by MUMPS, creates a pool of tasks where each task can be either a subtree or type 2 or type 3 node (figure \ref{fig:mumps-task-data-parallelism}). Then each task is mapped by the host among all available processes in such a way to achieve good memory and compute balance.\\
 
  
-Type 1 nodes are grouped in subtrees, according to the algorithm [reference], and each subtree is processed only by one process to avoid the finest granularity, which can cause high communication overheads. \\
+Type 1 nodes are grouped in subtrees, according to the Geist-Ng algorithm \cite{geist1989task}, and each subtree is processed only by one single process to avoid the finest granularity, which can cause high communication overheads. \\
 
 
 In case of type 2 nodes, the host process assigns each node to one process, which is called the master, which holds fully summed rows and columns of the node and perform pivoting and factorization of these rows. During the numerical factorization phase, in run-time, the master process first receives symbolic information which describes the structure of the contribution blocks sent by its children. At the next step, the master collects information concerning the load of all other processes and decides which of them (\textit{slaves}) are going to participate. Then the master informs the chosen slaves that a new task has been allocated for them and sends them the frontal matrix distribution. After that, the slaves communicates the the children of the master process and collects the corresponding numerical elements. The slaves are in charge of all the assembly and computation of the partly summed rows. \\

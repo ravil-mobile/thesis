@@ -63,7 +63,8 @@ SCSL                                                                 & BLAS impl
 
 
 
-Among all libraries listed in table \ref{table:list-of-blas-implementations} there were only three available on HW1 machine, namely: Netlib BLAS, Intel MKL and OpenBLAS. Thus, 3 versions of MUMPS-PETSc libraries were compiled and tested with using GRS matrix set.\\
+Among all libraries listed in table \ref{table:list-of-blas-implementations} there were only four available on HW1 machine, namely: Netlib BLAS, Intel MKL, OpenBLAS and ATLAS. However, installation of ATLAS requires to switch off dynamic frequency scaling, also called CPU throttling, to allow an ATLAS configuration routine to find the best loop transformation parameters for a specific hardware. In order to turn off CPU throttling, one has to reboot the entire machine and make appropriate changes in Basic Input/Output System (BIOS). This fact made ATLAS library not to be suitable for the rest of the research and we excluded it from our primary list of candidates. Moreover, during installation, one has to explicitly provide the number of OpenMP threads that are going to be used once a BLAS subroutine is called. This means there is no way to change the number of threads per MPI process in run-time without re-installation of ATALS library. Thus, only 3 versions of MUMPS-PETSc (Netlib BLAS, Intel MKL and OpenBLAS) libraries were compiled and tested with using GRS matrix set and 1 thread per MPI process. The test results are shown in figures bla, bla and bra.\\
+
 
 
 % say that ATLAS is shit and we have to live only with Intel MKL and OpenBlas
