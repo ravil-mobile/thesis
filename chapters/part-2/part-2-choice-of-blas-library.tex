@@ -29,7 +29,7 @@ Both BLAS and LAPACK originate from the Netlib project which is a repository of 
 The goal of BLAS library is to provide a high efficient implementation of common dense linear algebra kernels by means of high rate of floating point operations per memory access, low cache and Translation Lookaside Buffer (TLB) miss rates.\\
 
 
-In its turn, LAPACK is designed in such a way so that as much as possible of computation is performed by calls to BLAS library. This allows to achieve high efficiency for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc. on modern computers. However, the Netlib BLAS implementation is written for an abstract general-purpose central processing unit, in mind, where hardware parameters are based on market statistics. Hence, it is not possible to achieve the maximum possible performance on a specific machine.\\
+In its turn, LAPACK is designed in such a way so that as much as possible computations is performed by calls to BLAS library. This allows to achieve high efficiency for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc. on modern computers. However, the Netlib BLAS implementation is written for an abstract general-purpose central processing unit, in mind, where hardware parameters are based on market statistics. Hence, it is not possible to achieve the maximum possible performance on a specific machine.\\
 
 
 Hence, there exist special-purpose, hardware-specific implementations of the library developed by hardware vendors i.e. IBM, Cray, Intel, AMD, etc., as well as open-source tuned implementations such as ATLAS, OpenBLAS, etc. To achieve full compatibility, the developers consider the Netlib implementation of BLAS library as the standard (or reference) and thus overwrite all subroutines with additional tuning and optimization. This approach makes it possible to easily replace different BLAS implementations during object files linking  without any modifications of the source code.\\
@@ -63,10 +63,41 @@ SCSL                                                                 & BLAS impl
 
 
 
-Among all libraries listed in table \ref{table:list-of-blas-implementations} there were only four available on HW1 machine, namely: Netlib BLAS, Intel MKL, OpenBLAS and ATLAS. However, installation of ATLAS requires to switch off dynamic frequency scaling, also called CPU throttling, to allow an ATLAS configuration routine to find the best loop transformation parameters for a specific hardware. In order to turn off CPU throttling, one has to reboot the entire machine and make appropriate changes in Basic Input/Output System (BIOS). This fact made ATLAS library not to be suitable for the rest of the research and we excluded it from our primary list of candidates. Moreover, during installation, one has to explicitly provide the number of OpenMP threads that are going to be used once a BLAS subroutine is called. This means there is no way to change the number of threads per MPI process in run-time without re-installation of ATALS library. Thus, only 3 versions of MUMPS-PETSc (Netlib BLAS, Intel MKL and OpenBLAS) libraries were compiled and tested with using GRS matrix set and 1 thread per MPI process. The test results are shown in figures bla, bla and bra.\\
+Among all libraries listed in table \ref{table:list-of-blas-implementations} there were only four available on HW1 machine, namely: Netlib BLAS, Intel MKL, OpenBLAS and ATLAS. However, installation of ATLAS requires to switch off dynamic frequency scaling, also called CPU throttling, to allow an ATLAS configuration routine to find the best loop transformation parameters for a specific hardware. In order to turn off CPU throttling, one has to reboot the entire machine and make appropriate changes in Basic Input/Output System (BIOS). This fact made ATLAS library not suitable for the rest of the study and we excluded it from the primary list of candidates. Moreover, during installation, one has to explicitly provide the number of OpenMP threads that are going to be used once a BLAS subroutine is called. This means there is no way to change the number of threads per MPI process in run-time without re-installation of ATALS library. Thus, only 3 versions of MUMPS-PETSc (Netlib BLAS, Intel MKL and OpenBLAS) library were compiled, installed and tested with using both GRS and SuiteSparse matrix sets and 1 thread per MPI process. The test results are shown in figure \ref{fig:mumps-blas-configuration} and appendix \ref{app:app-blas-configuration}.\\
 
 
 
-% say that ATLAS is shit and we have to live only with Intel MKL and OpenBlas
+\figpointer{\ref{fig:mumps-blas-configuration}}
+\begin{figure}[htpb]
+\centering
+	\begin{tabular}{cc}
+		\subfloat[k3-18]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/k3-18.png}} &
+		\subfloat[cube-645]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/cube-645.png}} \\
+		\subfloat[k3-2]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/k3-2.png}} &
+		\subfloat[cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/cube-64.png}} \\
+	\end{tabular}
+	\caption{MUMPS: comparison of different BLAS libraries with using GRS matrix set}
+	\label{fig:mumps-blas-configuration}
+\end{figure}
 
-% Say that we are going to use Netlib blas as the baseline
+
+\figpointer{\ref{fig:mumps-blas-configuration-2}}
+\begin{figure}[htpb]
+\centering
+	\begin{tabular}{cc}
+		\subfloat[cube-5]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/cube-5.png}} &
+		\subfloat[pwr-3d]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/pwr-3d.png}} \\
+	\end{tabular}
+	\caption{MUMPS: comparison of different BLAS libraries with using both GRS and SuiteSparse matrix sets}
+	\label{fig:mumps-blas-configuration-2}
+\end{figure}
+
+
+
+The tests show that OpenBLAS significantly outperforms both Netlib and Intel MKL libraries in case of GRS matrix set. In average, OpenBLAS is about \textbf{10\%} faster than the default Netlib implementation and approximately \textbf{17\%} faster than Intel MKL library. It is interesting to notice that parallel performance of OpenBLAS is a bit better around the saturation points in contrast to the competitors. It turns out that OpenBLAS is \textbf{11\%} and \textbf{18\%} faster than Netlib and Intel MKL, respectively. \\
+
+
+Slightly different results were observed in case of SuiteSparse matrix set. In general, Intel MKL and OpenBLAS demonstrate approximately the same efficiency and considerably outperform Netlib BLAS implementation. In opposite to GRS matrix set, it appears that Intel MKL is often faster than OpenBLAS for almost all test cases from the set. However, the difference between them is negligibly small.\\
+
+
+All in all, we can conclude that OpenBLAS implementation is the best choice for matrices generated by GRS software in case of flat-MPI execution strategy.\\
