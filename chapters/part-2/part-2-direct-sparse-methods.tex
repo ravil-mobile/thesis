@@ -453,24 +453,24 @@ Figure \ref{fig:mumps-task-data-parallelism} shows an example of two types of pa
 All the techniques mentioned above were designed to improve strong scaling behavior by splitting the most intensive parts among all available processors. Going back to our models, we can also think about that in a slightly different way, namely: \textit{data parallelism helps to re-distribute cost per node/level on the corresponding elimination tree}. However, we have to notice that efficiency of data parallelism totally depends on sizes of frontal matrices at the top part of the tree. In case of skinny sparse matrices, oversubscription of processing elements can lead to strong performance penalties as we could see from section \ref{subseq:direct methods}. A machine-dependent minimal frontal matrix size was introduced in MUMPS in order to control whether to use ScaLAPACK at the root node or not \cite{mumps-manual}. It can happen that the algorithm uses only task parallelism, due to the threshold, and, as a results, scaling will only depend on the tree structure that can be deep and unbalanced.\\
 
 
-Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{cant}} (Table \ref{table:suite-sparse-matrix-set}) done with using MUMPS library. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:cant-matrix-sparsity-pattern}. 
+Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{memchip}} (Table \ref{table:suite-sparse-matrix-set}) done with using MUMPS library. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:memchip-matrix-sparsity-pattern}. 
 
 \todo{add some examples to the appendix}
 \figpointer{\ref{fig:model-1-vs-mumps}. Show standard deviation}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.65\textwidth]{figures/chapter-2/model-1-vs-mumps.png}
-\caption{Comparison between model 1 and numerical factorization of the matrix \textit{\textbf{cant}} using MUMPS library}
+\caption{Comparison between model 1 and numerical factorization of the matrix \textit{\textbf{memchip}} using MUMPS library}
 \label{fig:model-1-vs-mumps}
 \end{figure}
 
 
-\figpointer{\ref{fig:cant-matrix-sparsity-pattern}}
+\figpointer{\ref{fig:memchip-matrix-sparsity-pattern}}
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=1.00\textwidth]{figures/chapter-2/cant-matrix-sparsity-pattern.png}
-\caption{Sparsity structure of the matrix \textit{\textbf{cant}} before and after fill-in reduction}
-\label{fig:cant-matrix-sparsity-pattern}
+  \includegraphics[width=1.00\textwidth]{figures/chapter-2/memchip-matrix-sparsity-pattern.png}
+\caption{Sparsity structure of the matrix \textit{\textbf{memchip}} before and after fill-in reduction}
+\label{fig:memchip-matrix-sparsity-pattern}
 \end{figure}
 
 

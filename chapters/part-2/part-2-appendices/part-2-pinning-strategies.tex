@@ -1,17 +1,31 @@
 \chapter{MUMPS: Process Pinning}
 \label{app:mm-mumps-process-pinning}
 
-
-
-\figpointer{\ref{fig:app-mumps-close-vs-spread}}
+\todo{replace cube-64 by Geo matrix}
+\figpointer{\ref{fig:app-mumps-close-vs-spread-1}}
 \begin{figure}[htpb]
 \centering
 	\begin{tabular}{cc}
-		\subfloat[torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/torso3.png}} &
-		\subfloat[PFlow\_742]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/PFlow_742.png}} \\
-		\subfloat[consph]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/consph.png}} &
-		\subfloat[cant]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/cant.png}} \\
+		\subfloat[HW1 - cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/cube-64.png}} &
+		\subfloat[HW2 - cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/cube-64.png}} \\
+		\subfloat[HW1 - torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/torso3.png}} &
+		\subfloat[HW2 - torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/torso3.png}} \\
 	\end{tabular}
 	\caption{Comparison of \textit{close} and \textit{spread} pinning strategies}
-	\label{fig:app-mumps-close-vs-spread}
+	\label{fig:app-mumps-close-vs-spread-1}
 \end{figure}
+
+
+\figpointer{\ref{fig:app-mumps-close-vs-spread-2}}
+\begin{figure}[htpb]
+\centering
+	\begin{tabular}{cc}
+		\subfloat[HW1 - consph]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/consph.png}} &
+		\subfloat[HW2 - consph]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/consph.png}} \\
+		\subfloat[HW1 - memchip\_3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/memchip.png}} &
+		\subfloat[HW2 - memchip]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/memchip.png}} \\
+	\end{tabular}
+	\caption{Comparison of \textit{close} and \textit{spread} pinning strategies}
+	\label{fig:app-mumps-close-vs-spread-2}
+\end{figure}
+
