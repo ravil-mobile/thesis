@@ -10,7 +10,7 @@ MUMPS provides various algorithms for reordering described in section \ref{subse
 In this section we are going to investigate influence of two different parallel fill reducing packages, namely: PT-Scotch and ParMETIS, on parallel performance of MUMPS. The algorithmic difference between PT-Scotch and ParMETIS was explained in section \ref{subseq:mumps-review}.\\
 
 
-To perform a test, the default PETSc, MUMPS, PT-Scotch and ParMETIS libraries were downloaded, compiled, configured and link together. The test was carried out using only flat-MPI mode without explicit process pinning. The results are shown in figure \ref{fig:mumps-ordering-1} as well as in appendix \ref{app:app-fill-reducing-reodering}.\\
+To perform a test, the default PETSc, MUMPS, PT-Scotch and ParMETIS libraries were downloaded, compiled, configured and link together. The test was carried out using only flat-MPI mode without any explicit process pinning. The results are shown in figure \ref{fig:mumps-ordering-1} as well as in appendix \ref{app:app-fill-reducing-reodering}.\\
 
 
 \figpointer{\ref{fig:mumps-ordering-1}}
@@ -27,16 +27,15 @@ To perform a test, the default PETSc, MUMPS, PT-Scotch and ParMETIS libraries we
 \end{figure}
 
 
-\todo{rewrite the results}
-% Huge difference between different fill reducing schemes
-According to the results, parallel performance of MUMPS can vary significantly between the libraries. In average, the difference between different fill-in reducing algorithms can achieve almost BRA\%.\\
+
+According to the results, parallel performance of MUMPS can vary significantly and very sensitive to a used fill-in reducing reordering algorithm. In average, the difference between application of different algorithms achieves almost \textbf{15\%}. However, in some particular cases, \textit{cube-5} and \textit{pwr-3d}, the difference varies around \textit{40-55\%}.\\
 
 
-It is important to mention that both packages, PT-Scotch and ParMetis, use heuristic approaches with the main aim to reduce fill-in of the factors and thus do not directly consider quality of the resultant elimination tree. It is relevant to assume that efficiency of a particular heuristic can be very sensitive to a matrix structure and size. \todo{insert example of k3-2 and show that expensive reordering can help to get better tree} This fact makes it difficult to predict which algorithm is better to use for a specific case in advance. Taking GRS matrix set as an example, we can observe that PT-Scotch is the best choice for small and medium matrices, namely: \textit{cube-5}, \textit{cube-64}, \textit{k3-2} and \textit{pwr-3d} cases. However, at the same time PerMetis tends to work better for relatively big systems such as \textit{cube-645} and \textit{k3-18}.\\
+It is important to mention that both packages, PT-Scotch and ParMetis, use heuristic approaches with the main aim to reduce fill-in of the factors and thus do not directly consider quality of the resultant elimination tree. It is relevant to assume that efficiency of a particular heuristic can be very sensitive to a matrix structure and size. This fact makes it difficult to predict which algorithm is better to use for a specific case in advance. Taking GRS matrix set as an example, we can observe that PT-Scotch is the best choice for small and medium matrices, namely: \textit{cube-5}, \textit{cube-64}, \textit{k3-2} and \textit{pwr-3d} cases. However, at the same time PerMetis tends to work better for relatively big systems such as \textit{cube-645} and \textit{k3-18}.\\
 
 
 % profiling of cube-5 and pwr-3d with ParMetis
-During the test, application of ParMetis in case of small systems of equations showed a strong negative effect on parallel performance of MUMPS. The execution time for factorization of \textit{pwr-3d} and \textit{cube-5} matrices grew with the increase of processing units (figure \ref{fig:mumps-ordering-matrices-total-time}).\\
+During the test, we noticed that application of ParMetis for small systems of equations showed a strong negative effect on parallel performance of MUMPS. The results showed the factorization time of \textit{pwr-3d} and \textit{cube-5} matrices grew with the increase of processing units (figure \ref{fig:mumps-ordering-matrices-total-time}).\\
 
 
 \figpointer{\ref{fig:mumps-ordering-matrices-total-time}}
@@ -51,7 +50,10 @@ During the test, application of ParMetis in case of small systems of equations s
 \end{figure}
 
 
-A simple profiling showed two important things. Firstly, numerical factorization time and time spent on the analysis phase had the same order in case of sequential execution i.e. 1 MPI process. Secondly, while numerical factorization time barely decreased with increase of number of processing elements, time spent on analysis phase time significantly grew. The results of profiling are shown in figure \ref{fig:mumps-ordering-matrices-profiling}.\\
+A simple profiling showed two important things. Firstly, numerical factorization time and time spent on the analysis phase had approximately the same order in case of sequential execution i.e. 1 MPI process. Secondly, while numerical factorization time barely decreased with increase of number of processing elements, time spent on analysis phase significantly grew. By and large, we can observe the slow-down of MUMPS mainly comes from only the analysis phase.\\
+
+
+A careful investigation revealed the analysis phase contained several peaks at points where the processor count was equal to a power of two. We assumed that cause could be due to either fill reducing or process mapping pre-processing steps. However, a detailed profiling and tracing of the analysis phase, which are out of the scope of this study, are required in order to give the exact answer. The results of profiling are shown in figure \ref{fig:mumps-ordering-matrices-profiling}.\\
 
 
 \figpointer{\ref{fig:mumps-ordering-matrices-profiling}}
@@ -66,7 +68,8 @@ A simple profiling showed two important things. Firstly, numerical factorization
 \end{figure}
 
 
-In this section, we have presented the influence of different fill-in reducing algorithms on parallel performance of MUMPS. We have observed the right choice of the algorithm can lead to significant improvements in terms of the overall execution time. We have showed there is no a single algorithm that performs the best for all test cases. At the moment of writing, we came to conclusion there was no an indirect metric to predict the best algorithm in advance for a specific system of equations and only a flat-MPI test could be used for that purposed. Sometimes PT-Scotch and ParMetis can perform nearly the same like it is in case of \textit{CurlCurl\_3} and \textit{cant}, for example (see appendix \ref{app:app-fill-reducing-reodering}). Therefore, from time to time, it can be quite difficult to make a decision which package to use. At the end, we have assigned each test case to a specific fill reducing reordering method based on results of the conducted experiments and our subjective opinion. The results are summarized it in tables \ref{table:GRS-ordering-assignment} and \ref{table:SuiteSparse-ordering-assignment}. \\ 
+
+In this section, we have presented the influence of different fill-in reducing algorithms on parallel performance of MUMPS. We have observed the right choice of the algorithm can lead to significant improvements in terms of the overall execution time. We have showed there is no a single algorithm that performs the best for all test cases. At the moment of writing, we came to conclusion there was no an indirect metric to predict the best algorithm in advance for a specific system of equations and only a flat-MPI test could be used for that purposed. Sometimes PT-Scotch and ParMetis can perform nearly the same as it is in case of factorization of \textit{CurlCurl\_3} and \textit{cant} matrices, for example (see appendix \ref{app:app-fill-reducing-reodering}). Therefore, from time to time, it can be quite difficult to make a decision which package to use. At the end, we have assigned each test case to a specific fill reducing reordering method based on results of the conducted experiments and our subjective opinion. The results are summarized it in tables \ref{table:GRS-ordering-assignment} and \ref{table:SuiteSparse-ordering-assignment}. \\ 
 
 
 
@@ -82,7 +85,7 @@ k3-2        & PT-Scotch & 130101  & 787997   & 6.0568  \\ \hline
 k3-18       & ParMetis  & 1155955 & 7204723  & 6.2327  \\ \hline
 pwr-3d      & PT-Scotch & 6009    & 32537    & 5.4147  \\ \hline
 \end{tabular}
-\caption{GRS matrix set: assignment of matrices to a specific fill-in reducing algorithm based on parallel performance during flat-MPI tests}
+\caption{GRS matrix set: assignment of matrices to a specific fill-in reducing algorithm based on parallel performance of flat-MPI tests}
 \label{table:GRS-ordering-assignment}
 \end{table}
 
@@ -102,11 +105,9 @@ x104        & PT-Scotch & 108384  & 8713602  & 80.3956 \\ \hline
 CurlCurl\_3 & PT-Scotch & 1219574 & 13544618 & 11.1060 \\ \hline
 Geo\_1438   & ParMetis  & 1437960 & 63156690 & 43.9210 \\ \hline
 \end{tabular}
-\caption{SuiteSparse matrix set: assignment of matrices to a specific fill-in reducing algorithm based on parallel performance during flat-MPI tests}
+\caption{SuiteSparse matrix set: assignment of matrices to a specific fill-in reducing algorithm based on parallel performance of flat-MPI tests}
 \label{table:SuiteSparse-ordering-assignment}
 \end{table}
 
 
-
-From now onwards, we will use this assignment for the rest of the study to keep consistency between tests and show the overall effect of 
-\textit{optimal parameters} on the default MUMPS settings at the end. \\
+From now onwards, assignments mentioned in tables \ref{table:GRS-ordering-assignment}, \ref{table:SuiteSparse-ordering-assignment} will be used without explicitly referring to it.\\

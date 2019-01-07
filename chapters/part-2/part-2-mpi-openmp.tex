@@ -43,7 +43,7 @@ Additionally, it is worth noticing that both works, \cite{chowdhury2010some} and
 We have to admit that both works, \cite{chowdhury2010some} and \cite{l2013introduction}, are relatively old and the analysis above may be not complete and full. Because MUMPS is a dynamic developing project, we can expect that adaptation of shared-memory parallelization in MUMPS has been significantly advanced since that time. Since the release of MUMPS version 4, the developers have persistently recommended to use only a hybrid mode like\textit{one MPI process per socket and as many threads as the number of cores} \cite{mumps-manual}.\\
 
 
-As an initial test, we decided to compare influence of both Intel MKL and OpenBLAS libraries on parallel performance of MUMPS using GRS matrix set only. In order to pin OpenMP threads in a right way, without any conflict between them, the following OpenMP environment variables were set as:
+As an initial test, we compared influence of both Intel MKL and OpenBLAS libraries on parallel performance of MUMPS using GRS matrix set only. In order to pin OpenMP threads in a right way, without any conflict between them, the following OpenMP environment variables were set as:
 
 \begin{itemize}
 	\item OMP\_PLACES=cores
@@ -51,7 +51,7 @@ As an initial test, we decided to compare influence of both Intel MKL and OpenBL
 \end{itemize} 
 
 
-During the test, we found that run-time of MUMPS-OpenBLAS configuration abnormality increased for some test cases. For instance, in case of matrix \textit{cube-645}, the increase reached almost 450\% in contrast to the pure sequential execution. \\
+During the test, we found that run-time of MUMPS-OpenBLAS configuration abnormality increased for some test cases. For instance, in case of matrix \textit{cube-645}, the increase reached almost \textbf{450\%} in contrast to the pure sequential execution. \\
 
 \figpointer{\ref{fig:mumps-openblas-anomalies}}
 \begin{figure}[htpb]
@@ -77,10 +77,10 @@ Multiple conflicts between application and system threads were observed using \t
 \end{figure}
 
 
-It is difficult to say what exactly caused such behavior. However, \citeauthor{chowdhury2010some} also reported about the same problem with using GotoBLAS (OpenBLAS). They assumed that GotoBLAS created and kept some threads active even after the main threads returned to the calling application which could lead to interference with threads created in other OpenMP regions \cite{chowdhury2010some}. For that reason, we decided to stick only to Intel MKL library for the rest of the study in this section because there were no conflicts detected during initial runs.\\
+It is difficult to say what exactly caused such behavior. However, \citeauthor{chowdhury2010some} also reported about the same problem with using GotoBLAS (OpenBLAS). They assumed that GotoBLAS created and kept some threads active even after the main threads returned to the calling application which could lead to interference with threads created in other OpenMP regions \cite{chowdhury2010some}. For that reason, we decided to stick only to Intel MKL library for the rest of the study of this section because there were no conflicts detected during initial runs.\\
 
 
-At the beginning, only common mixed MPI/OpenMP modes were tested in order to check influence of shared-memory parallelism on parallel performance of MUMPS as well as to limit the amount of testing. The following strategies were chosen, namely: 20 MPI - 1 thread (flat-MPI), 10 MPI - 2 threads, 4 MPI - 5 threads, 2 MPI - 10 threads, 1 MPI - 20 threads (flat-OpenMP). Additionally, MUMPS was set as a preconditioning algorithm for the GMRES solver with only \textit{one iteration}. This allowed to force MUMPS library to solve systems multiple right-hand sides. According to our assumption, time spent on one GMRES iteration is negligible in contrast time spent on sparse direct matrix factorization. The test results are shown in tables BRA, BRA and BRA as well as in appendix BRA. Numerical values in tables are given in seconds.\\
+Only common mixed MPI/OpenMP modes were tested in order to check influence of shared-memory parallelism on parallel performance of MUMPS as well as to limit the amount of testing. The following strategies were chosen, namely: 20 MPI - 1 thread (flat-MPI), 10 MPI - 2 threads, 4 MPI - 5 threads, 2 MPI - 10 threads, 1 MPI - 20 threads (flat-OpenMP). The tests were conducted on both HW1 and HW2 machines in order to check whether the results are consistent across different machines with different operating and environment settings. Additionally, MUMPS was set as a preconditioning algorithm for the GMRES solver with only \textit{one iteration}. This allowed to force MUMPS library to solve systems multiple right-hand sides. According to our assumption, time spent on one GMRES iteration is negligible in contrast time spent on sparse direct matrix factorization. The test results are represented in tables \ref{fig:mpi-omp-grs-hw1} \ref{fig:mpi-omp-grs-hw2}, \ref{fig:mpi-omp-suitesparse-hw1} and \ref{fig:mpi-omp-suitesparse-hw2}. Numerical values in tables are given in seconds.\\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -96,7 +96,7 @@ cube-64                                               & 0.756                   
 cube-5                                                & 0.181                                                     & 0.132                                                      & \textbf{0.104}                                            & 0.126                                                      & 0.117                                                      & 1.744                                                            \\ \hline
 pwr-3d                                                & 0.130                                                     & 0.114                                                      & 0.0972                                                    & \textbf{0.077}                                             & 0.109                                                      & 1.691                                                            \\ \hline
 \end{tabular}
-\caption{GRS - HW1}
+\caption{Compassion of different hybrid MPI/OpenMP modes used for GRS matrix set on HW1}
 \label{fig:mpi-omp-grs-hw1}
 \end{table}
 
@@ -114,7 +114,7 @@ cube-64                                               & 0.805                   
 cube-5                                                & 0.241                                                     & 0.121                                                      & \textbf{0.093}                                            & 0.129                                                      & 0.126                                                      & 2.582                                                            \\ \hline
 pwr-3d                                                & 0.234                                                     & 0.095                                                      & 0.098                                                     & \textbf{0.070}                                             & 0.094                                                      & 3.341                                                            \\ \hline
 \end{tabular}
-\caption{GRS - HW2}
+\caption{Compassion of different hybrid MPI/OpenMP modes used for GRS matrix set on HW2}
 \label{fig:mpi-omp-grs-hw2}
 \end{table}
 
@@ -135,7 +135,7 @@ x104                                                  & \textbf{1.597}          
 CurlCurl\_3                                           & 49.250                                                    & 44.120                                                     & \textbf{39.909}                                           & 43.311                                                     & 63.001                                                     & 1.234                                                            \\ \hline
 Geo\_1438                                             & 478.101                                                   & 234.697                                                    & \textbf{151.603}                                          & 157.697                                                    & 158.102                                                    & 3.154                                                            \\ \hline
 \end{tabular}
-\caption{SuiteSparse - HW1}
+\caption{Compassion of different hybrid MPI/OpenMP modes used for SuiteSparse matrix set on HW1}
 \label{fig:mpi-omp-suitesparse-hw1}
 \end{table}
 
@@ -156,21 +156,18 @@ pkustk10                                              & 1.373                   
 torso3                                                & 4.733                                                     & \textbf{4.080}                                             & 4.483                                                     & 5.648                                                      & 8.217                                                      & 1.160                                                           \\ \hline
 x104                                                  & 2.676                                                     & \textbf{1.597}                                             & 2.025                                                     & 3.204                                                      & 2.133                                                      & 1.676                                                           \\ \hline
 CurlCurl\_3                                           & 39.890                                                    & \textbf{34.579}                                            & 38.620                                                    & 41.171                                                     & 67.760                                                     & 1.154                                                           \\ \hline
-Geo\_1438                                             & xxx                                                       & yyy                                                        & zzz                                                       & aaa                                                        & bbb                                                        & ccc                                                             \\ \hline
+Geo\_1438                                             & ROM                                                       & ROM                                                        & ROM                                                       & ROM                                                        & ROM                                                        & ROM                                                             \\ \hline
 \end{tabular}
-\caption{SuiteSparse - HW2}
+\caption{Compassion of different hybrid MPI/OpenMP modes used for SuiteSparse matrix set on HW2\\
+*ROM - run out of memory}
 \label{fig:mpi-omp-suitesparse-hw2}
 \end{table}
 
-% mention their hardware
+
+According to the results, we have noticed the optimal hybrid MPI/OpenMP mode locates near the saturation point of the corresponding flat-MPI test. Therefore, search of the optimal mode can take considerable amount of time. It is needless to say that the mode varies from matrix to matrix and there is no way to predict the mode in advance. Moreover, the results show that performance gain is around \textbf{2.1\%} in case of GRS matrix set on HW1 hardware, excluding small test cases such as \textit{cube-5} and \textit{pwr-3d} where runs with 20 MPI processes were slower in contrast to sequential execution. Much optimistic results were obtained for experiments conducted on HW2 machines were performance gain reached almost \textbf{31\%} for the same test cases.\\
 
 
-% mention about the PETSc experement with GRS matrices. They reproduced our result
+SuiteSparse matrix set demonstrates much better performance gain out of hybrid parallel computing on both hardware. In average, run-time is improved in more than \textbf{15\%} for HW1 and approximately \textbf{41\%} in case of HW2, excluding \textbf{Geo\_1438} from statistics. The best result was obtained for \textit{Geo\_1438} matrix where execution time dropped in about \textbf{3 times} for all hybrid modes relatively to flat-MPI. We suppose it could happen because \textit{Geo\_1438} matrix had a very huge ratio of large and small fronts. \textit{Geo\_1438} is the best example which shows the benefit of hybrid parallel programing usage.\\
 
 
-% say that the results are relatively old and maybe there is no sense to trust them
-
-
-
-
-% show a result where multithreding works
+By an large, we have noticed some negligible improvement of execution time in case of GRS matrix set on HW1 machine with using the optimal hybrid MPI/OpenMP configuration. However, in spite of the improvement, the parallel efficiency drops significantly. As the result, we have come to the conclusion that flat-MPI mode is the best for GRS matrix set running HW1 machine for three reasons. Firstly, this mode is deterministic and requires less amount of testing to find the optimal process count. Secondly, the parallel efficiency of hardware usage is better in case of flat-MPI which is relevant for energy-efficient parallel computing. Thirdly, improvement obtained with using Intel MKL library running on the optimal hybrid mode can deteriorate performance gain of MUMPS-OpenBLAS flat-MPI configuration.\\ 
