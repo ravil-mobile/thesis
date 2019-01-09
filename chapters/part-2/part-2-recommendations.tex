@@ -1,0 +1,32 @@
+\section{Recommendations}
+\label{subseq:mm-recommendations}
+
+
+According to results and conclusion obtained in this study, we are able to make a general guidance for ATHLET-NuT users and developers. \\
+
+
+First of all, we insist to configure PETSc-MUMPS module of NuT with OpenBLAS library and use only flat-MPI mode together with \textit{spread} process pinning strategy because, as it was shown in sections \ref{subseq:mm-mumps-process-pinning} and \ref{subseq:blas-comparison}, these settings always have their positive effect on parallel performance regardless of the matrix size and structure. \\
+
+
+Secondly, we recommend the user to check table \ref{table:mm-recommendations-size-table} before submitting a job on a production compute node in order to define a matrix type of a problem i.e. \textit{small}, \textit{medium} or \textit{large}. Based on the matrix type, the user can select both a fill reducing reordering algorithm and the number of MPI processes which, we believe, can be pretty close to the optimal MUMPS settings. \\
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Matrix type & \begin{tabular}[c]{@{}c@{}}Number of \\ equations\end{tabular}      \\ \hline
+Small       & \begin{tabular}[c]{@{}c@{}}Less than\\ 25000\end{tabular}           \\ \hline
+Medium      & \begin{tabular}[c]{@{}c@{}}form \\ 50000\\ to\\ 250000\end{tabular} \\ \hline
+Large       & \begin{tabular}[c]{@{}c@{}}More\\ than\\ 500000\end{tabular}        \\ \hline
+\end{tabular}
+\caption{Matrix type reference table}
+\label{table:mm-recommendations-size-table}
+\end{table}
+
+
+We recommend to use only PT-Scotch and no more than 4 MPI processes for \textbf{small} systems. The same reordering algorithm, PT-Scotch, is better to apply to \textbf{medium} sized systems of equations as well, however, the optimal number of MPI processes lays in a range from 5 to 10. In case of \textbf{large} systems, we insistently recommend to switch to ParMetis package to perform fill-in reduction and start parallel execution from 8 MPI processes.\\
+
+
+
+
