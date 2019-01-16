@@ -14,7 +14,7 @@ Numerical integration of time dependent partial differential equations can be ac
 \end{equation}
 
 
- where $A \in \mathbb{R^{N \times N}}$ is an invertible square matrix, $b \in \mathbb{R^{N}}$ represents the right-hand side, and $x \in \mathbb{R^{N}}$ is the solution vector. At this point we refer to a system of linear equations as just a system and we will use these two terms interchangeably. \\
+ where $A \in \mathbb{R}^{N \times N}$ is an invertible square matrix, $b \in \mathbb{R}^{N}$ represents the right-hand side, and $x \in \mathbb{R}^{N}$ is the solution vector. At this point we refer to a system of linear equations as just a system and we will use these two terms interchangeably. \\
 
  
 In some cases, especially in case of implicit or semi-implicit methods, we have to compute several systems to perform one step of numerical integration. Thus, solution of a system \ref{eq:slq} is the computational core of any time integration scheme. In fact, it is the most expensive part and it is primary source of code optimization. \\ 
@@ -28,6 +28,7 @@ At this point we can set requirements for a solver that we are looking for:\\
 
 \begin{itemize}
 	\item robustness
+	% be able to solve ill-conditioned systems of equations
 	\item numerical stability
 	\item parallel efficiency
 	\item open source licenses

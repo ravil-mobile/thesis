@@ -1,0 +1,57 @@
+\chapter{Problem Statement}\label{chapter:problem-statment}
+
+
+Integration of a system of ODEs by means of W-methods can be considered as a solution of a sequence of linear systems from another point of view. Equations \ref{eq:athlet-9} can be rewritten in a form \ref{eq:athlet-10}, after grouping both the right- and left-hand sides in a single matrix and vector, respectively.\\
+
+
+\begin{equation} \label{eq:athlet-10}
+	A_{i} \Delta z^{l}_{i} =  b^{l}_{i} 
+\end{equation}
+
+where $A = ((h \gamma)^{-1}I - J)$ is a $\mathbb{R}^{N} \times \mathbb{R}^{N}$ non-singular sparse matrix, $\Delta z^{l}_{i}$  and $b^{l}_{i}$ are $\mathbb{R}^{N}$ vectors.\\
+
+
+According to the integration scheme, figure \ref{fig:introduction-w-method-scheme}, and definition of the method, each step of numerical integration requires to solve 6 linear systems with 3 distinct matrices, arisen from the Jacobian matrix by means of the corresponding shift of the main diagonal. Therefore, the computational burden of the W-method mainly lies on solution of sparse linear systems.\\
+
+
+It is well known there exist two families of linear sparse solver, namely: iterative and direct sparse methods. In general case, execution time of any algorithm, regardless of the solver family, is bounded by $O(N^2)$ complexity due to matrix sparsity, where $N$ is number of equations in the system. However, the constant in front of the factor $N^2$ can vary significantly between the methods which has its direct effect on solver execution time. Additionally, it is important to mention the families use absolutely different approaches for solution of sparse linear systems and thus posses different numerical properties. Among all properties there are some which are particular important for efficient execution of W-methods, namely: \\
+
+
+\begin{itemize}
+	\item robustness (or numerical stability) with respect to ill-conditioner problems
+	\item numerical accuracy
+	\item parallel efficiency, with emphasis on strong scaling 
+\end{itemize}
+
+
+This, above mentioned, properties can be treated as non-functional requirements to sparse linear solver for efficient numerical time integration.\\
+
+ 
+Finding solutions of sparse linear systems is a well-known and commonly occurring problem in the field of scientific computing. For that reason, numerous implementations of different kind of linear solvers exist. However, the NuT project imposes some extra constrains due to its software design: \\
+
+
+\begin{itemize}
+	\item open-source license
+	\item direct interface to PETSc
+\end{itemize}
+
+%In particular, it requires a particular solver implementation to have its \textbf{open-source license} and to have its direct \textbf{interface to PETSc} library.\\
+
+
+In this study, we are primarily concerned with selection and configuration of a linear sparse solver that could cover all requirements listed above; this, as we have described above, is the main source of runtime acceleration.\\
+
+
+This report is organized as follows. Chapter \ref{subseq:matrix-sets-and-hardware} provides full information about the experimental setup and matrix sets  used in the study. Chapters BRA and BRA explain theory and some parallelization aspects of iterative and sparse direct methods, respectively, using a  well-known representative-algorithm of each type as an example. In chapter BRA, we give a short summary and conclude which type of sparse linear solvers is the best suited for time integration governed by the W-method. In chapter BRA, we represent a list of solvers, according to the chosen type, available on the market, at the moment of writing, and perform initial tests with aim of finding the fastest. From chapter BRA onwards, we focus on configuration of a specific solver to reduce its execution time. Chapter BRA sums up overall results of performed configuration and, in chapter BRA, we give some recommendations to the ATHLET users about which solver options are better to use for a specific matrix size: small, medium, large.\\
+
+
+
+
+
+
+%In its turn, NuT cannot start solution of systems \ref{eq:athlet-9} without information about the full Jacobian approximation. 
+
+% and therefor it waits for ATHLET evaluation completion. However, Meanwhile 
+
+% Afterwards, the client sends the Jacobian matrix to NuT and, in its turn, NuT computes solutions of systems \ref{eq:athlet-9}, having performed the corresponding shift along the matrix diagonal.\\
+
+

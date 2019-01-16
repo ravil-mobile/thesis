@@ -1,0 +1,156 @@
+\chapter{Overview of ATHLET and NuT software}\label{chapter:athlet-nut}
+
+\section{ATHLET}
+
+
+The thermal-hydraulic system code ATHLET (Analysis of THermal-hydraulics of LEaks and Transients) is developed by GRS for the analysis of the whole spectrum of operational conditions, incidental transients, design-basis accidents and beyond design-basis accidents without core damage anticipated for nuclear energy facilities \cite{grs:athlet-info}. The code provides specific models and methods for the simulation of many types of nuclear power plants comprising current light water reactors (PWR, BWR, VVER, RBMK), advanced Generation III+ and IV reactors as well as Small Modular Reactors \cite{grs:athlet-info}.\\
+
+
+Physical processes inside of hydraulic circuits of light-water reactors can be naturally described by a two-phase thermo-fluiddynamic model based on conservation equations of mass, momentum and energy for liquid and vapor.\\
+
+1. Liquid mass
+\begin{equation} \label{eq:athlet-1}
+\frac{\partial ((1-\alpha)\rho_{l})}{\partial t} + \nabla ((1-\alpha) \rho_{l} \vec{w_{l}}) = - \psi
+\end{equation}
+
+
+2. Vapor mass
+\begin{equation} \label{eq:athlet-2}
+\frac{\partial (\alpha \rho_{v})}{\partial t} + \nabla (\alpha \rho_{v} \vec{w_{v}}) = \psi
+\end{equation}
+
+
+3. Liquid momentum
+\begin{equation} \label{eq:athlet-3}
+\frac{\partial ((1-\alpha) \rho_{l} \vec{w_{l}})}{\partial t} + \nabla ((1-\alpha) \rho_{l} \vec{w_{l}} \vec{w_{l}}) + \nabla ((1 - \alpha)p) = \vec{F_{l}}
+\end{equation}
+
+
+4. Vapor momentum
+\begin{equation} \label{eq:athlet-4}
+\frac{\partial (\alpha \rho_{v} \vec{w_{v}})}{\partial t} + \nabla (\alpha \rho_{v} \vec{w_{v}} \vec{w_{v}}) + \nabla (\alpha p) = \vec{F_{v}}
+\end{equation}
+
+
+5. Liquid energy
+\begin{equation} \label{eq:athlet-5}
+\frac{\partial \Big[ (1-\alpha)\rho_{l}(h_{l} + \frac{1}{2} \vec{w_{l}} \vec{w_{l}} - \frac{p}{\rho_{l}}) \Big]}{\partial t} + \nabla \Big[ (1-\alpha)\rho_{l}\vec{w_{l}}(h_{l} + \frac{1}{2} \vec{w_{l}} \vec{w_{l}}) \Big] = - p \frac{\partial (1 - \alpha)}{\partial t} + E_{l}
+\end{equation}
+
+
+6. Vapor energy
+\begin{equation} \label{eq:athlet-6}
+\frac{\partial \Big[ \alpha \rho_{v}(h_{v} + \frac{1}{2} \vec{w_{v}} \vec{w_{v}} - \frac{p}{\rho_{v}}) \Big]}{\partial t} + \nabla \Big[ \alpha\rho_{v}\vec{w_{v}}(h_{v} + \frac{1}{2} \vec{w_{v}} \vec{w_{v}}) \Big] = - p \frac{\partial \alpha}{\partial t} + E_{v}
+\end{equation}
+
+7. Volume vapor fraction
+\begin{equation} \label{eq:athlet-7}
+	\alpha = \frac{V_{v}}{V}
+\end{equation}
+
+
+where $p$ - pressure of mixture, $\psi$ - mass source term, $\vec{F}$ - external composite force acted on a control volume, $E$ - external composite energy source term within a control volume, subscripts $l$ and $v$ denote liquid and vapor phases, respectively. \\
+
+
+% Finite volume and 1D discritiazation 
+Spacial integration of the conservation equations, the ssystem \ref{eq:athlet-1} - \ref{eq:athlet-7}, is performed on the basis of finite-volume method with using one dimensional formulation, figure \ref{fig:introduction-1d-fvm}.
+
+
+\figpointer{\ref{fig:introduction-1d-fvm}}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/introduction-1d-fvm.png}
+\caption{ATHLET: one dimensional finite volume formulation of the problem}
+\label{fig:introduction-1d-fvm}
+\end{figure}
+
+
+Finally, the system is transformed to a non-autonomous system of ordinary differential equations and expressed as an initial value problem, equation \ref{eq:athlet-8}, after spacial finite-volume integration and many mathematical transformations with the aim of decoupling the initial system REF. 
+
+
+\begin{equation} \label{eq:athlet-8}
+	\frac{dy}{dt} = f(t,y), \;  t_{0} \leq t \leq t_{F} \; y(t_{0}) = y_{0}
+\end{equation}
+
+where $y \in \mathbb{R}^{N}$ is a composite vector of variables, $f$ is a non-linear function such that $f : \mathbb{R} \times \mathbb{R}^{N} \supset \Omega  \rightarrow \mathbb{R}^{N}$  .\\
+
+
+% Rosenbrock-Wanner
+Analysis of system \ref{eq:athlet-8} shows the problem is rather stiff and thus must to be solved with an implicit solver. Rosenbrock methods are a class of linear implicit methods which is capable of solving such stiff systems of ODEs efficiently. The methods replace non-linear systems with a sequence of linear ones, however, some stability and accuracy properties are usually lost \cite{blom2013rosenbrock}. An additional drawback of the methods is evaluation of the exact Jacobian at every time step which affects computational cost.\\
+
+
+To decrease the cost and preserve sufficient accuracy of numerical integration, ATHLET, instead, uses a W-method of the third order. W-methods belong to the family of Rosenbrock methods, however, calculate the Jacobian matrix occasionally. The ATHLET developers spent much of their time and efforts to develop heuristics to identify instances of time when evaluation of the Jacobian must be performed. In other words, the algorithm can re-use the same Jacobian matrix approximation between steps with some partial matrix updates. However, when a hydraulic circuit state drastically changes due to transitivity, the evaluation of the full Jacobian is required.\\
+
+
+\figpointer{\ref{fig:introduction-w-method-scheme}}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/introduction-rosenbrock-scheme.png}
+\caption{A general view on the W-method solver implemented in ATHLET}
+\label{fig:introduction-w-method-scheme}
+\end{figure}
+
+
+In the general case, a step of the W-method method, implemented in ATHLET, can be viewed as a sequence of three stages in the following way. Each stage uses implicit Euler method with different sub-steps  and exactly one Newton's iteration to evaluate the value of vector $y$ at the next integration step with different accuracy. Then, the obtained values are extrapolated, in order explained in figure \ref{fig:introduction-w-method-scheme}, to achieve desired order of integration. By and large, the algorithm can be expressed in a compact form of equation \ref{eq:athlet-9}.
+
+\begin{equation} \label{eq:athlet-9}
+	((h \gamma)^{-1}I - J) \Delta z^{l}_{i} = - h^{-1} z^{l}_{i} + f(t_0 + \tau_{i} h, y_{0} + z^{l}_{i})
+\end{equation}
+
+where $\Delta z^{l}_{i} = z^{l+1}_{i} - z^{l}_{i}$, $z^{l}_{i} = y^{l}_{i} - y^{l}_{i - 1}$, $J \approx \frac{\partial f}{\partial y}$ - approximation of Jacobian matrix, $l = 1,2$ - Newton's iteration index, $i = 1, 2, 3$ - integration step index.\\
+
+
+\section{NuT}
+
+Numerical Toolkit, or just NuT, can be viewed as a container of various dense and sparse linear algebra subroutines which can run in parallel on distributed-memory machines. NuT design follows ideas of the \textit{Adapter/Wrapper} pattern which provides a uniform common interface for its services to various GRS simulation tools, table \ref{table:introduction-grs-software}, and thus helps to achieve re-usability, flexibility and extensibility properties of the code.\\
+
+
+Currently, NuT is based heavily on Portable, Extensible Toolkit for Scientific Computation, known as PETSc library. It is known as the world’s most widely used parallel numerical software  library \cite{wiki:petsc-general-info}. It includes a large suite of parallel linear and nonlinear equation solvers as well as its software-infrastructure to handle computations on distributed-memory machines by means of Message Passing Interface (MPI) and specific data structures. Fortunately, because of an appropriate choice of the design pattern, NuT can be easily extended to provide an extra service or an external library access which has not been available in PETSc yet.\\ 
+
+
+\section{ATHLET-NuT coupling}
+
+\figpointer{\ref{fig:introduction-nut-process-groups}}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/introduction-nut-process-groups.png}
+\caption{NuT process groups}
+\label{fig:introduction-nut-process-groups}
+\end{figure}
+
+Coupling of NuT with other GRS tools can be viewed as a client-server architecture where NuT acts as a server and the tools can be treated as clients. Communication between two parts is performed via Message Passing Interface.\\
+
+
+To provide a clear and concise external interface, NuT contains a client module called "NuT Plug-in" which is viewed as a socket from the client side using the analogy of Transmission Control Protocol (TCP). Plug-in hides all MPI calls to the sever which considerably improves readability of the code.\\
+
+
+% communicators
+In the general case, NuT allows multiple clients to work concurrently with the server. To handle the traffic, the library splits the default MPI communicator into appropriate process groups, as it is shown in figure \ref{fig:introduction-nut-process-groups}, at start-up time of the application.\\
+
+
+
+The design of NuT allows to share some NuT-MPI processes between different process groups due to performance reasons i.e. finite number of processing units on hardware. To resolve possible deadlocks, each process group has its representative, called the head. Each client has two views on its group which is done by means of distinct MPI communicators. The first communicator is responsible for client-head communication whereas the second one allows the client to talk to any NuT process within the group.\\
+
+
+A general view of client-server communication looks  like a 3-way handshake in the following way. A client sends a request to the head which is a signal to reserve all compute-units of the group for an upcoming task. Having possessed the resources and prepared them for a specific service, the head notifies the client about resource acquisition and the entire process group waits for data. Afterwards, the client sends data either to a specific NuT-process or to the entire group using the second communicator and waits for a result of the service. In the current implementation of NuT, the communication between client and server is synchronous i.e. the client gets blocked while waiting for a result from the server. \\
+
+
+As an example, figure \ref{fig:introduction-athlet-nut-coupling} represent a general view of ATHLET-NuT coupling where ATHLET is responsible for marching of the numerical integration solver whereas NuT computes solutions of systems \ref{eq:athlet-9}.
+
+
+\todo{ask for an updated image}
+\figpointer{\ref{fig:introduction-athlet-nut-coupling}}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/introduction-athlet-nut-coupling.png}
+\caption{ATHEL-NuT software coupling}
+\label{fig:introduction-athlet-nut-coupling}
+\end{figure}
+
+
+Partial and full Jacobian matrix updates, by means of finite differences, are computed on the client side since only the client has the access to function $f(t, y)$, equation \ref{eq:athlet-8}. Due to decoupling of the underlying system of PDEs and specifics of finite volume discretization, Jacobian matrix is rather sparse and, therefore, ATHLET uses Jacobian matrix compression algorithm, described in chapter BRA, to reduce the amount of Jacobian columns evaluations. Having computed a matrix column, ATHLET immediately broadcasts it to its entire NuT process group, by means of 3-way handshake mechanism described above. It is worth mentioning this approach allows to circumvent potential memory limits on the client side and thus store the entire sparse Jacobian matrix in distributed manner on the server. In other words, ATLET never holds the entire Jacobian matrix in its memory; conversely, the matrix is distributed across multiple NuT processes according to block-row distribution induced by PETSc.\\
+
+
+In its turn, NuT is waiting for the entire Jacobian matrix information from ATHLET and starts solution of systems \ref{eq:athlet-9} right after that.\\
+
+
