@@ -1,5 +1,3 @@
-\chapter{Task 2}\label{chapter:introduction}
-
 \section{Jacobian matrix compression}
 \label{sec:jacobian-matrix-compression}
 
@@ -37,7 +35,7 @@ The compression algorithm is based on a notion of \textit{structurally orthogona
 Having obtained a compressed form of Jacobian, another set of vectors $d \in \mathbb{R}^{N}$, also known as seed vectors, can be used to perform function perturbation in stead of unit vectors $e_{k}$. A seed vector $d$ has 1’s in components corresponding to the indices of columns in a structurally orthogonal group of columns, and zeros in all other components \cite{gebremedhin2005color}. By differencing the function $F$ along the vector $d$, one can simultaneously determine the nonzero elements in all of these columns through one additional function evaluation at $F(y+d)$ \cite{gebremedhin2005color}.\\
 
 
-It is obvious the algorithm requires to partition a matrix into the fewest amount of groups, colors, in order to achieve the most of efficiency. There exist various methods and huristics dedicated to that particular problem. \citeauthor{gebremedhin2005color}, in work \cite{gebremedhin2005color}, conducted the most comprehensive study in this field and summarized different matrix partitioning algorithms proposed over the last 20 years. Currently, Jacobian matrix compression has been successfully implemented in ATHLET by means of the corresponding built-in PETSc subroutines.\\
+It is obvious the algorithm requires to partition a matrix into the fewest amount of groups, colors, in order to achieve the most of efficiency. There exist various methods and huristics dedicated to that particular problem. \citeauthor{gebremedhin2005color}, in work \cite{gebremedhin2005color}, conducted the most comprehensive study in this field and summarized different matrix partitioning algorithms proposed over the last 20 years. Currently, Jacobian matrix compression has been successfully implemented in ATHLET by means of the corresponding built-in PETSc subroutines through NuT interface.\\
 
 
 % unequal length of MPI messages 
@@ -54,18 +52,105 @@ Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/matrix-compression-2.png}
+  \includegraphics[width=0.7\textwidth]{figures/matrix-compression-2.png}
   \caption{Column length distribution of the example of figure \ref{fig:matrix-partitioning-example}} \label{fig:matrix-column-distribution}
 \end{figure}
 
 
-According to the ATHLET-NuT coupling design, each column, figure \ref{fig:matrix-column-distribution}, is transfered to NuT by means of synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, right after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
+According to the ATHLET-NuT coupling design, each column, figure \ref{fig:matrix-column-distribution}, is transfered to NuT by means of the synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, right after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
 
 
 % listing
-Listing BRA represents a pseudo-code of the current implementation of the compressed Jacobian transfer between ATHLET and NuT. We use this code as a baseline for our following study.\\
+Listings \ref{lst:athlet-grs-defaul:athlet} and \ref{lst:athlet-grs-defaul:nut} represent the default compressed Jacobian matrix transfer between ATHLET and NuT. This code was used as a baseline for the rest part of the study.\\
 
 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=python, caption={Pseudocode of the default ATHLET-NuT coupling: ATHLET part}, frame=single, label={lst:athlet-grs-defaul:athlet}]
+# GIVEN PARAMETERS:
+# acomm - the athlet communicator
+# acomm_id - athlet identification number 
+# y - known vector
+# N - problem size
+# COO - compressed matrix coordinate format
+
+eps = 1e-4
+center = f(y)
+column = zeros(N)
+
+# compute Jacobian and send it to NuT column-by-column
+for seed_vector in seed_vectors:
+
+	# compute the next column
+	vector = evaluate_jacobian(f, seed_vector, center, eps)
+	
+	length = perturbed_vector.length
+	signal = [encode("add_to_jacobian"), acomm_id]
+	
+	# perform 3-way handshake
+	MPI_Send(signal, 2, char, acomm.head, acomm)
+	
+	# broadcast jacobian column length
+	MPI_Bcast(length, 1, int, acomm.head, acomm)
+	
+	# broadcast jacobian column
+	MPI_Bcast(vector.data, length, COO, acomm.all, acomm)
+	
+
+\end{lstlisting}
+\end{minipage}
+
+
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=python, caption={Pseudocode of the default ATHLET-NuT coupling: NuT part}, frame=single, label={lst:athlet-grs-defaul:nut}]
+# N - problem size
+# J - allocated distributed jacobian matrix
+# COO - compressed matrix coordinate format
+nut_running = True
+
+while nut_running:
+	if rank in heads:
+		
+		# receive request
+		MPI_Recv(signal, 2, int, NUT_WORLD.any_client, NUT_WORLD)
+		
+		comm = my_comm_list[signal[1]]
+		if (comm not None):
+			# posses resources
+			MPI_Bcast(signal, 2, int, comm.all, comm)
+		else:
+			continue
+		
+	else:
+		MPI_Recv(signal, 2, int, NUT_WORLD.any_head, NUT_WORLD)
+		
+	# decode request
+	comm = my_comm_list[signal[1]]
+	if (comm not None):	
+		request = decode(signal[0])
+	
+		case(request):
+			...
+			if (request == "exit"):
+				# beak while loop			
+				nut_running = False
+			
+			if (request == "add_to_jacobian"):
+				# receive jacobian column length
+				MPI_Recv(length, 1, int, comm.client, comm)
+	
+				# receive row jacobian column
+				MPI_Recv(elements, length, COO, comm.client, comm)
+
+			
+				for i in range(0, length):
+					if (local_min < elements[i].row < local_max):
+						J.insert(elements[i])
+		...
+
+\end{lstlisting}
+\end{minipage}
 
 
 

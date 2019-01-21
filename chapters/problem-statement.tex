@@ -14,7 +14,7 @@ where $A = ((h \gamma)^{-1}I - J)$ is a $\mathbb{R}^{N} \times \mathbb{R}^{N}$ n
 According to the integration scheme, figure \ref{fig:introduction-w-method-scheme}, and definition of the method, each step of numerical integration requires to solve 6 linear systems with 3 distinct matrices, arisen from the Jacobian matrix by means of the corresponding shift of the main diagonal. Therefore, the computational burden of the W-method mainly lies on solution of sparse linear systems.\\
 
 
-It is well known there exist two families of linear sparse solver, namely: iterative and direct sparse methods. In general case, execution time of any algorithm, regardless of the solver family, is bounded by $O(N^2)$ complexity due to matrix sparsity, where $N$ is number of equations in the system. However, the constant in front of the factor $N^2$ can vary significantly between the methods which has its direct effect on solver execution time. Additionally, it is important to mention the families use absolutely different approaches for solution of sparse linear systems and thus posses different numerical properties. Among all properties there are some which are particular important for efficient execution of W-methods, namely: \\
+It is well known there exist two families of linear sparse solver, namely: iterative and direct sparse methods. In general case, execution time of any algorithm, regardless of the solver family, is bounded by $O(N^2)$ complexity due to matrix sparsity, where $N$ is number of equations in the system. However, the constant in front of the factor $N^2$ can vary significantly between the methods which explains difference in execution time. Additionally, it is important to mention the families use absolutely different approaches for solution of sparse linear systems and thus posses different numerical properties. Among all properties there are some which are particular important for efficient execution of W-methods, namely: \\
 
 
 \begin{itemize}
@@ -44,14 +44,17 @@ In this study, we are primarily concerned with selection and configuration of a 
 This report is organized as follows. Chapter \ref{subseq:matrix-sets-and-hardware} provides full information about the experimental setup and matrix sets  used in the study. Chapters BRA and BRA explain theory and some parallelization aspects of iterative and sparse direct methods, respectively, using a  well-known representative-algorithm of each type as an example. In chapter BRA, we give a short summary and conclude which type of sparse linear solvers is the best suited for time integration governed by the W-method. In chapter BRA, we represent a list of solvers, according to the chosen type, available on the market, at the moment of writing, and perform initial tests with aim of finding the fastest. From chapter BRA onwards, we focus on configuration of a specific solver to reduce its execution time. Chapter BRA sums up overall results of performed configuration and, in chapter BRA, we give some recommendations to the ATHLET users about which solver options are better to use for a specific matrix size: small, medium, large.\\
 
 
+An additional topic, considered in this study, is improvement ATHLET-NuT communication during Jacobian matrix transfer. As it was described in section \ref{sec:athlet-nut-coupling}, ATHLET, the client, transfers Jacobian matrix in column-by-column manner. NuT, the server, treats each column transfer as a service and, therefore, each transfer passes through 3-way handshake. Moreover, it is important to mention one more time, client-server communication is blocking, according the current implementation of ATHLET-NuT coupling. In other words, ATHLET gets blocked till completion of a column transfer. \\
 
 
+The main goal of Jacobian matrix compression, described in section \ref{sec:jacobian-matrix-compression}, is to minimize the number of perturbations of non-linear function $f(y)$, equation \ref{eq:athlet-8}, induced by the finite differences. Additionally it allows to reduce the amount of column transfers as well. Therefore, it improves overall application performance from both computational and communication point of view. However, there are still some aspects to be considered.\\
 
 
-%In its turn, NuT cannot start solution of systems \ref{eq:athlet-9} without information about the full Jacobian approximation. 
+Due to specifics of matrix compression algorithm, described in section \ref{sec:athlet-nut-coupling}, column length is decreasing between the first and last columns of compressed Jacobian matrix form which, as a result, leads to unequal MPI message sizes.\\
 
-% and therefor it waits for ATHLET evaluation completion. However, Meanwhile 
 
-% Afterwards, the client sends the Jacobian matrix to NuT and, in its turn, NuT computes solutions of systems \ref{eq:athlet-9}, having performed the corresponding shift along the matrix diagonal.\\
+In this part of the study, we introduce a concept called \textit{accumulator} which allows to transfer a compressed Jacobian matrix in equal chunks. This approach potentially solves three important problems at once. First of all, the accumulator can help to get rid of small MPI messages and thus improves network bandwidth utilization. Secondly, it helps to reduce the amount of synchronization between client and server and, therefore, improves operation of NuT as the server. Lastly, it allows to apply non-blocking MPI communication at the client side and thus overlap Jacobian matrix transfer with its computation.\\
 
+
+In section \ref{sec:jacobian-matrix-compression}, we briefly describe a Jacobian matrix compression algorithm and the arisen ATHLET-NuT communication problem. Chapter BRA provides a full description of developed benchmarks. At the end, we represents and discussed obtained results and make a general conclusion of the performed part of the study.\\
 

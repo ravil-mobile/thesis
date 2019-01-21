@@ -1,0 +1,49 @@
+\chapter{Introduction}\label{chapter:introduction}
+
+% what is nuclear energy and why it is attractive?
+Nowadays, nuclear energy is one of the main sources of electricity. It comes from splitting atoms in a reactor which, as the results, heats water up to the point when it converts into pressurized steam. In its turn, steam turns turbines which, finally, produce electricity. According to the recent estimations, thermal efficiency of modern nuclear power plants lies in the range of 35-45\% which is comparable to conventional fossil fueled power plants. In spite of considerable initial investment,  nuclear power plants have low running costs and longevity which makes them particularly cost effective.\\
+
+
+% Advantages
+In recent years, nuclear power plants have become even more attractive because of relatively low emission of carbon dioxide. As a result, the emissions of green house gases to the atmosphere and thus the contribution of nuclear power plants to global warming is relatively little.\\
+
+
+% Example of nuclear energy utilization in the EU
+Today, nuclear power plants generate almost 30\% of the electricity produced in the European Union (EU). There are almost 130 nuclear reactors in operation in 14 the EU, namely: Belgium, Bulgaria, Czech Republic, Finland, France, Germany, Hungary, Netherlands, Romania, Slovakia, Slovenia, Spain, Sweden, and the United Kingdom. [reference].\\
+
+
+% danger of nuclear power
+% Disadvantages: Accidents Can Happen
+% idea: requirements to perform hundreds of experiments and foresee all possible outcomes.
+The main problem of nuclear power is radioactive waste which is extremely dangerous for people and environment and has to be carefully looked after for several thousand years after utilization. Any accident in a plant can cause of grave consequences at a level similar to Chernobyl disaster. For this reason, nuclear power safety is one of the most important topics in this field. It requires to perform a huge amount of testing and analysis before and during operation of a nuclear power plant in order to predict any possible outcome and device protective means from any type of accidents. The topic has become even more prominent after 2011 Fukushima accident. In response to the disaster, a numerous of stress tests were conducted to measure the ability of the EU nuclear industry to withstand any kind of natural disaster.\\
+
+
+
+% 1. GRS: general info and the goal
+% 2. Simulation tools
+Since 1977, Gesellschaft für Anlagen- und Reaktorsicherheit (GRS) has been the main German scientific research institute in the field of nuclear safety and radioactive waste management. Today, the organization carries out advanced research and analysis in its fields of reactor safety, radioactive waste management as well as radiation and environmental protection [reference]. Due to a huge amount of testing, different types of possible accidents and disability to conduct natural experiments, GRS provides and develops numerous simulation software products to cope with this problem. Table \ref{table:introduction-grs-software} represents the main software packages that have been developed by GRS and their short description.\\
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{|c|l|}
+\hline
+Name          & \multicolumn{1}{c|}{Description}                                                                                                                                                             \\ \hline
+ASTEC         & \begin{tabular}[c]{@{}l@{}}Integral code for determination of the source term \\ during core meltdown for the primary circuit \\ and containment of Light-Water Reactors (LWRs)\end{tabular} \\ \hline
+ATHLET        & \begin{tabular}[c]{@{}l@{}}Thermohydraulic safety analyses for the primary\\ circuit of  LWRs\end{tabular}                                                                                   \\ \hline
+ATHLET-CD     & \begin{tabular}[c]{@{}l@{}}Analyses of accidents with core meltdown \\ and fission product release for LWRs\end{tabular}                                                                     \\ \hline
+ATLAS         & \begin{tabular}[c]{@{}l@{}}Analysis simulator for interactive handling \\ and  visualisation of several computer codes\end{tabular}                                                          \\ \hline
+COCOSYS       & \begin{tabular}[c]{@{}l@{}}Analyses of severe incidents in the \\ containment of LWRs\end{tabular}                                                                                           \\ \hline
+DORT/TORT     & \begin{tabular}[c]{@{}l@{}}Solution of time-dependant neutron transport\\ equations for 2D/3D transients analyses\end{tabular}                                                               \\ \hline
+QUABOX/CUBBOX & 3-D neutron kinetics core model                                                                                                                                                              \\ \hline
+SUSA          & Uncertainty and sensitivity analyses                                                                                                                                                         \\ \hline
+TESPA-ROD     & Core rod code for design basis accidents                                                                                                                                                     \\ \hline
+\end{tabular}
+\caption{A general overview of software developed by GRS}
+\label{table:introduction-grs-software}
+\end{table}
+
+
+
+% objective of the study
+The main focus of this study is dedicated to ATHLET software package, which is capable to simulate various thermal-hydraulic systems for the analysis of the whole spectrum of leaks and transients in pressurized and boiling water reactors, as well as its Numerical Toolkit. During the study, we will try to identify the most computer-intensive part of ATHLET-NuT code and accelerate the execution time of simulations.\\
+

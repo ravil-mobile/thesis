@@ -109,6 +109,7 @@ Currently, NuT is based heavily on Portable, Extensible Toolkit for Scientific C
 
 
 \section{ATHLET-NuT coupling}
+\label{sec:athlet-nut-coupling}
 
 \figpointer{\ref{fig:introduction-nut-process-groups}}
 \begin{figure}[htpb]
@@ -148,7 +149,7 @@ As an example, figure \ref{fig:introduction-athlet-nut-coupling} represent a gen
 \end{figure}
 
 
-Partial and full Jacobian matrix updates, by means of finite differences, are computed on the client side since only the client has the access to function $f(t, y)$, equation \ref{eq:athlet-8}. Due to decoupling of the underlying system of PDEs and specifics of finite volume discretization, Jacobian matrix is rather sparse and, therefore, ATHLET uses Jacobian matrix compression algorithm, described in chapter BRA, to reduce the amount of Jacobian columns evaluations. Having computed a matrix column, ATHLET immediately broadcasts it to its entire NuT process group, by means of 3-way handshake mechanism described above. It is worth mentioning this approach allows to circumvent potential memory limits on the client side and thus store the entire sparse Jacobian matrix in distributed manner on the server. In other words, ATLET never holds the entire Jacobian matrix in its memory; conversely, the matrix is distributed across multiple NuT processes according to block-row distribution induced by PETSc.\\
+Partial and full Jacobian matrix updates, by means of finite differences, are computed on the client side since only the client has the access to function $f(y)$, equation \ref{eq:athlet-8}. Due to decoupling of the underlying system of PDEs and specifics of finite volume discretization, Jacobian matrix is rather sparse and, therefore, ATHLET uses a Jacobian matrix compression algorithm, described in section \ref{sec:jacobian-matrix-compression}, to reduce the amount of Jacobian column evaluations. Having computed a matrix column, ATHLET immediately broadcasts it to its entire NuT process group, by means of 3-way handshake mechanism described above. It is worth mentioning this approach allows to circumvent potential memory limits on the client side and thus store the entire sparse Jacobian matrix in distributed manner on the server. In other words, ATLET never holds the entire Jacobian matrix in its memory; conversely, the matrix is distributed across multiple NuT processes according to block-row distribution induced by PETSc.\\
 
 
 In its turn, NuT is waiting for the entire Jacobian matrix information from ATHLET and starts solution of systems \ref{eq:athlet-9} right after that.\\
