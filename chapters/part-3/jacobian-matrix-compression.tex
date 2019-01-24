@@ -64,6 +64,8 @@ According to the ATHLET-NuT coupling design, each column, figure \ref{fig:matrix
 Listings \ref{lst:athlet-grs-defaul:athlet} and \ref{lst:athlet-grs-defaul:nut} represent the default compressed Jacobian matrix transfer between ATHLET and NuT. This code was used as a baseline for the rest part of the study.\\
 
 
+All \textbf{code listings}, represented in this part of the study, are written in \textbf{pseudo-code} and dedicated only for convenient reading. The aim is to show and display the main ideas skipping non-relevant parts of the real source code. The \textbf{pseudo-code} is a mixture of several programming languages, namely: \textbf{Python}, \textbf{C/C++}, \textbf{Fortran}, \textbf{MPI}.\\
+
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=python, caption={Pseudocode of the default ATHLET-NuT coupling: ATHLET part}, frame=single, label={lst:athlet-grs-defaul:athlet}]
@@ -88,7 +90,7 @@ for seed_vector in seed_vectors:
 	signal = [encode("add_to_jacobian"), acomm_id]
 	
 	# perform 3-way handshake
-	MPI_Send(signal, 2, char, acomm.head, acomm)
+	MPI_Send(signal, 2, int, acomm.head, acomm)
 	
 	# broadcast jacobian column length
 	MPI_Bcast(length, 1, int, acomm.head, acomm)
