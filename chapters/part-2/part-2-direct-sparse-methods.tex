@@ -431,7 +431,7 @@ Level 2 & 18.75\% & 87.50\% \\ \hline
 \end{table}
 
 
-As we can see, the result of our first model is relatively close to 25\% and, therefore, it looks quite optimistic. However, the second model shows that 87\% of workload is focused on the top part of the tree and, as a result, we can consider that model as extremely pessimistic. \\
+As we can see, the result of our first model is relatively close to 25\% and, therefore, it looks quite optimistic. However, the second model shows that 87\% of the workload is focused on the top part of the tree and, as a result, we can consider that model as extremely pessimistic. \\
 
 
 By and large, reduction of time spent on the top nodes is a way to improve strong scaling behavior. To do so, data parallelism can be additionally exploited for these nodes. It is worth noting that data parallelism at bottom levels does not make sense because it leads to increase of granularity there and thus increase communication overheads which can lead to significant performance drop.\\

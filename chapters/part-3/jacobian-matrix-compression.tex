@@ -2,7 +2,7 @@
 \label{sec:jacobian-matrix-compression}
 
 
-The main goal of Jacobian matrix compression is minimization of the number of non-linear function evaluations which is a quite compute-intensive operation. Minimization is performed by means of efficient treatment of non-zero entries due to matrix sparsity. The problem is also known as matrix partitioning.\\
+The main goal of Jacobian matrix compression is minimization of the number of non-linear function evaluations which is quite a computationally intensive operation. Minimization is performed by means of efficient treatment of non-zero entries of a sparse matrix. The problem is also known as matrix partitioning.\\
 
 
 In the general case, finite difference method can be used to compute a Jacobian matrix approximation in the following way:\\
@@ -14,7 +14,7 @@ In the general case, finite difference method can be used to compute a Jacobian 
 where $F : \mathbb{R}^{N} \rightarrow \mathbb{R}^{N}$  is a non-linear function, $e_{k} \in \mathbb{R}^{N}$ is the k\textit{th} coordinate unit vector, $\epsilon$ is a small step size.\\
 
 
-Equation \ref{eq:matrix-compression-1} does not exploit Jacobian matrix sparsity and, therefore, estimation of a Jacobian matrix requires $N$  function evaluations.\\
+Equation \ref{eq:matrix-compression-1} does not exploit Jacobian matrix sparsity and, therefore, estimation of a Jacobian matrix requires $N$ function evaluations.\\
 
 
 \figpointer{\ref{fig:example-of-matrix-compression}}
@@ -26,20 +26,20 @@ Equation \ref{eq:matrix-compression-1} does not exploit Jacobian matrix sparsity
 \end{figure}
 
 
-The compression algorithm is based on a notion of \textit{structurally orthogonal} columns i.e. columns which do not share any non-zero entry in a common row. Figure \ref{fig:example-of-matrix-compression} shows an example of matrix compression where each color denotes independent, structurally orthogonal, columns.\\
+The compression algorithm is based on the notion of \textit{structurally orthogonal} columns i.e. columns which do not share any non-zero entry in a common row. Figure \ref{fig:example-of-matrix-compression} shows an example of a matrix compression where each color denotes independent \textit{structurally orthogonal} columns.\\
 
 
 % Curtis, Powell, and Reid [35] were the first to observe in 1974 that sparsity can be employed in this way to reduce the number of function evaluations needed to estimate the Jacobian.
 
 
-Having obtained a compressed form of Jacobian, another set of vectors $d \in \mathbb{R}^{N}$, also known as seed vectors, can be used to perform function perturbation in stead of unit vectors $e_{k}$. A seed vector $d$ has 1’s in components corresponding to the indices of columns in a structurally orthogonal group of columns, and zeros in all other components \cite{gebremedhin2005color}. By differencing the function $F$ along the vector $d$, one can simultaneously determine the nonzero elements in all of these columns through one additional function evaluation at $F(y+d)$ \cite{gebremedhin2005color}.\\
+Having obtained a compressed form of Jacobian, another set of vectors $d \in \mathbb{R}^{N}$, also known as seed vectors, can be used to perform function perturbation instead of unit vectors $e_{k}$. A seed vector $d$ has 1’s in components corresponding to the indices of columns in a structurally orthogonal group of columns, and zeros in all other components \cite{gebremedhin2005color}. By differencing the function $F$ along the vector $d$, one can simultaneously determine the nonzero elements in all of these columns through one additional function evaluation at $F(y+d)$ \cite{gebremedhin2005color}.\\
 
 
-It is obvious the algorithm requires to partition a matrix into the fewest amount of groups, colors, in order to achieve the most of efficiency. There exist various methods and huristics dedicated to that particular problem. \citeauthor{gebremedhin2005color}, in work \cite{gebremedhin2005color}, conducted the most comprehensive study in this field and summarized different matrix partitioning algorithms proposed over the last 20 years. Currently, Jacobian matrix compression has been successfully implemented in ATHLET by means of the corresponding built-in PETSc subroutines through NuT interface.\\
+It is obvious the algorithm requires to partition a matrix into the fewest amount of groups, colors, in order to achieve the most of efficiency. There exist various methods and huristics dedicated to that particular problem. \citeauthor{gebremedhin2005color}, in work \cite{gebremedhin2005color}, conducted one of the most recent comprehensive studies in this field and summarized different matrix partitioning algorithms proposed over the last 20 years. Currently, Jacobian matrix compression has been successfully implemented in ATHLET by means of the corresponding built-in PETSc subroutines through NuT interface.\\
 
 
 % unequal length of MPI messages 
-Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an efficient matrix partitioning where an initial 100 by 100 Jacobian matrix is transformed into its 100 by 28 compressed form with using 28 distinct colors. It can be easily observed from the figure the column vector length of the compressed Jacobian form is gradually decreasing. Figure \ref{fig:matrix-column-distribution} provides a detailed and clear view on the problem, using data from figure \ref{fig:matrix-partitioning-example} as an example, where a bar represents  the corresponding column length.\\
+Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an efficient matrix partitioning where an initial 100 by 100 Jacobian matrix is transformed into its 100 by 28 compressed form using 28 distinct colors. It can be clearly observed from the figure the column vector length of the compressed Jacobian form is gradually decreasing. Figure \ref{fig:matrix-column-distribution} provides a detailed and clear view on the problem, using data from figure \ref{fig:matrix-partitioning-example} as an example, where a bar represents the corresponding column length.\\
 
 
 \figpointer{\ref{fig:matrix-partitioning-example}}
@@ -57,14 +57,14 @@ Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an
 \end{figure}
 
 
-According to the ATHLET-NuT coupling design, each column, figure \ref{fig:matrix-column-distribution}, is transfered to NuT by means of the synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, right after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
+According to the ATHLET-NuT coupling design, each column is transfered to NuT by means of the synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, immediately after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
 
 
 % listing
-Listings \ref{lst:athlet-grs-defaul:athlet} and \ref{lst:athlet-grs-defaul:nut} represent the default compressed Jacobian matrix transfer between ATHLET and NuT. This code was used as a baseline for the rest part of the study.\\
+Code listings \ref{lst:athlet-grs-defaul:athlet} and \ref{lst:athlet-grs-defaul:nut} represent the default compressed Jacobian matrix transfer between ATHLET and NuT. This code was used as a baseline for the remaining part of the study.\\
 
 
-All \textbf{code listings}, represented in this part of the study, are written in \textbf{pseudo-code} and dedicated only for convenient reading. The aim is to show and display the main ideas skipping non-relevant parts of the real source code. The \textbf{pseudo-code} is a mixture of several programming languages, namely: \textbf{Python}, \textbf{C/C++}, \textbf{Fortran}, \textbf{MPI}.\\
+All \textbf{code listings}, presented in this part of the study, are written in \textbf{pseudo-code} and intended for for convenience of reading. The aim is to show and display the main ideas skipping non-relevant parts of the source code. The \textbf{pseudo-code} is a mixture of several programming languages, namely: \textbf{Python}, \textbf{C/C++}, \textbf{Fortran}, \textbf{MPI}.\\
 
 
 \begin{minipage}{\linewidth}

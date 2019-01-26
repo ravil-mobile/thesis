@@ -2,7 +2,7 @@
 \label{sec:accumulator-conclusions}
 
 
-In this part of the study, we have designed and implemented the \textit{accumulator} concept for efficient sparse compressed Jacobian matrix transfer between ATHLET and NuT. The concept is rather simple and did not require drastic changes of the existing software design and architecture. In spite of simplicity, the concept allows to significantly reduce the communication time i.e. by almost 60\%. The overall performance gain comes from three different sources: 
+In this part of the study, we have designed and implemented the \textit{accumulator} concept for efficient sparse compressed Jacobian matrix transfer between ATHLET and NuT. The concept is rather simple and did not require drastic changes of the existing software design and architecture. In spite of simplicity, the concept allows to significantly reduce the communication time i.e. by almost \textbf{60\%}. The overall performance gain comes from three different sources: 
 
 \begin{enumerate}
 	\item efficient utilization of interconnection
@@ -10,18 +10,18 @@ In this part of the study, we have designed and implemented the \textit{accumula
 	\item overlap of communications with computations
 \end{enumerate}
 
-The study has shown non-blocking data transfer is the main source of the performance gain. Efficient bandwidth utilization can additionally give 7-9\% of improvement when applications work within the same compute-node.\\
+The study has shown non-blocking data transfer is the main source of the performance gain. Efficient bandwidth utilization can additionally give \textbf{7-9\%} of improvement when applications work within the same compute-node.\\
 
 
-We have also observed one can experience a slight slow-down from pure data accumulation in case of inter-node communication due to probable MPI protocol switching. However, as it has been shown, it is always compensated by means of communication/computation overlap.\\
+One can experience a slight slow-down from pure data accumulation in case of the inter-node communication due to probable MPI protocol switching. However, as it has been shown, it is always compensated by means of communication/computation overlap.\\
 
 
-The final tests have shown the concept does not give a considerable overall improvement because the computation part takes almost 99.8\% of the total execution time of the corresponding part of the source code. However, results can be much better in case of multi-client operation of NuT; especially when clients share common NuT processes. Reduced number data transfers results in reduced amount of handshakes which is always accompanied by resource acquisition mechanism, described in section \ref{sec:athlet-nut-coupling}. Unfortunately, it is difficult to design and prepare valid tests to verify this statement. \\
+The final tests have shown the concept does not give a considerable overall improvement because the computation part takes almost \textbf{99.8\%} of the total execution time of the corresponding part of the source code. However, results can be much better in case of multi-client operation of NuT; especially when clients share common NuT processes. Reduced number data transfers results in reduced amount of handshakes which is always accompanied by the resource acquisition mechanism, described in section \ref{sec:athlet-nut-coupling}. Unfortunately, it is difficult to design and prepare valid tests to verify this statement. \\
 
 
-By and large, verification of the modified code has not detected any result deviations. The new concept has always resulted in a slight overall performance gain. The study has also shown the main bottleneck is, indeed, non-linear function evaluation.\\
+By and large, verification of the modified code has not detected any deviations in results. The new concept has always resulted in a slight overall performance gain. The study has also shown the main bottleneck is, indeed, the non-linear function evaluation.\\
 
 
-It is worth mentioning that a sequential ATHLET code, running in a single core, has been available for this study, only. However, there exist a parallel version of ATHLET multi-threaded by means of OpenMP. Therefore, the results can be even better because of the reduced fraction of function evaluation time. This fact also shows that development and performance tuning of ATHLET is constantly in progress and is being done in parallel among several departments, covering different areas of the program source code.\\
+It is worth mentioning that only a sequential ATHLET code, running in a single core, has been available for this study. However, there exists a parallel version of ATHLET multi-threaded with OpenMP. Therefore, the results can be even better because of the reduced fraction of function evaluation time. This fact also shows that development and performance tuning of ATHLET is constantly in progress and is being done in parallel among several departments of GRS, covering different areas of the program source code.\\
 
 

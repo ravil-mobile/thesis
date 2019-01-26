@@ -127,11 +127,11 @@ As an extreme example we can consider the inverse matrix $A^{-1}$ as the best pr
 
 There exist numerous techniques to compute preconditioners given a matrix $A$ e.g. (point) Jacobi, Block-Jacobi, incomplete $LU$ decomposition (ILU), multilevel ILU (ILU(p)), threshold ILU (ILUT), incomplete Cholesky factorization (IC), sparse approximate inverse (SPAI), multigrid as a preconditioner, etc. Almost all methods listed above have some tuning parameters which allow to get a better preconditioner i.e. a smaller condition number of the transformed system. However, it usually leads to increase of computational and storage costs. \\
 
-Some methods can works particularly well for matrices derived from certain PDEs e.g. Poisson, Navier\-Stokes, etc. problems discretized using the cartesian grid. However sometimes it can take a considerable amount of time to choice right parameters for a certain preconditioning algorithm. It can become a challenge to fulfill all requirements 1, 2, 3 mentioned above. \\
+Some methods can works particularly well for matrices derived from certain PDEs e.g. Poisson, Navier\-Stokes, etc. problems discretized using the cartesian grid. However sometimes it can take a considerable amount of time to choose correct parameters for a certain preconditioning algorithm. It can become a challenge to fulfill all requirements 1, 2, 3 mentioned above. \\
 
 Table \todo{Table with comparisons of different preconditioning for our test cases}
 
-Table [] shows results of different preconditioning algorithms application to our test case. It can be seen that some algorithms failed even after tuning. \\
+Table [] shows results of different preconditioning algorithms applied to our test case. It can be seen that some algorithms failed even after tuning. \\
 
 It interesting to notice that \citeauthor{wsmp} came to approximately the same results working on their set of matrices in their work \cite{wsmp}. They observed that preconditioned iterative solvers worked efficiently only for 2 out 5 cases in contrast to direct sparse solvers.\\
 
