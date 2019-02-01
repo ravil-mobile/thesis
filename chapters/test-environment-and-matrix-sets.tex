@@ -1,4 +1,4 @@
-\chapter{Experimental setup and matrix sets}\label{subseq:matrix-sets-and-hardware}
+\chapter{Experimental Setup and Matrix Sets}\label{subseq:matrix-sets-and-hardware}
 
 
 In this study, two matrix sets were used: GRS and SuiteSparse. In our case, the SiteSparse matrix set was, in fact, few matrices downloaded from SuiteSparse Matrix Collection \cite{sparse-matrix-collection:1}, \cite{sparse-matrix-collection:2}. We tried to choose different matrices from the collection with respect to both the number of equations $n$ in a system and ratio $R$ between the number of non-zero elements $nnz$ and the number of equations.\\ 
@@ -7,21 +7,23 @@ In this study, two matrix sets were used: GRS and SuiteSparse. In our case, the 
 To generate GRS matrix set, we ran the most common GRS simulations in ATHLET and stopped the simulations somewhere in the middle saving corresponding shifted Jacobian matrices in the PETSc binary format.\\
 
 
-Tables \ref{table:grs-matrix-set}  and \ref{table:suite-sparse-matrix-set} shows matrix properties of both matrix sets.\\
+The main matrix properties as well as matrix sparsity patterns are shown in tables \ref{table:grs-matrix-set}, \ref{table:suite-sparse-matrix-set} and appendix \ref{app:sparsity-patterns}.
 
-\todo{add sparsity plots to appendix}
+
 \begin{table}[ht]
 \small
 \centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Name     & N       & NNZ      & NNZ / N & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\ Number\end{tabular} \\ \hline
-pwr-3d   & 6009    & 32537    & 5.4147  & 4.375e+05                                                                \\ \hline
-cube-5   & 9325    & 117897   & 12.6431 & 1.329e+07                                                                \\ \hline
-cube-64  & 100657  & 1388993  & 13.7993 & 2.144e+08                                                                \\ \hline
-cube-645 & 1000045 & 13906057 & 13.9054 & 1.199e+06                                                                \\ \hline
-k3-2     & 130101  & 787997   & 6.0568  & 1.926e+09                                                                \\ \hline
-k3-18    & 1155955 & 7204723  & 6.2327  & 1.381e+08                                                                \\ \hline
+Name     & n       & nnz      & nnz / n & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\ Number\end{tabular} \\ \hline
+pwr-3d   & 6009    & 32537    & 5.4147  & 1.019e+07
+ \\ \hline
+cube-5   & 9325    & 117897   & 12.6431 & 1.592e+09                                                                \\ \hline
+cube-64  & 100657  & 1388993  & 13.7993 & 7.406e+08                                                                \\ \hline
+cube-645 & 1000045 & 13906057 & 13.9054 & 6.474e+08
+ \\ \hline
+k3-2     & 130101  & 787997   & 6.0568  & 1.965e+15                                                                \\ \hline
+k3-18    & 1155955 & 7204723  & 6.2327  & 1.947e+12                                                                \\ \hline
 \end{tabular}
 \caption{GRS matrix set}
 \label{table:grs-matrix-set}
@@ -29,28 +31,27 @@ k3-18    & 1155955 & 7204723  & 6.2327  & 1.381e+08                             
 
 
 
-\todo{add sparsity plots to appendix}
 \begin{table}[ht]
 \centering
 \small
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Name        & N       & NNZ      & NNZ / N & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\ Number\end{tabular} & Field                      \\ \hline
-cant        & 62451   & 4007383  & 64.1684 & 4.918e+03                                                                & 2D/3D Problem              \\ \hline
-consph      & 83334   & 6010480  & 72.1251 & 9.346e+03                                                                & 2D/3D Problem              \\ \hline
-CurlCurl\_3 & 1219574 & 13544618 & 11.1060 & 7.536e+03                                                                & Model Reduction Problem    \\ \hline
-Geo\_1438   & 1437960 & 63156690 & 43.9210 & 8.618+03                                                                 & 2D/3D Problem              \\ \hline
-memchip     & 2707524 & 13343948 & 4.9285  & 4.439e+04                                                                & Circuit Simulation Problem \\ \hline
-PFlow\_742  & 742793  & 37138461 & 49.9984 & 4.366e+04                                                                & 2D/3D Problem              \\ \hline
-pkustk10    & 80676   & 4308984  & 53.4110 & 2.474e+02                                                                & Structural Problem         \\ \hline
-torso3      & 259156  & 4429042  & 7.0903  & xxx                                                                      & 2D/3D Problem              \\ \hline
-x104        & 108384  & 8713602  & 80.3956 & 7.733e+03                                                                & Structural Problem         \\ \hline
+Name        & n       & nnz      & nnz / n & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\ Number\end{tabular} & Field                      \\ \hline
+cant        & 62451   & 4007383  & 64.1684 & 5.082e+05                                                                & 2D/3D Problem              \\ \hline
+consph      & 83334   & 6010480  & 72.1251 & 2.438e+05                                                                & 2D/3D Problem              \\ \hline
+CurlCurl\_3 & 1219574 & 13544618 & 11.1060 & 2.105e+05                                                                & Model Reduction Problem    \\ \hline
+Geo\_1438   & 1437960 & 63156690 & 43.9210 & 4.677e+05                                                                      & 2D/3D Problem              \\ \hline
+memchip     & 2707524 & 13343948 & 4.9285  & 1.305e+07                                                                & Circuit Simulation Problem \\ \hline
+PFlow\_742  & 742793  & 37138461 & 49.9984 & 5.553e+06                                                                & 2D/3D Problem              \\ \hline
+pkustk10    & 80676   & 4308984  & 53.4110 & 5.589e+02                                                                & Structural Problem         \\ \hline
+torso3      & 259156  & 4429042  & 7.0903  & 2.456e+03                                                                & 2D/3D Problem              \\ \hline
+x104        & 108384  & 8713602  & 80.3956 & 3.124e+05                                                                & Structural Problem         \\ \hline
 \end{tabular}
 \caption{SuiteSparse matrix set}
 \label{table:suite-sparse-matrix-set}
 \end{table}
 
-Approximations of condition numbers were computed by means of Rayleigh–Ritz procedure \cite{rayleigh-ritz-procedure}. GMRES solver, with $1000$ iteration steps, was applied for un-preconditioned systems to generate a Krylov subspace for each matrix. Then, the resultant Hessenberg matrices were used for approximating eigenspaces and the corresponding eigenvalues. The approximations should be treated as lower bound since the algorithm overestimates the smallest eigenvalue.\\
+Approximations of condition numbers were computed by means of Rayleigh–Ritz procedure \cite{rayleigh-ritz-procedure}. GMRES solver, with $1000$ iteration steps, was applied for un-preconditioned systems to generate a Krylov subspace for each matrix. Then, the resulting Hessenberg matrices were used for approximating eigenspaces and the corresponding eigenvalues. The approximations should be treated as lower bound since the algorithm overestimates the smallest eigenvalue.\\
 
 
 The objective of this study is to find and configure a sparse linear solver which can fulfill all requirements listed above for the GRS matrix set. It is worth pointing out, as it was mentioned in section \ref{sec:athlet-overview}, ATHLET performs many mathematical transformations upon the original system and, finally, generates an approximation of a Jacobian matrix. For that reason, one can assume that GRS matrix set can be structurally different from matrices coming naturally from finite-volume, finite-elements discretization or optimization problems. Therefore, SuiteSparse matrix set was used, from time to time, to examine this statement.\\
@@ -92,27 +93,24 @@ NUMA node3 CPU(s)   & - &  21-27 \\ \hline
 \end{table}
 
 
-For this study, OpenMPI implementation of the MPI standard was used because of its open-source license and comprehensive documentation. The library has many options for processes pinning which was a crucial part at some point of this study.\\
+For this study, OpenMPI implementation of the MPI standard was used because of its open-source license and comprehensive documentation. The library has many options for processes pinning which was quite important for of this study.\\
 
 
-To make process pinning deterministic, we developed a python script which automatically generated rank-files based on the number of MPI processes, OpenMP threads per MPI process, the maximum number of processing elements and the number of NUMA domains.
-The scrip always leaves appropriate gaps between MPI processes to allow each process to fork the corresponding number of threads within a parallel region.\\
+To make process pinning explicit and deterministic, a python script was developed to generate rank-files automatically based on the number of MPI processes, OpenMP threads per MPI process, the maximum number of processing elements and the number of NUMA domains. The scrip always leaves appropriate gaps between MPI processes to allow each process to fork the corresponding number of threads within a parallel region.\\
 
 
-A rank-file specifies explicit mapping between MPI processes (ranks) and actual processing elements, cores, within a machine. The script has two modes, namely: \textit{spread} and \textit{close}. Given a certain number of ranks, \textit{spread} mode tries to distribute them as spread as possible across available NUMA domains in round-robin fashion. In contrast to \textit{spread} strategy, \textit{close} mode groups ranks as close as possible to keep the maximum number of ranks within a single NUMA domain. Figure \ref{fig:python-script-rankfile-example} shows an example of how these two modes work in case of 5 MPI ranks, 2 OpenMP threads per rank, on a compute node equipped with 20 cores and 2 NUMA domains (HW1).\\
-
-
-
-\figpointer{\ref{fig:python-script-rankfile-example}}
-\begin{figure}
+\begin{figure}[h!]
 \centering
 	\begin{tabular}{cc}
 			\subfloat[\textit{Spread} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/spread-mode.png}} &
 		\subfloat[\textit{Close} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/close-mode.png}} \\
 	\end{tabular}
-	\caption{An example of process pinning of 5 MPI processes with 2 OpenMP threads per rank in case of HW1}
+	\caption{An example of process pinning of 5 MPI processes with 2 OpenMP threads per rank in case of HW1 hardware}
 	\label{fig:python-script-rankfile-example}
 \end{figure}
 
 
-After some considerations, it was decided to use \textbf{Intel 18.2} compiler for this study as the newest and the most efficient Intel compiler at the time of writing.\\
+A rank-file specifies explicit mapping between MPI processes (ranks) and actual processing elements, cores, within a machine. The script has two modes, namely: \textit{spread} and \textit{close}. Given a certain number of ranks, \textit{spread} mode tries to distribute them as spread as possible across multiple available NUMA domains in a round-robin fashion. In contrast to \textit{spread} strategy, \textit{close} one groups ranks as close as possible to keep the maximum number of ranks within a single NUMA domain. Figure \ref{fig:python-script-rankfile-example} shows an example of how these two modes work in case of 5 MPI ranks, 2 OpenMP threads per rank, on a compute node equipped with 20 cores and 2 NUMA domains (HW1).\\
+
+
+In this study, PETSc 3.10 and OpenMPI 3.1.1 libraries were chosen and compiled with Intel 18.2 compiler.\\

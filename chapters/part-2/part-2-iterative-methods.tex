@@ -1,5 +1,5 @@
-\section{Iterative methods}
-\label{subseq:iterative methods}
+\subsection{Theory Overview}
+\label{subseq:iterative-theory}
 Iterative methods, especially Krylov subspace methods that we are going to discuss in this section, are well known for their relatively low storage requirements $O(nnz)$ and computation cost $O(N^2)$ in case of sparse linear systems of equations and good condition number. It turns out that sometimes it might be only one way to solve huge systems with millions unknowns.\\
 
 The most well known methods are Conjugate Gradient (CG) for symmetric positive definite matrices, Minimal Residual Method (MINRES) for symmetric indefinite systems, Generalized Minimal Residual Method (GMRES) for non-symmetric systems of linear equations as well as different variants of GMRES such Biconjugate Gradient Method (BiCG), Biconjugate Gradient Stabilized Method (BiCGSTAB) and so on.\\
@@ -53,6 +53,11 @@ Given \ref{eq:Gmres-4}, we can compute the solution as following:
 
 Because of large computational and storage costs, in case of evaluation of the full Krylov subspace, only small a subspace is computed, typically first 20 - 50 column vectors. Then the algorithm is restarted using the computed approximate solution as a initial guess for the next iteration.\\
 
+
+
+\subsection{Parallelization Aspects}
+\label{subseq:iterative-parallel-aspects}
+
 We can see that some operations, for example \ref{eq:Gmres-6}, can be efficiently done in parallel. However, operatiopns like sparse triangular solve \ref{eq:Gmres-5} can introduce some effect on strong scaling behavior. Figure \ref{fig:sparse-triangular-solve-performance} shows strong scaling performance results of a sparse parallel triangular solver with a two dimensional matrix distribution. Performance considerations of the solver can be found in \cite{sparse-la:triangular-solve}.\\
 
 \figpointer{\ref{fig:sparse-triangular-solve-performance}}
@@ -93,6 +98,8 @@ Other Krylov methods such as CG, for example, scales much better than GMRES. Bec
 
 
 
+\subsection{Preconditioners}
+\label{subseq:iterative-preconditioners}
 % start discussion about preconditioning
 The most important criteria of Krylov methods is convergence rate. The convergence rate of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, equation \ref{eq:Gmres-7} shows dependence of the convergence rate from the matrix condition number. It can be clearly seen that a big condition number leads to very slow error reduction and, as the results, to huge number of iterations.\\
 

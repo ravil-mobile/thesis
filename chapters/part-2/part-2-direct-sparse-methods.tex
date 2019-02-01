@@ -1,7 +1,7 @@
-\section{Direct sparse methods}
-\label{subseq:sparse methods}
+\subsection{Theory Overview}
+\label{subseq:direct-sparse methods}
 
-Direct sparse methods combine main advantages of direct and iterative methods i.e. numerical robustness and usage of sparsity structures. As a results, there is no need for preconditioning and the computation complexity is $O(n^2)$ \cite{complexity-of-spdm}. The problem is that storage cost can significantly increase during factorization i.e. the inverse of a sparse matrix can be sufficiently dense. To reduce storage space of $LU$ decomposition this group of methods performs fill-in reduction reodering as a pre-processing step before actual factorization. If storage space is still huge even after fill-in reduction reodering out-of core factorization can be used where partial results are stored in the secondary memory. \\
+Direct sparse methods combine main advantages of direct dense and iterative methods i.e. numerical robustness and usage of sparsity structures. As a results, there is no need for preconditioning and the computation complexity is $O(n^2)$ \cite{complexity-of-spdm}. The problem is that storage cost can significantly increase during factorization i.e. the inverse of a sparse matrix can be sufficiently dense. To reduce storage space of $LU$ decomposition this group of methods performs fill-in reduction reodering as a pre-processing step before actual factorization. If storage space is still huge even after fill-in reduction reodering out-of core factorization can be used where partial results are stored in the secondary memory. \\
 
 The most widely known sparse direct method is multifrontal method introduced by \citeauthor{mult-frontal-original:1} in their work \cite{mult-frontal-original:1}. Multifrontal method is an improved extension of a frontal method \cite{frontal-original} that can compute independent fronts in parallel. A front, or also called frontal matrix, can be considered as small dense matrix which is a result of Gaussian Elimination for a particular column. The algorithm, in fact, is as a variant of Gaussian Elimination process. There also exist left-looking and right-looking sparse direct methods. The difference between all of them is explained and can be found in \cite{elimination-tree}.\\
 
@@ -319,6 +319,11 @@ a_{i_r,j} & a_{i_r,j+1} & \dots & a_{i_r,j+t} \\
 Up to this point we have already seen all key concepts of the multifrontal method and discussed how the algorithm works. We will move to the discussion of parallelization of the method. \\
 
 
+
+\subsection{Parallelization Aspects}
+\label{subseq:direct-parallel-aspects}
+
+
 The elimination tree, in fact, represents dependencies among columns. Conversely, the tree also shows independent steps of elimination process. Hence the tree forms independent problems that can be executed in parallel. Task parallelism is the main and primary source the algorithm parallelisation. Figure \ref{fig:elimination-tree-mm-parallel-steps} shows task parallelism, for the example given in Figure \ref{fig:supernodal-method-postordering-and-etree}, where each color represents a set concurrent tasks.\\
 
 
@@ -492,4 +497,9 @@ Secondly, we can see the algorithm requires many pre-processing steps to be done
 
 
 Lastly, the algorithm can fail due to incorrect  working space prediction. As a results, factorization has to be restarted with some modification of input solver parameters.\\
+
+
+
+\subsection{Numerical Pivot Handling}
+\label{subseq:pivot-hadling}
 
