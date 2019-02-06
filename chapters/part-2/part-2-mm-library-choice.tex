@@ -1,11 +1,9 @@
-%\section{Choice of a Sparse Linear Direct Solver Library}
 \label{subseq:mm-library-choice}
 
-% NOTE:
-% all equation starts with prefix: lc, for this section
+Fair to say, there is no single algorithm or software that is the best for all types of linear systems \cite{list-of-sparse-direct-solvers}.\\
 
 
-Fair to say, there is no single algorithm or software that is best for all types of linear systems \cite{list-of-sparse-direct-solvers}. Nowadays there exist many different sparse direct solvers on the market. Some of them are tunned for specific linear systems i.e. symmetric positive definite, systems with symmetric sparsity pattern, system with complex numbers, etc., some are targeted for the most general cases. Some packages can handle data parallelism in different ways even within the same library depending on the system size and other criteria. Hence, parallel performance highly depends on a specific implementation of a method. Table \ref{table:mm-library-spec} displays a short summary of almost all available and well-known packages, at the time of writing, in this field based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
+Nowadays, there exist many different avaliable sparse direct solvers. Some of them are tunned for specific linear systems whereas others are targeted for the most general cases \cite{list-of-sparse-direct-solvers}. Some of them handle tree-task and node-data parallelism in different ways even within the same library depending on frontal matrix sizes and other criteria \cite{wsmp}, \cite{mumps-manual}, \cite{superlu-manual}. Hence, parallel performance of a direct sparse method depends heavily on its specific implementation. Table \ref{table:mm-library-spec} represents a short summary of almost all available packages capable to run on distributed-memory machines, at the time of writing, based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
 
 
 \todo{add footnotes of Open*}
@@ -36,93 +34,11 @@ WSMP         & Multifrontal       & General                      & No           
 \end{table}
 
 
-We only listed libraries that can run on distributed memory parallel machines. Almost all of them also support shared memory environment in some degree. Nonetheless there also exist libraries that  run either only sequentially (UMFPACK, SPARSE, TAUCS, SuperLU) or only on shared memory machines (PanelLLT, SuperLU\_MT).\\
+It can be clearly observed, from table \ref{table:mm-library-spec}, that only MUMPS, PaStiX and SuperLU\_DIST cover all requirements induced by GRS, see chapter \ref{chapter:problem-statment}, namely: open-source license and a direct interface to PETSc. It is interesting to notice that all libraries, mentioned above, are implementations of different sparse direct methods, namely: multi-frontal (MUMPS), left-looking (PaStiX) and right-locking (SuperLU\_DIST). Moreover, PaStiX and SuperLU\_DIST use only static pivoting \cite{pastix-manual}, \cite{superlu-manual} whereas MUMPS provides a full implementation of the threshold pivoting strategy \cite{mumps-manual}, described in subsection \ref{subseq:pivot-hadling}.\\
 
 
-% the most important aspect that we want to compare and consider is how numerical pivoting has been implemented for all chosen libraries. Numerical pivoting is [wiki]. Numerical pivoting in run time can lead to lots of problems
+To compare the libraries, a couple of flat-MPI tests were performed using GRS matrix set on HW1 machine. PETSc library was compiled and configured with MUMPS (version 5.1.2), PasTiX (version 6.0.0) and SuperLU\_DIST (version 5.4) packages using their default settings. An internal built-in PETSc profiler was used to measure execution time.  A time limit of 15 minutes was set up for each test-case to prevent blocking of a cluster compute node from unexpected long program execution. Results are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc} where numerical values are given in seconds.\\
 
-
-% to the end: we can see that MUMPS gives us better functionality. We can  explicitly control numerical pivoting and thus storage requirements, load balance and numerical accuracy 
-
-We can see, from table \ref{table:mm-library-spec}, that only MUMPS, PaStiX and SuperLU\_DIST cover all our initial requirements: open-source license and direct interface to the PETSc library. However, these libraries implement different sparse direct methods, namely: multifrontal, left-looking and right-locking, respectively. Moreover, they handle partial pivoting in different ways.\\
-
-
-It is known that partial pivoting is necessary to achieve a good numerical accuracy during Gaussian Elimination. It interchanges rows and columns of a matrix in such a way to avoid small numerical values along the diagonal. In case of sparse direct solvers, the numerical pivoting, in run-time, usually distorts all predictions that have been made during the analysis phase and can lead to significant fill-in and load unbalanced, with respect to floating-point operations, during factorization. Hence, implementation of numerical pivoting, especially during parallel execution, plays the most important role in performance for this group of methods.\\
-
-
-Both PaStiX and SuperLU\_DIST libraries use so-called static pivoting where the pivot order is chosen before numerical factorization and kept fixed during factorization.\\
-
-
-The main advantage of static pivoting is that it allows to better optimize the data layout, load balance, and communication scheduling \cite{superlu-manual}. However, it leads to a higher risk of numeric instability. Therefore, both PaStiX and SuperLU\_DIST provide a few ways to perform the solution refinement.\\
-
-
-For instance, SuperLU\_DIST uses diagonal scaling, setting very tiny pivots to larger values, and iterative refinement (listing \ref{lst:iterative-refinement}). While PaStiX allows the user to choose a refinement strategy between GMRES, CG (for SPD systems) and iterative refinement as well. At this point it is interesting to notice that we came to the same conclusion as the PasTiX developers with respect to the solution refinement using Krylov iterative methods.\\
-
-
-Iterative refinement, shown in listing \ref{lst:iterative-refinement}, is claimed to converge to a \todo{can we use decent here?} decent precision within 2 or 3 steps in work \cite{mm-backward-error}. However, in practice, we noticed that the iterative refinement can work not as expected, especially in case of lowered partial pivoting constrains.\\
-
-For completeness, we have to mention that the variable $too\_large$ is, in fact, an estimation of the backward error \cite{mm-backward-error} which can be expressed as following:
-
-\begin{equation}
-\frac{|b - A\hat{x}|_{i}}{(|b| + |A| |\hat{x}|)_{i}}
-\end{equation}
-
-where $\hat{x}$ is the computed solution and $|\bullet|$ is the element-wise module operation.\\
-
- 
-\begin{minipage}{\linewidth}
-
-\begin{lstlisting}[language=python, caption={A simple iterative refinement}, frame=single, label={lst:iterative-refinement}]
-# perform analysis and numerical factorization 
-# phases
-LU = SparseDirectSolver(matrix=A)
-
-# compute initial solution
-x = Solve(factorization=LU, rhs=b)
-
-# compute initial residual
-r = A * x - b
-
-while r > too_large:
-	# find correction
-	d = Solve(factorization=LU, rhs=r)
-	
-	# update solution
-	x = x - d
-	
-	# update residual
-	r = A * x - b
-\end{lstlisting}
-\end{minipage}
-\todo{listing of iterative refinement}
-
-% Drawback static pivoting is implicit wrt memory consumtion
-
-In contrast to PaStiX and SuperLU\_DIST, MUMPS performs partial pivoting in run-time during the numerical factorization phase. To limit the amount of numerical pivoting, and stick better to the
-sparsity predictions done during the symbolic factorization, partial pivoting can be relaxed, leading to the partial threshold pivoting strategy \cite{mumps-manual}.\\
-
-A pivot $|a_{i,i}|$ is accepted if it satisfies:\\
-\begin{equation}\label{eq:lc-1}
-|a_{i,i}| \geq u \times max_{k=i \cdots n} |a_{k,j}|
-\end{equation}
-
-where $u$ is value between 0 and 1.\\
-
-To improve solution accuracy, MUMPS, as PasTiX and SuperLU\_DIST, provides the iterative refinement as a post-processing step as well.\\
-
-
-The most important feature which MUMPS introduces is so-called delayed pivots. It can happen that equation \ref{eq:lc-1} cannot be satisfied within a fully-summed block of a frontal matrix (equation  \ref{eq:mm-10}) and we also cannot consider elements outside the block since the corresponding rows are not fully-summed. In this case, some rows and columns will remain unfactored, or delayed, in the front. They are going to be sent the frontal matrix of the parent, as part of the contribution block and the process will repeat. The delayed pivot approach helps to improve numerical accuracy, however, it causes additional fill-in in the parent node.\\
-
-
-In spite of obvious complexity of dynamic partial pivoting, MUMPS allows the user to explicitly control run-time behavior of the algorithm due to partial threshold pivoting strategy. This provides an opportunity for optimization and tuning in some degree.\\
-
-\todo{data parallelism difference between MUMPS and SuperLU}
-
-
-PETSc (version 3.10) provides the full interface to both SuperLU\_DIST and MUMPS, whereas the interface to the PasTiX library is quite limited. In fact, in case of PasTiX, the user can only control the number of threads per MPI process and a level of verbosity, which makes this library to be less interesting for our subsequent (following) research.\\
-
-
-In order to evaluate the overall parallel performance of the libraries, we performed a few flat-MPI tests with the GRS matrix using the HW1 machine. Before testing, we downloaded and configured the libraries, MUMPS version 5.1.2, PasTiX version 6.0.0, SuperLU\_DIST version 5.4, within the PETSc environment with their \textbf{default settings}. As a profiling tool, we used the internal PETSc profiler. A time limit of 15 minutes was set up for each test case to prevent blocking of a compute node in case if out-of-core execution. Results of the tests are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc}. Numerical values in tables are given in \textbf{seconds}.\\
 
 
 \begin{table}[ht]
@@ -141,7 +57,7 @@ MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \
 9   & 7.50E-02 & 8.28E-02 & 5.02E-01 &  & 19  & 8.58E-02 & 1.33E-01 & 5.47E-01 \\ \cline{1-4} \cline{6-9} 
 10  & 7.22E-02 & 8.52E-02 & 4.64E-01 &  & 20  & 8.64E-02 & 1.49E-01 & 3.39E-01 \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textbf{cube-5} (9352 equations)}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textit{cube-5} (9352 equations)}
 \label{table:lc-cube-5-result}
 \end{table}
 
@@ -162,7 +78,7 @@ MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \
 9   & 7.93E-01 & 8.35E-01 & time-out &  & 19  & 8.04E-01 & 8.65E-01 & time-out \\ \cline{1-4} \cline{6-9} 
 10  & 8.07E-01 & 8.15E-01 & time-out &  & 20  & 6.85E-01 & 8.87E-01 & time-out \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textbf{cube-64} (100657 equations)}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textit{cube-64} (100657 equations)}
 \label{table:lc-cube-64-result}
 \end{table}
 
@@ -183,18 +99,20 @@ MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ 
 9   & 1.95E+01 & 4.08E+01 & crashed &  & 19  & 1.52E+01 & 3.31E+01 & crashed \\ \cline{1-4} \cline{6-9} 
 10  & 1.91E+01 & 3.81E+01 & crashed &  & 20  & 1.38E+01 & 3.16E+01 & crashed \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textbf{k3-18} (1155955 equations)}
+\caption{Results of a flat-MPI test of MUMPS, PasTiX and SuperLU\_DIST libraries with their default settings and the matrix \textit{k3-18} (1155955 equations)}
 \label{table:lc-k3-18-result}
 \end{table}
 
 
 
-We ran into a few problems with the SuperLU\_DIST library during the tests. Firstly, factorization exceeded the set time limit in case of \textbf{cube-64} and \textbf{k3-2} matrices. Secondly, we noticed the library crashed during processing of \textbf{k3-18}, \textbf{cube-645} and (partially) \textbf{pwr-3d} matrices. A debugging process showed that a segmentation fault occurred in \textit{pdgstrf} function during the numerical factorization phase. We still keep working on this problem together with the PETSc team in order to find a solution. \\
+Some problems were detected during  SuperLU\_DIST library testing. First of all, execution of \textit{cube-64} and \textit{k3-2} test-cases exceeded the set time limit. Secondly, it was noticed the library was crashing during processing of \textit{k3-18}, \textit{cube-645} and (partially) \textit{pwr-3d} test-cases. Debugging revealed that a segmentation fault occurred in function \textit{pdgstrf}  during the numerical factorization phase. Nonetheless, it is still unclear whether the problem was software or hardware specific. A solution or a reason of such program behavior has not been found at the moment of writing.\\
+
 
 % FOR PRESENTATION: it can be due to wrong matrix representation in binary PETSc files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
 
+To complete comparison and evaluate parallel performance SuperLU\_DIST library, an additional test was conducted using 2D formulation of the Poisson problem with \textit{100000} unknown. According to the results, SuperLU\_DIST managed to complete matrix factorization within the set time limit without crashing, however, it showed abnormal jagged strong scaling behavior. Moreover, it turned out it was the slowest in comparison with the other solvers. The results are shown in figure \ref{fig:5-point-stencil-solvers-comparison}.\\
 
-To complete and perform a fair comparison, an additional flat-MPI test was conducted with a 5-point stencil Poisson matrix with 100000 equations. We think this test can partially allow us to estimate parallel performance of systems like \textbf{k3-18}, \textbf{cube-645} where SuperLU\_DIST crashed. The results of the test are given in figure \ref{fig:5-point-stencil-solvers-comparison}.\\
+
 
 \figpointer{\ref{fig:5-point-stencil-solvers-comparison}}
 \begin{figure}[htpb]
@@ -206,11 +124,10 @@ To complete and perform a fair comparison, an additional flat-MPI test was condu
 
 % FOR PRESENTATION: we think that 
 
-
-According to the test results, it is clear that MUMPS significantly outperforms both SuperLU\_DIST and PaStiX. A literature review showed that \citeauthor{wsmp}, in paper \cite{wsmp}, came to nearly the same results comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries with respect to execution time for their matrix set. However, paper \cite{mm-comparison-of-packages} showed an almost opposite outcome. According to \citeauthor{mm-comparison-of-packages}, SuperLU\_DIST spent less time on factorization and solution phases, which almost always determines the total execution time, and, even more interesting, it scaled much better overall. We must note that both research groups used different machines and matrix sets. This fact actually seconds our idea that a choice of a suitable library can depend heavily on data and hardware.\\
-
-
-Taking into consideration the results of our primary flat-MPI tests, the MUMPS library was chosen as a sparse direct solver for our hybrid approach and the following study. Furthermore, an overview of the MUMPS documentation also showed some room for performance tuning that we were going to discuss in detail in sections [bla], [bla] and  [bla].\\
+According to the initial and additional tests, MUMPS library showed the best parallel performance and scaling in contrast to other solvers. No abnormal behavior during its operation was detected. In some cases, it only required to increase a multiplicative factor of estimated working space which was used to hold frontal matrices and factors $L$ and $U$ in memory. PaStiX was the second fastest solver in our test. However,  it was often considerably slower than MUMPS. At the same time, SuperLU\_DIST showed the worst results. Additionally, as it was mentioned above, we experienced some technical problems during operation of that library.\\
 
 
-However, it should be mentioned that we cannot exclude that SuperLU\_DIST  and PaStiX can perform similar, or even better, as the MUMPS library with appropriate parameters tuning or for another matrix set.\\
+A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in work \cite{wsmp}, came to nearly the same outcome, as we did, comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving of systems of linear equations in contrast to other solvers used in their work. It needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
+
+
+In this chapter, we compared different sparse direct methods and their concrete implementations with their default settings with regard to GRS matrix set. Based on the obtained results and literature review, MUMPS library was chosen for the following study. In subsection \ref{subseq:mumps-review}, we make a detail review of MUMPS libraries and its specific traits. \\

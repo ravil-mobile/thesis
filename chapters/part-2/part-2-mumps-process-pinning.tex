@@ -1,4 +1,4 @@
-\section{MUMPS: Process Pinning}
+\subsection{MUMPS: Process Pinning}
 \label{subseq:mm-mumps-process-pinning}
 
 Due to intensive and complex manipulations with frontal and and contribution matrices, we can assume that MUMPS belongs to memory bound applications. In this case memory access can be a bottleneck for the library. A common way to improve performance of memory bound applications running on distributed memory machines is to distribute processes equally among NUMA domains within a compute node. Given the fact that each NUMA domain has its own system bus, this strategy allows to reduce conjunction of memory traffic by balancing data requests equally among the memory channels.\\

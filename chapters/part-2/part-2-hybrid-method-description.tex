@@ -1,5 +1,47 @@
-\section{Conclusion}
 \label{subseq:hybrid-method-description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Direct sparse methods do not require a preconditioner, in fact, they can be used as a preconditioner of an iterative solver.\\
+
+\todo{SDS: start - read comments}
+%We can conclude, from the analysis above, the method has inherently bad scaling behavior and it is quite sensitive to a matrix structure. We will see later that it is almost impossible to predict the saturation point i.e. a point after which performance either drops or stays at the same level. We assume that scaling becomes better with growth of a matrix size. However, we cannot expect such behavior for small and medium systems.\\  
+
+
+%Secondly, we can see the algorithm requires many pre-processing steps to be done before numerical factorization phase. All these steps must run in parallel and be highly scalable. Apart from performance constrains of the steps, they must lead to wide and well balanced elimination trees which becomes crucial during the numerical phase.\\
+
+
+%Lastly, the algorithm can fail due to incorrect  working space prediction. As a results, factorization has to be restarted with some modification of input solver parameters.\\
+\todo{SDS: end}
+
+
+
+\textbf{Preconditioners start:}
+At the first step, some methods, table BRA, were tried with tier default settings. The algorithms were chosen because of their availability in PETSc and to run in parallel.\\
+
+
+
+
+% native PETSc preconditioners as well as some external ones
+
+Table \todo{Table with comparisons of different preconditioning for our test cases}
+
+Table [] shows results of different preconditioning algorithms applied to our test case. It can be seen that some algorithms failed even after tuning. \\
+
+It interesting to notice that \citeauthor{wsmp} came to approximately the same results working on their set of matrices in their work \cite{wsmp}. They observed that preconditioned iterative solvers worked efficiently only for 2 out 5 cases in contrast to direct sparse solvers.\\
+
+We can summarize that it is vital to perform careful parameter tuning of any preconditioning algorithms combining results from [table] and \cite{wsmp}. In general the  search can take a considerable amount of time. Moreover, it becomes impractical for time integration problems where topology of an underlying problem and, as the results, the computational mesh, discretization, Jacobian matrix can be changed over time of a simulation. It is obvious that parameters chosen for a particular time step can become not optimal for consecutive steps and, at the end, it can lead to divergence. If divergence happens at any time step the entire time integration algorithm fails and the simulation has to be restarted with different preconditioning parameters or with a different preconditioning algorithm.\\
+
+By and large we come to a conclusion that preconditioned iterative solvers are not robust and thus cannot fully fulfill requirements listed in section \ref{chapter:solver configuration}.\\
+
+% maybe above we have to mention inderect memory access and its effect on performance
+
+
+\textbf{Preconditioners end:}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+
+
 
 % show motivation to use sparce direct methods: show a plot whith MUMPS and 100 interation of GMRES
 % show all phases
@@ -17,13 +59,13 @@ We have observed almost all available methods and we could see that none of them
 The analysis from sections \ref{subseq:iterative methods} and \ref{subseq:iterative methods} shows that iterative methods scale much better in contrast to sparse direct ones. However, they are only efficient in case of very well preconditioned systems. We showed in section \ref{subseq:iterative methods} that search of preconditioning parameters usually takes lots of time and efforts. Additionally, we cannot guarantee that the settings fond for our GRS matrix set will always work well in subsequent steps of time integration or for other different simulations.\\
 
 
-Sparse direct methods do not have such a problem. They always produce the right solution. The methods can only fail in case of underestimation of the working space due to numerical pivoting during the numerical factorization phase. In order to cope with that problems, some implementations of direct sparse methods provide two options to the user, namely: to increase predicted working space by some factor e.g. 2, 3, 4, etc. or to lower constrains of numerical pivoting which allows small numerical values to stay on the diagonal.\\
+Sparse direct methods do not suffer from problem. They always produce \todo{grammar}the right solution. The methods can only fail in case of underestimation of the working space due to numerical pivoting during the numerical factorization phase. In order to cope with that problems, some implementations of direct sparse methods provide two options to the user, namely: to increase predicted working space by some factor e.g. 2, 3, 4, etc. or to lower constrains of numerical pivoting which allows small numerical values to stay on the diagonal.\\
 
 
 The drawback of the second option is that it can lead to out-of-core execution with using the secondary memory which makes numerical factorization significantly slow. While the second option has lower chance of out-of-core factorization it can lead to a numerically inaccurate solution. \\
 
 
-After many considerations we decided to stick to the sparse direct solvers because \textbf{robustness} criteria had the highest priority in our case. To circumvent problems mentioned above, we proposed a so-called hybrid solver, in spite of the fact that the definition of \textit{hybrid linear solvers} had already been used in scientific computing literature in a slightly different way \cite{shylu-hybrid-solver}. \textbf{\textit{The idea is to switch off numerical pivoting (or significantly lower the constrains) of sparse direct solvers and use the resultant $LU$ decomposition as a preconditioner for an iterative method, for example GMRES}}.\\
+\todo{to fullfill robustness creteria} After many considerations we decided to stick to the sparse direct solvers because \textbf{robustness} criteria had the highest priority in our case. To circumvent problems mentioned above, we proposed a so-called hybrid solver, in spite of the fact that the definition of \textit{hybrid linear solvers} had already been used in scientific computing literature in a slightly different way \cite{shylu-hybrid-solver}. \textbf{\textit{The idea is to switch off numerical pivoting (or significantly lower the constrains) of sparse direct solvers and use the resultant $LU$ decomposition as a preconditioner for an iterative method, for example GMRES}}.\\
 
 \begin{lstlisting}[language=python, caption={A pseudo-code of the Hybrid approach}, frame=single]
 # compute LU decomposition with a sparse direct solver
