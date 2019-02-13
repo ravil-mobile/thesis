@@ -2,12 +2,12 @@
 \label{subseq:mpi-openmp}
 
 
-As it was mentioned in  section \ref{subseq:mumps-review}, the development of MUMPS began in 1996 when message-passing programming paradigm dominated in parallel computing. Therefore, the library originally was designed only for distributed-memory machines.\\
+As it was mentioned in subsection \ref{subseq:mumps-review}, the development of MUMPS began in 1996 when message-passing programming paradigm dominated in parallel computing. Therefore, the library originally was designed only for distributed-memory machines.\\
 
-In 2010,  \citeauthor{chowdhury2010some} published their first experiments and some issues, in \cite{chowdhury2010some}, of exploiting shared memory parallelism in MUMPS. The authors showed that it was possible to achieve some improvements in multicore systems with multithreading, given a purely MPI application. However, later \citeauthor{l2013introduction} mentioned, in \cite{l2013introduction}, that adaptation of existing code for NUMA architecture was still a challenge because of memory allocation, memory affinity, thread pinning and other related issues.\\
+In 2010,  \citeauthor{chowdhury2010some} published their first experiments and some issues, in \cite{chowdhury2010some}, of exploiting shared memory parallelism in MUMPS. The authors showed that it was possible to achieve some improvements in multicore systems using multi-threading, given a purely MPI application. However, later \citeauthor{l2013introduction} mentioned, in \cite{l2013introduction}, that adaptation of the existing code for NUMA architecture was still a challenge because of memory allocation, memory affinity, thread pinning and other related issues.\\
 
 
-In spite of natural data locality of message-passing applications which is always beneficial, a general motivation of switching to a hybrid mode, mixed MPI/OpenMP, is to reduce communication overheads between processes. According to the profiling results done by \citeauthor{chowdhury2010some}, MUMPS contained four main initial sources of shared-memory parallelization, namely: 
+In spite of an advantage of natural data locality of message-passing applications, a general motivation of switching to a hybrid mode, mixed MPI/OpenMP process/thread distribution, is to reduce communication overheads between processes. According to the profiling results done by \citeauthor{chowdhury2010some}, MUMPS contained four main regions of shared-memory parallelization, namely: 
 
 \begin{enumerate}
 
@@ -22,28 +22,30 @@ In spite of natural data locality of message-passing applications which is alway
 \end{enumerate}
 
 
-Almost all customized BLAS libraries, for example Intel MKL and OpenBLAS, are multi-threaded and can efficiently work in shared-memory environment. Thus, parallelization of region \ref{openmp-blocks-1} can be achieved by linking a suitable BLAS library whereas regions \ref{openmp-blocks-2}, \ref{openmp-blocks-3} and \ref{openmp-blocks-4} are multithreaded by inserting appropriate OpenMP directives above the corresponding loop statements.\\
+Almost all customized BLAS libraries, for example Intel MKL and OpenBLAS, are multi-threaded and can efficiently work in shared-memory environment. Hence, parallelization of region \ref{openmp-blocks-1} can be achieved by linking a suitable BLAS library whereas regions \ref{openmp-blocks-2}, \ref{openmp-blocks-3} and \ref{openmp-blocks-4} can be multi-threaded by inserting appropriate OpenMP directives above the corresponding loop statements.\\
 
 
-A detailed review of works \cite{l2013introduction} and \cite{chowdhury2010some} reveals that, in general, a pure OpenMP or mixed MPI/OpenMP strategy can reduce run-time of MUMPS. In average, factorization time is reduced by \textbf{14.3\%} and in some special cases improvement reaches about \textbf{50.4\%}, according to the data provided in the papers. However, at the same time, the results demonstrate that pure-MPI mode sometimes can significantly outperform any hybrid mixed strategy.\\
+A detailed review of works \cite{l2013introduction} and \cite{chowdhury2010some} reveals that, in general, a pure OpenMP or mixed MPI/OpenMP strategy can reduce run-time of MUMPS. On average, factorization time is reduced by \textbf{14.3\%} and in some special cases improvement reaches about \textbf{50.4\%}, according to the data provided in the papers. However, at the same time, the results also show that sometimes the pure-MPI mode can significantly outperform other hybrid mixed strategy.\\
 
 
-By and large, the results show two important aspects. Firstly, performance of a specific strategy depends heavily on the resultant assembly tree and thus on the matrix sparsity pattern and applied fill reducing algorithm. Secondly, it is not possible to guess in advance which strategy gives the best parallel performance without detailed information about the tree structure and computational cost per node. \citeauthor{l2013introduction} showed that performance of a particular mode depended on the ratio of large and small fronts. For example, they noticed more threads per MPI process leaded to better parallel performance when the ratio was high. On the other hand, they observed the absolutely opposite result with relatively small ratios. Unfortunately, \citeauthor{l2013introduction} did not provide any quantitative measure for that in their work \cite{l2013introduction}.\\ 
+By and large, the results show two important aspects. Firstly, performance of a specific strategy depends heavily on the resulting assembly tree and thus on the matrix sparsity pattern and applied fill reducing reordering. Secondly, it is not possible to guess in advance which strategy gives the best parallel performance without detailed information about the tree structure and computational cost per node. \citeauthor{l2013introduction} showed that performance of a particular mode dependeds on a ratio of large and small fronts. For example, they noticed that more threads per MPI process leaded to better parallel performance when the ratio was high. On the other hand, they observed the absolutely opposite result with relatively small ratios. Unfortunately, \citeauthor{l2013introduction} did not provide any quantitative measure for the notion of small and large ratios in their work \cite{l2013introduction}.\\ 
 
 
-It is also interesting to notice that parallelization of region 1 with using a multithreaded BLAS library brings most of parallel performance for mixed or pure OpenMP strategies, according to the results from\cite{l2013introduction}. But, at the same time, performance of regions 2, 3, 4 multithreaded by OpenMP directives is marginal. In average, it allows to reduce numerical factorization run-time by only \textbf{0.66\%}.\\
+It is also interesting to notice that parallelization of region 1 using a multi-threaded BLAS library gives the most of improvement of parallel performance for mixed or pure OpenMP strategies, according to the results from \cite{l2013introduction}. Whereas,
+multi-threading of regions 2, 3, 4 has only a small positive effect i.e it reduces numerical factorization run-time by only \textbf{0.66\%} on an average.\\
 
 
-This outcome is expected because BLAS subroutines, especially level 3, have a high ratio of floating point operations per memory access and thus PEs re-use data stored in caches as much as possible. Meanwhile, regions 2, 3, 4 mainly perform initialization, data movement and execution of \textit{if-statements} which lead to a low compute ratio.\\
+
+This outcome is expected because BLAS subroutines, especially level 3, re-use data stored in caches as much as possible and thus achieve high ratios of floating point operations per memory access which is essential for efficient multi-threading. Meanwhile, regions 2, 3, 4 mainly perform initialization, data movement and execution of \textit{if-statements} which always result in low compute-intensity.\\
+
+%\todo{consider that paragraph}
+%Additionally, it is worth noticing that both works, \cite{chowdhury2010some} and \cite{l2013introduction}, were mainly focused on the numerical factorization phase assuming that both analysis and solution phases do not take lots of computational time. In spite of credibility of this assumption, it still should be pointed out the solution phase runs faster in case of flat-MPI mode. This fact becomes even more interesting because, in our case, a system with multiple right-hand sides has to be solved in order to generate a preconditioner.\\
 
 
-Additionally, it is worth noticing that both works, \cite{chowdhury2010some} and \cite{l2013introduction}, were mainly focused on the numerical factorization phase assuming that both analysis and solution phases do not take lots of time. In spite of credibility of this assumption, it still should be pointed out the solution phase runs faster in case of flat-MPI mode. This fact becomes even more interesting because, in our case, a system with multiple right-hand sides has to be solved in order to generate a preconditioner.\\
+We have to admit both works, \cite{chowdhury2010some} and \cite{l2013introduction}, are relatively old and the analysis above may be not complete and full. Because MUMPS is a dynamic developing project, we can expect that adaptation of shared-memory parallelization in MUMPS has been significantly advanced since that time. Since the release of MUMPS version 4, the developers have persistently recommended to use only hybrid strategies e.g. \textit{one MPI process per socket and as many threads as the number of cores} \cite{mumps-manual}.\\
 
 
-We have to admit that both works, \cite{chowdhury2010some} and \cite{l2013introduction}, are relatively old and the analysis above may be not complete and full. Because MUMPS is a dynamic developing project, we can expect that adaptation of shared-memory parallelization in MUMPS has been significantly advanced since that time. Since the release of MUMPS version 4, the developers have persistently recommended to use only a hybrid mode like\textit{one MPI process per socket and as many threads as the number of cores} \cite{mumps-manual}.\\
-
-
-As an initial test, we compared influence of both Intel MKL and OpenBLAS libraries on parallel performance of MUMPS using GRS matrix set only. In order to pin OpenMP threads in a right way, without any conflict between them, the following OpenMP environment variables were set as:
+As an initial test, we compared influence of both Intel MKL and OpenBLAS libraries on parallel performance of MUMPS using GRS matrix set only. In order to pin OpenMP threads in a correct way, without any conflict between them, the following OpenMP environment variables were set as:
 
 \begin{itemize}
 	\item OMP\_PLACES=cores
@@ -51,7 +53,7 @@ As an initial test, we compared influence of both Intel MKL and OpenBLAS librari
 \end{itemize} 
 
 
-During the test, we found that run-time of MUMPS-OpenBLAS configuration abnormality increased for some test cases. For instance, in case of matrix \textit{cube-645}, the increase reached almost \textbf{450\%} in contrast to the pure sequential execution. \\
+During the testing, we found that sometimes execution time of MUMPS-OpenBLAS configuration abnormality increased. For instance, in case of factorization of matrix \textit{cube-645}, the increase reached almost \textbf{450\%} in contrast to the pure sequential execution. \\
 
 \figpointer{\ref{fig:mumps-openblas-anomalies}}
 \begin{figure}[htpb]
@@ -65,7 +67,7 @@ During the test, we found that run-time of MUMPS-OpenBLAS configuration abnormal
 \end{figure}
 
 
-Multiple conflicts between application and system threads were observed using \textit{htop} as an interactive process viewer. Figure \ref{fig:mumps:openblas-thread-conflcit} shows a snapshot taken during factorization of matrix \textit{k3-18} running with 1 MPI process and 20 threads.\\
+Multiple conflicts between application and system threads were observed using \textit{htop} software as an interactive process viewer. Figure \ref{fig:mumps:openblas-thread-conflcit} shows a snapshot taken during factorization of matrix \textit{k3-18} running with 1 MPI process and 20 threads.\\
 
 
 \figpointer{\ref{fig:mumps:openblas-thread-conflcit}}
@@ -77,10 +79,10 @@ Multiple conflicts between application and system threads were observed using \t
 \end{figure}
 
 
-It is difficult to say what exactly caused such behavior. However, \citeauthor{chowdhury2010some} also reported about the same problem with using GotoBLAS (OpenBLAS). They assumed that GotoBLAS created and kept some threads active even after the main threads returned to the calling application which could lead to interference with threads created in other OpenMP regions \cite{chowdhury2010some}. For that reason, we decided to stick only to Intel MKL library for the rest of the study of this section because there were no conflicts detected during initial runs.\\
+It is difficult to state what exactly caused such behavior. However, \citeauthor{chowdhury2010some} also reported about the same problem using GotoBLAS (OpenBLAS). They assumed that GotoBLAS created and kept some threads active even after the main threads returned to the calling application which could lead to interference with threads created in other OpenMP regions \cite{chowdhury2010some}. For this reason, we decided to use only Intel MKL library for the rest of the study because there were no such thread-conflicts detected during operation of MUMPS-Intel MKL configuration.\\
 
 
-Only common mixed MPI/OpenMP modes were tested in order to check influence of shared-memory parallelism on parallel performance of MUMPS as well as to limit the amount of testing. The following strategies were chosen, namely: 20 MPI - 1 thread (flat-MPI), 10 MPI - 2 threads, 4 MPI - 5 threads, 2 MPI - 10 threads, 1 MPI - 20 threads (flat-OpenMP). The tests were conducted on both HW1 and HW2 machines in order to check whether the results are consistent across different machines with different operating and environment settings. Additionally, MUMPS was set as a preconditioning algorithm for the GMRES solver with only \textit{one iteration}. This allowed to force MUMPS library to solve systems multiple right-hand sides. According to our assumption, time spent on one GMRES iteration is negligible in contrast time spent on sparse direct matrix factorization. The test results are represented in tables \ref{fig:mpi-omp-grs-hw1} \ref{fig:mpi-omp-grs-hw2}, \ref{fig:mpi-omp-suitesparse-hw1} and \ref{fig:mpi-omp-suitesparse-hw2}. Numerical values in tables are given in seconds.\\
+Only common mixed MPI/OpenMP modes were tested in order to check influence of shared-memory parallelism on parallel performance of MUMPS as well as to limit the amount of testing. The following strategies were chosen, namely: 20 MPI - 1 thread (flat-MPI), 10 MPI - 2 threads, 4 MPI - 5 threads, 2 MPI - 10 threads, 1 MPI - 20 threads (flat-OpenMP). The tests were conducted on both HW1 and HW2 machines with the aim of checking whether  results would be consistent between different hardware running under different operating and environment settings. The test results are represented in tables \ref{fig:mpi-omp-grs-hw1} \ref{fig:mpi-omp-grs-hw2}, \ref{fig:mpi-omp-suitesparse-hw1} and \ref{fig:mpi-omp-suitesparse-hw2} where numerical values are given in seconds.\\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -164,10 +166,17 @@ Geo\_1438                                             & ROM                     
 \end{table}
 
 
-According to the results, we have noticed the optimal hybrid MPI/OpenMP mode locates near the saturation point of the corresponding flat-MPI test. Therefore, search of the optimal mode can take considerable amount of time. It is needless to say that the mode varies from matrix to matrix and there is no way to predict the mode in advance. Moreover, the results show that performance gain is around \textbf{2.1\%} in case of GRS matrix set on HW1 hardware, excluding small test cases such as \textit{cube-5} and \textit{pwr-3d} where runs with 20 MPI processes were slower in contrast to sequential execution. Much optimistic results were obtained for experiments conducted on HW2 machine were performance gain reached almost \textbf{31\%} for the same test cases.\\
+%According to the results, we have noticed the optimal hybrid MPI/OpenMP mode locates near the saturation point of the corresponding flat-MPI test. Therefore, search of an optimal mode can take considerable amount of time. It is needless to say that the mode varies from matrix to matrix and there is no way to predict the mode in advance. Moreover, the results show that performance gain is around \textbf{2.1\%} in case of GRS matrix set on HW1 hardware, excluding small test cases such as \textit{cube-5} and \textit{pwr-3d} where runs with 20 MPI processes were slower in contrast to sequential execution. Much optimistic results were obtained for experiments conducted on HW2 machine were performance gain reached almost \textbf{31\%} for the same test cases.\\
+
+\todo{check: description of the saturation point}
+According to the results, we have noticed that an optimal hybrid MPI/OpenMP mode locates near the saturation point of the corresponding flat-MPI test. Generally speaking, a location of the saturation point is specific for each matrix and, therefore, there is no way to predict a mode in advance. However, having known the point, the amount of testing can be considerably reduced by searching around and applying different mixed MPI/OpenMP strategies.\\
 
 
-SuiteSparse matrix set demonstrates much better performance gain out of hybrid parallel computing on both hardware. In average, run-time is improved in more than \textbf{15\%} for HW1 and approximately \textbf{41\%} in case of HW2, excluding \textit{Geo\_1438} from statistics. The best result was obtained for \textit{Geo\_1438} matrix where execution time dropped in about \textbf{3 times} for all hybrid modes relatively to flat-MPI. We suppose it could happen because \textit{Geo\_1438} matrix had a very huge ratio of large and small fronts. \textit{Geo\_1438} is the best example which shows the benefit of hybrid parallel programing usage.\\
+The results show that average performance gain is around \textbf{2.1\%} in case of GRS matrix set for HW1 hardware, excluding small test-cases such as \textit{cube-5} and \textit{pwr-3d}. We consider these two scenarios, \textit{cube-5} and \textit{pwr-3d}, as specific ones because their execution time with 20 MPI processes using flat-MPI mode is originally slower in contrast to the sequential execution and, therefore, it is relevant to assume that improvement came only from reducing the process count. At the same time, much optimistic results were obtained from experiments conducted on HW2 machine where performance gain reached almost \textbf{31\%} for the same test-cases.\\
 
 
-By an large, we have noticed some negligible improvement of execution time in case of GRS matrix set on HW1 machine with using the optimal hybrid MPI/OpenMP configuration. However, in spite of the improvement, the parallel efficiency drops significantly. As the result, we have come to the conclusion that flat-MPI mode is the best for GRS matrix set on HW1 machine for three reasons. Firstly, this mode is deterministic and requires less amount of testing to find the optimal process count. Secondly, efficiency of hardware usage is better in case of flat-MPI which can be relevant for energy-efficient computing. Thirdly, improvement obtained with using Intel MKL library running with the optimal hybrid MPI/OpenMP mode can deteriorate performance gain of MUMPS-OpenBLAS flat-MPI configuration.\\ 
+
+Results obtained using SuiteSparse matrix set demonstrate much better performance gain from hybrid parallel computing on both hardware. On average, execution time improves by more than \textbf{15\%} running tests on HW1 and approximately by \textbf{41\%} on HW2, excluding \textit{Geo\_1438} from the statistics. The best result was obtained exactly in case of \textit{Geo\_1438} test-case where execution time dropped about \textbf{3 times} for all hybrid modes in contrast to the corresponding flat-MPI mode. We suppose it may occur because a high ratio of large and small fronts of this particular test-case. By and large, \textit{Geo\_1438} is in fact the best example of hybrid parallel programing usage in MUMPS.\\
+
+
+All in all, in this section we have discussed how MUMPS adopts hybrid parallel programming. As it is in case of selection of a fill reducing reordering algorithm, subsection \ref{subseq:fill-in-reordering}, we have concluded it is not possible to find an optimal mixed strategy without testing. However, we have shown a way to reduce amount of it: perform a flat-MPI test, find the saturation point and search around. We have noticed some negligible improvement of execution time in case of testing GRS matrix set on HW1 machine with an optimal hybrid MPI/OpenMP configuration. However, in spite of the improvement, parallel efficiency drops significantly. As a result, we have come to a conclusion the flat-MPI mode is the best one for GRS matrix set in case of HW1 machine for several reasons. Firstly, this mode is deterministic and requires least amount of testing in order to find an optimal process count. Secondly, hardware efficiency is higher in this case. Thirdly, improvement obtained with MUMPS-Intel MKL configuration running with an optimal hybrid MPI/OpenMP mode can deteriorate performance gain obtained with MUMPS-OpenBLAS flat-MPI configuration, shown in subsection \ref{subseq:blas-comparison}.\\ 

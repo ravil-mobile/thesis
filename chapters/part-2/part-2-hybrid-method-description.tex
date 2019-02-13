@@ -67,20 +67,20 @@ The drawback of the second option is that it can lead to out-of-core execution w
 
 \todo{to fullfill robustness creteria} After many considerations we decided to stick to the sparse direct solvers because \textbf{robustness} criteria had the highest priority in our case. To circumvent problems mentioned above, we proposed a so-called hybrid solver, in spite of the fact that the definition of \textit{hybrid linear solvers} had already been used in scientific computing literature in a slightly different way \cite{shylu-hybrid-solver}. \textbf{\textit{The idea is to switch off numerical pivoting (or significantly lower the constrains) of sparse direct solvers and use the resultant $LU$ decomposition as a preconditioner for an iterative method, for example GMRES}}.\\
 
-\begin{lstlisting}[language=python, caption={A pseudo-code of the Hybrid approach}, frame=single]
-# compute LU decomposition with a sparse direct solver
-LU = SparseDirectSolver(matrix=A, pivoting="switch_off")
+%\begin{lstlisting}[language=python, caption={A pseudo-code of the Hybrid approach}, frame=single]
+%# compute LU decomposition with a sparse direct solver
+%LU = SparseDirectSolver(matrix=A, pivoting="switch_off")
 
-# compute inverse of A using backward-forward substitutions
-# sovle: LU * A_inv = I
-A_inv = ComputeInverse(decomposition=LU)
+%# compute inverse of A using backward-forward substitutions
+%# sovle: LU * A_inv = I
+%A_inv = ComputeInverse(decomposition=LU)
 
-# apply a Krylov method to a preconditioned system 
-# i.e A_inv * A * x = A_inv * b
-GMRES(matrix=A, rhs=b, preconditione=A_inv)
-\end{lstlisting}
+%# apply a Krylov method to a preconditioned system 
+%# i.e A_inv * A * x = A_inv * b
+%GMRES(matrix=A, rhs=b, preconditione=A_inv)
+%\end{lstlisting}
 
-\todo{write which solver we used}
+%\todo{write which solver we used}
 According to our primary tests, the hybrid approach showed us that it required from 1 to 5 iterations of the GMRES solver on average to converge to a desired residual.\\
 
 

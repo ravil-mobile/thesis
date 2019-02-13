@@ -3,10 +3,8 @@
 Fair to say, there is no single algorithm or software that is the best for all types of linear systems \cite{list-of-sparse-direct-solvers}.\\
 
 
-Nowadays, there exist many different avaliable sparse direct solvers. Some of them are tunned for specific linear systems whereas others are targeted for the most general cases \cite{list-of-sparse-direct-solvers}. Some of them handle tree-task and node-data parallelism in different ways even within the same library depending on frontal matrix sizes and other criteria \cite{wsmp}, \cite{mumps-manual}, \cite{superlu-manual}. Hence, parallel performance of a direct sparse method depends heavily on its specific implementation. Table \ref{table:mm-library-spec} represents a short summary of almost all available packages capable to run on distributed-memory machines, at the time of writing, based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
+Nowadays, there exist many different avaliable sparse direct solvers. Some of them are tunned for specific linear systems whereas others are targeted for the most general cases \cite{list-of-sparse-direct-solvers}. Some of them handle tree-task and node-data parallelism in different ways even within the same library depending on sizes of frontal matrices and other criteria \cite{wsmp}, \cite{mumps-manual}, \cite{superlu-manual}. Hence, parallel performance of a direct sparse method depends heavily on its specific implementation. Table \ref{table:mm-library-spec} represents a short summary of almost all available packages capable to run on distributed-memory machines, at the time of writing, based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
 
-
-\todo{add footnotes of Open*}
 
 \begin{table}[ht]
 \small
@@ -29,7 +27,8 @@ PARDISO         & Multifrontal       & General                      & No        
 
 WSMP         & Multifrontal       & General                      & No              & Commercial   \\ \hline
 \end{tabular}
-\caption{List of packages to solve sparse linear systems using direct methods on distributed memory parallel machines \cite{list-of-sparse-direct-solvers}, \cite{petsc-web-page}}
+\caption{List of packages to solve sparse linear systems using direct methods on distributed memory parallel machines \cite{list-of-sparse-direct-solvers}, \cite{petsc-web-page}.\\
+Open* - the interface is not officially supported by the PETSc team}
 \label{table:mm-library-spec}
 \end{table}
 
@@ -110,7 +109,7 @@ Some problems were detected during  SuperLU\_DIST library testing. First of all,
 
 % FOR PRESENTATION: it can be due to wrong matrix representation in binary PETSc files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
 
-To complete comparison and evaluate parallel performance SuperLU\_DIST library, an additional test was conducted using 2D formulation of the Poisson problem with \textit{100000} unknown. According to the results, SuperLU\_DIST managed to complete matrix factorization within the set time limit without crashing, however, it showed abnormal jagged strong scaling behavior. Moreover, it turned out it was the slowest in comparison with the other solvers. The results are shown in figure \ref{fig:5-point-stencil-solvers-comparison}.\\
+To complete comparison and evaluate parallel performance SuperLU\_DIST library, an additional test was conducted using 2D formulation of the Poisson problem with \textit{100000} unknown. According to the results, SuperLU\_DIST managed to complete matrix factorization within the set time limit without crashing, however, it showed abnormal jagged strong scaling behavior. Moreover, it turned out it was the slowest in comparison to the other solvers. The results are shown in figure \ref{fig:5-point-stencil-solvers-comparison}.\\
 
 
 
@@ -127,7 +126,7 @@ To complete comparison and evaluate parallel performance SuperLU\_DIST library, 
 According to the initial and additional tests, MUMPS library showed the best parallel performance and scaling in contrast to other solvers. No abnormal behavior during its operation was detected. In some cases, it only required to increase a multiplicative factor of estimated working space which was used to hold frontal matrices and factors $L$ and $U$ in memory. PaStiX was the second fastest solver in our test. However,  it was often considerably slower than MUMPS. At the same time, SuperLU\_DIST showed the worst results. Additionally, as it was mentioned above, we experienced some technical problems during operation of that library.\\
 
 
-A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in work \cite{wsmp}, came to nearly the same outcome, as we did, comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving of systems of linear equations in contrast to other solvers used in their work. It needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
+A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in work \cite{wsmp}, came to nearly the same outcome, as we did, comparing parallel performance of WSMP, MUMPS and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving  systems of linear equations in contrast to other solvers used in their work. It needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
 
 
 In this chapter, we compared different sparse direct methods and their concrete implementations with their default settings with regard to GRS matrix set. Based on the obtained results and literature review, MUMPS library was chosen for the following study. In subsection \ref{subseq:mumps-review}, we make a detail review of MUMPS libraries and its specific traits. \\

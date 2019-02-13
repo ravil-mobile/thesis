@@ -1,13 +1,13 @@
 \subsubsection{Theory Overview}
 \label{subseq:direct-sparse methods}
 
-Direct sparse methods combine the main advantages of direct and iterative methods. In other words, numerical accuracy of the methods is comparable with the standard Gaussian Elimination process while their computational complexity is typically bounded by $O(n^2)$ \cite{complexity-of-spdm} due to treatment of non-zero matrix elements. As it is in case of direct dense methods, a solution of a system of equations is computed by means of forward and backward substitutions using $LU$ decomposition of the corresponding matrix.\\
+Direct sparse methods combine the main advantages of direct and iterative methods. In other words, numerical accuracy of the methods is comparable with the standard Gaussian Elimination process while their computational complexity is typically bounded by $O(n^2)$ \cite{complexity-of-spdm} due to efficient treatment of non-zero matrix elements. As it is in case of direct dense methods, a solution of a system of equations is computed by means of forward and backward substitutions using $LU$ decomposition of the corresponding matrix.\\
 
 
 A multi-frontal method is probably the most representative example of direct sparse solvers, inroduced by \citeauthor{mult-frontal-original:1} in work \cite{mult-frontal-original:1}. The method is, in fact, an improved version of the frontal method \cite{frontal-original} and can compute independent fronts in parallel. A front, also called a frontal matrix, can be considered as a small dense matrix resulting from a column elimination of the original system. There also exist left- and right-looking vatiants of the multi-frontal method explained in detail in \cite{elimination-tree}.\\
 
 
-In this subsection, the theory of multi-frontal method is explained, which helps to understand parallel aspects and strong scaling behavior of   direct sparse solvers in case of parallel execution. To keep the overview rather simple, we assume matrix $A$ is real, symmetric and sparse. In this case, $LU$ decomposition of matrix $A$ boils down to Cholesky factorization \ref{eq:chol-1}.\\
+In this subsection, the theory of multi-frontal method is explained, which helps to understand parallel aspects and strong scaling behavior of   direct sparse solvers in case of parallel execution. To keep the overview rather simple, we assume matrix $A$ is real, symmetric and sparse. In this case, $LU$ decomposition of matrix $A$ boils down to Cholesky factorization, equation \ref{eq:chol-1}.\\
 
 \begin{equation} \label{eq:chol-1}
 	A = LDL^T
@@ -25,7 +25,7 @@ The algorithm starts with symbolic factorization of system \ref{eq:chol-1} with 
 \end{figure}
 
 
-Figure \ref{fig:sparsity-pattern-example-mm} shows an illustrative example of a sparse matrix $A$ and its Cholesky factor $L$ taking from \cite{mult-frontal-original:2}. The solid circles represent original non-zero elements whereas hollow ones define fill-in factors of $L$. \\
+Figure \ref{fig:sparsity-pattern-example-mm} shows an illustrative example of a sparse matrix $A$ and its Cholesky factor $L$, taking from \cite{mult-frontal-original:2}. The solid circles represent original non-zero elements whereas hollow ones define fill-in factors of $L$. \\
 
 
 The elimination tree is a crucial part of the method. It can be considered as a structure of $n$ nodes where node $p$ is the parent of $j$ if and only if it satisfies equation \ref{eq:elimination-tree-1}. It is worth pointing out the definition \ref{eq:elimination-tree-1} is not only one possible and one can define a strucutre of the elimination tree in a different way as well, \cite{mult-frontal-original:2}.\\% As an example, another definition of an ellimination tree, alos refered as an assembly tree, was defined by \citeauthor{mult-frontal-original:2} in \cite{mult-frontal-original:2}.\\
@@ -85,7 +85,7 @@ Update matrix $\hat{U_{j}}$ is, in fact, can be considered as the second term of
 
 The subscript $k$ represents descendant columns of node $j$. Hence, only those elements of descendant columns are included and considered which correspond to the non-zero pattern of the $j$th column.\\
 
-Let's consider a partial factorization of 2-by-2 block dense matrix, equation \ref{eq:mm-3}, to better understand the essence of update matrix $\hat{U_{j}}$. Let's assume that  matrix $B$ has already been factorized and can be expressed as follows: \\
+Let's consider a partial factorization of a 2-by-2 block dense matrix, equation \ref{eq:mm-3}, to better understand the essence of update matrix $\hat{U_{j}}$. Let's assume that  matrix $B$ has already been factorized and can be expressed as follows: \\
 
 
 \begin{equation} \label{eq:mm-4}
@@ -242,7 +242,7 @@ a_{i_r,j} \\
 
 where $c_{1}, \: c_{2}, \: \dots \: c_{n}$ are indices of direct children of node $j$.\\
 
-At this point, it is worth mentioning the resulting frontal matrix $F_{j}$ forms a small dense block which has to be factorized along the first column. The partial factorization of such a block can efficiently performed by means of the corresponding dense linear algebra kernels.\\
+At this point, it is worth mentioning the resulting frontal matrix $F_{j}$ forms a small dense block which has to be factorized along the first column. The partial factorization of such a block can be efficiently performed by means of the corresponding dense linear algebra kernels.\\
 
 
 After partial factorization of matrix $F_{j}$, assembly of contribution matrix $U_{j}$ must be completed by adding those elements of $U_{c_1}, \:, U_{c_2}, \: \dots, U_{c_s}$ to $U_{j}$ that have not been used in factorization of $F_{j}$ due to sparsity of column $j$. Then, the process continues moving up along the tree. Therefore, complete update matrices are growing in size while the global elimination process is moving towards the root of the tree.\\
@@ -336,10 +336,10 @@ It can be clearly observed the methods consist of three distinct phases, namely:
 \label{subseq:direct-parallel-aspects}
 
 
-In contrast to iterative methods, parallelization of direct sparse methods mainly comes from task-based parallelism where an elimination tree can be considered as a collection of tasks. In fact, a tree represents data dependencies during column partial factorizations and, therefore, reveals dependent and independent tasks. For example, leaves usually locate in separate branches of the tree and thus represent concurrent tasks that can be executed in parallel. On the other hand, parent nodes represent data dependences from their children and cannot be factorized beforehand. Therefore, sparse direct methods have only limited parallelism which swiftly decreases while computations are moving towards the top of an elimination tree.\\
+In contrast to iterative methods, parallelization of direct sparse methods mainly comes from task-based parallelism where an elimination tree can be considered as a collection of tasks. In fact, the tree represents data dependencies during column partial factorizations and, therefore, reveals dependent and independent tasks. For example, leaves usually locate in separate branches of a tree and thus represent concurrent tasks that can be executed in parallel. On the other hand, parent nodes represent data dependences from their children and cannot be factorized beforehand. Therefore, sparse direct methods have only limited parallelism which swiftly decreases while computations are moving towards the top of an elimination tree.\\
 
 
-Let's consider two simple models, that have been developed for this study, in order to demonstrate potential parallel performance of tree-task parallelism. The models, in fact, are perfectly balanced binary trees with different costs per level. Within a level, the cost is distributed equally among the nodes. The first model, figure \ref{fig:mm-parallel-model-tree-linear}, implies 
+Let's consider two simple models, that have been developed for this part of the study, in order to demonstrate potential parallel performance of tree-task parallelism. The models, in fact, are perfectly balanced binary trees with different costs per level. Within a level, the cost is distributed equally among the nodes. The first model, figure \ref{fig:mm-parallel-model-tree-linear}, implies 
 quadratic decrease of computational cost between nodes of adjacent levels whereas the second one, figure \ref{fig:mm-parallel-model-tree-quadratic}, simulates cubic decay of compute-intensity. The models intend to reflect growth of complete update matrices in size, while moving from bottom to top along an elimination tree, and thus increase of floating point operations.\\
 
 
@@ -423,19 +423,18 @@ Model 2 & 1.4972 & 1.5000   \\ \hline
 \end{table}
 
 
-These, rather simple, models reveal the most important fact about tree-task parallelism of sparse direct solvers. The performance depends heavily on an elimination tree and, in particular, on distribution of compute-intensity among nodes. As it was mentioned above, the intensity is usually centered on the top part of the tree where task-based parallelism is limited due to data dependency. As an example, \citeauthor{mult-frontal-original:2} observed that factorization of the last 6 nodes took slightly more than 25\% of the total number of floating point operations in case of application of the multi-frontal method to a $k-by-k$ regular model problem using a nine-point difference operator, \cite{mult-frontal-original:2}.\\
+These, rather simple, models reveal the most important fact about tree-task parallelism of sparse direct methods. The performance depends heavily on an elimination tree structure and, in particular, on distribution of compute-intensity among nodes. As it was mentioned above, the intensity is usually centered on the top part of the tree where task-based parallelism is limited due to data dependency. As an example, \citeauthor{mult-frontal-original:2} observed that factorization of the last 6 nodes took slightly more than 25\% of the total number of floating point operations in case of application of the multi-frontal method to a $k-by-k$ regular model problem using a nine-point difference operator, \cite{mult-frontal-original:2}.\\
 
 
-Node-data parallelism is often combined with tree-task parallelism which usually results in improvement of parallel performance of direct sparse methods. In the general case, frontal matrix $\mathcal{F}_{j}$ can be distributed across multiple processors and partially factorized in parallel. However, because of fine granularity of bottom levels data parallelism is only applied to top  and middle parts of elimination trees.\\ 
+Node-data parallelism is often combined with tree-task parallelism which usually results in improvement of parallel performance of direct sparse methods. In the general case, frontal matrix $\mathcal{F}_{j}$ can be distributed across multiple processors and partially factorized in parallel. However, performance of node-data parallelism depends on both the matrix size and the number of processors assigned to perform factorization. Over-subscription of processing elements to a node can result in slow-down induced by communication overheads. Therefore,  data parallelism is only applied to top  and middle parts of elimination trees because of fine granularity of bottom levels.\\ 
 
-Performance of node-data parallelism depends on  both a frontal matrix size and the number of processors assigned to perform partial factorization. For example, over-subscription of processing elements to a node can result in slow-down induced by communication overheads.\\
 
 
 By and large, combined tree-task and node-data parallelism improves performance and strong scaling of sparse direct solvers, however, it cannot change the performance trend mainly induced by tree-task parallelism. Therefore, one can still expect  stagnation of speed-up even with a relatively small number of processors.\\
 
 
 A parallel implementation of sparse direct solvers demands to expand the analysis phase by adding 
-two more pre-processing steps, namely: process mapping and load balancing. Both mapping and balancing are usually performed statically during an analysis of an elimination tree.\\ %However, a refinement of these steps can become necessary to perform in run-time during the numerical factorization phase due to partial pivoting.\\
+two more pre-processing steps, namely: process mapping and load balancing. Both mapping and balancing are usually performed statically during the analysis of an elimination tree.\\ %However, a refinement of these steps can become necessary to perform in run-time during the numerical factorization phase due to partial pivoting.\\
 
 
 
@@ -538,11 +537,11 @@ Threshold pivoting means that a pivot $|a_{i,i}|$ is accepted if it satisfies eq
 
 where $\alpha \in [0,1]$ and $k=i \dots n$ represents row indices of column $i$ within a frontal matrix.\\
 
-Factorization of a column is suspended i.e. delayed, if equation \ref{eq:lc-1} cannot be satisfied within a fully-summed block of a frontal matrix. In this case, the column and the corresponding row are moved to the parent frontal matrix as a part its contribution block where the process repeats again. The process is also known as delayed pivoting and helps to improve numerical accuracy. Higher values of $\alpha$ leads to more accurate solutions but often generate extra fill-in and lead to load unbalance which, as a result, affect parallel performance. On the other hand, smaller values usually preserve the original elimination tree and, therefore,  keep load balance computed during the analysis phase by appropriate mapping of processors across nodes of the tree. However, in this case, numerical accuracy usually degrades. In practice, values of $\alpha$ lay in a range of $0.2$ to $0.04$ \todo{REF}.\\
+Factorization of a column is suspended i.e. delayed, if equation \ref{eq:lc-1} cannot be satisfied within a fully-summed block of a frontal matrix. In this case, the column and the corresponding row are moved to the parent's frontal matrix as a part its contribution block where the process repeats again. The process is also known as delayed pivoting and helps to improve numerical accuracy. Higher values of $\alpha$ leads to more accurate solutions but often generate extra fill-in and lead to load unbalance which, as a result, affect parallel performance. On the other hand, smaller values usually preserve the original elimination tree and, therefore,  keep load balance computed during the analysis phase by appropriate mapping of processors across nodes of the tree. However, in this case, numerical accuracy usually degrades. In practice, values of $\alpha$ lay in a range of $0.2$ to $0.04$ \todo{REF}.\\
 
 
 
-A case when parameter $\alpha$ is equal to $0$ is known as static pivoting which means that no pivoting is performed during the numerical factorization phase. This allows to better optimize data layout, load balancing, and communication scheduling \cite{superlu-manual} before numerical factorization which is supposed to improve parallel performance.\\
+A case when parameter $\alpha$ is equal to $0$ is known as static pivoting which means that no pivoting is performed during the numerical factorization phase. This allows to better optimize data layout, load balancing, and communication scheduling \cite{superlu-manual} before numerical factorization which is supposed to result in better parallel performance.\\
 
 
 
