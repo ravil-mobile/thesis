@@ -87,7 +87,7 @@ Among all libraries listed in table \ref{table:list-of-blas-implementations} the
 	\begin{tabular}{cc}
 		\subfloat[cube-5]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/cube-5.png}} &
 		\subfloat[pwr-3d]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/pwr-3d.png}} \\
-		\subfloat[memchip]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/memchip.png}} & \subfloat[torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/torso3.png}} \\
+		\subfloat[PFlow\_742]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/PFlow_742.png}} & \subfloat[torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/torso3.png}} \\
 	\end{tabular}
 	\caption{MUMPS: comparison of different BLAS libraries with using both GRS and SuiteSparse matrix sets on HW1 machine}
 	\label{fig:mumps-blas-configuration-2}
@@ -95,7 +95,7 @@ Among all libraries listed in table \ref{table:list-of-blas-implementations} the
 
 
 
-The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of GRS matrix set. In average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice Intel MKL turned out to be slower than the default Netlib BLAS implementation for small and medium sized GRS matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, showed significant performance gain in comparison to the standard Netlib BLAS implementation applied to SuiteSparse matrix set. The libraries reduced the execution time by almost \textbf{50\%} on an average. In opposite to GRS matrix set, it turned out that Intel MKL was often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of comparison are summarized in tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
+The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of GRS matrix set. In average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice Intel MKL turned out to be slower than the default Netlib BLAS implementation for small- and medium-sized GRS matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, showed significant performance gain in comparison to the standard Netlib BLAS implementation applied to SuiteSparse matrix set. The libraries reduced the execution time by almost \textbf{50\%} on an average. In opposite to GRS matrix set, it turned out that Intel MKL was often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of comparison are summarized in tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
 
 
 \begin{table}[h!]
@@ -136,5 +136,12 @@ x104                                                  & 41.82                   
 \end{table}
 
 
+It can be clearly observed from the tables that test-cases derived from GRS matrix set demonstrate insignificant improvements of execution time in constant to test generated with SuiteSparse matrix set. This may be explained by relatively small numbers of type 2 nodes in assembly trees resulted from these test-cases. In this case, the trees are mainly formed by the root and type 1 nodes. As it was mentioned in subsection \ref{subseq:mumps-review}, type 1 nodes are grouped in subtrees and each subtree is processed by a single MPI process. According to the documentation, it is not clear whether MUMPS calls BLAS subroutines while processing a type 1 node or not. Even if it is a case performance of BLAS can be limited because of small frontal matrix sizes of such nodes.\\
 
-In this section, we have shown how and where MUMPS utilizes common third-party libraries. The design of MUMPS can be considered as a good example of a scientific software architecture which reuses well-known, common blocks which appear quite often in scientific programs i.e. dense linear algebra kernels. Such design allows to easily configure and adopt software for a specific hardware as it was shown in this subsection. We have also shown that MUMPS-OpenBLAS configuration is the best choice for GRS matrix set. It has been interesting to observe that the tuned Intel implementation of BLAS compiled with the latest Intel compiler demonstrated slow-down in contrast to the standard Netlib, not optimized, implementation.\\
+We assume that, in the general case, lack of type 2 nodes in an assembly tree can be due to inefficient amalgamation process of the corresponding elimination tree resulted from the matrix sparsity pattern.\\
+
+
+Based on the obtained results, comparison between different matrix sets and our reasoning, we presume that ATHLET generates linear systems resulting in such trees where type 1 nodes predominate over the others. We can assume it is due to specifics of numerical spacial and time integration explained in section \ref{sec:athlet-overview}.\\
+
+
+In this subsection, we have shown where and how MUMPS utilizes BLAS and LAPACK libraries. We have compared two tuned BLAS implementations with a baseline, Netlib BLAS, using two different matrix sets. We have presented the overall statistics of the obtained results and come to the conclusion that MUMPS-OpenBLAS configuration is the best one for GRS matrix set. Additionally, we have given reasoning for noticeable difference between results of some test-cases as well as we have talked about probable specifics of linear systems generated by ATHLET.\\

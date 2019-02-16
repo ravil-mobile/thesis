@@ -4,10 +4,10 @@
 According to results and conclusion obtained in this study, we are able to make a general guidance for ATHLET-NuT users and developers. \\
 
 
-First of all, we insist to configure PETSc-MUMPS module of NuT with OpenBLAS library and use only flat-MPI mode together with \textit{spread} process pinning strategy because, as it was shown in sections \ref{subseq:mm-mumps-process-pinning} and \ref{subseq:blas-comparison}, these settings always have their positive effect on parallel performance regardless of the matrix size and structure. \\
+First of all, we insist to configure PETSc-MUMPS module of NuT with OpenBLAS library and use only flat-MPI mode together with \textit{spread} process pinning strategy because, as it was shown in sections \ref{subseq:mm-mumps-process-pinning} and \ref{subseq:blas-comparison}, these settings always results in better parallel performance regardless of the matrix size and structure.\\
 
 
-Secondly, we recommend the user to check table \ref{table:mm-recommendations-size-table} before submitting a job on a production compute node in order to define a matrix type of a problem i.e. \textit{small}, \textit{medium} or \textit{large}. Based on the matrix type, the user can select both a fill reducing reordering algorithm and the number of MPI processes which, we believe, can be pretty close to the optimal MUMPS settings. \\
+Secondly, we recommend the user to check table \ref{table:mm-recommendations-size-table} before running a simulation in order to define a matrix type of a problem i.e. \textit{small}, \textit{medium} or \textit{large}. Based on the matrix type, the user can select both a fill reducing reordering algorithm and the number of MPI processes which, we believe, can be pretty close to the optimal MUMPS settings. \\
 
 
 \begin{table}[h!]
