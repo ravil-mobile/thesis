@@ -521,7 +521,7 @@ two more pre-processing steps, namely: process mapping and load balancing. Both 
 \label{subseq:pivot-hadling}
 
 
-Because of the cumulative effect of inexact computer arithmetics due to a floating point representation of real numbers and, as a result, truncations and rounding errors, small numerical values along the matrix main diagonal can result in significant numerical inaccuracy of the Gaussian Elimination process. Therefore, partial pivoting is a crucial step of Gaussian Elimination. It implies to interchange rows and columns of a matrix in such a way to place distinct and distant values form zero to the main diagonal.\\
+Because of the accumulative effect of inexact computer arithmetics due to a floating point representation of real numbers and, as a result, truncations and rounding errors, small numerical values along the matrix main diagonal can result in significant numerical inaccuracy of the Gaussian Elimination process. Therefore, partial pivoting is a crucial step of Gaussian Elimination. It implies to interchange rows and columns of a matrix in such a way to place distinct and distant values form zero to the main diagonal.\\
 
 
 In case of direct dense methods, partial pivoting is a straightforward operation and can be expressed as multiplication of the original matrix $A$ by a permutation matrix $P$, where each row and column contain a single $1$, at the corresponding place, and $0$s everywhere. However, it becomes a problem when it deals with direct sparse methods.\\
