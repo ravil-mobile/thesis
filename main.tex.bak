@@ -1,7 +1,7 @@
 \RequirePackage[l2tabu,orthodox]{nag}
 
 % TODO: decide if one-sided/two-sided
-%\documentclass[headsepline,footsepline,footinclude=false,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,BCOR=12mm,DIV=12]{scrbook} % two-sided
+%,footsepline,footinclude=false,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,BCOR=12mm,DIV=12]{scrbook} % two-sided
 \documentclass[headsepline,footsepline,footinclude=false,oneside,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc]{scrbook} % one-sided
 
 
@@ -21,7 +21,7 @@
 % TODO: change thsesis information
 \newcommand*{\getUniversity}{Technische Universität München}
 \newcommand*{\getFaculty}{Department of Informatics}
-\newcommand*{\getTitle}{Thesis title}
+\newcommand*{\getTitle}{Configuration of a linear sparse solver for a linear implicit time integration method and application of non-blocking MPI communication in parts of thermo-hydraulic computations for efficient data transfer}
 \newcommand*{\getTitleGer}{Titel der Abschlussarbeit}
 \newcommand*{\getAuthor}{Ravil Dorozhinskii}
 \newcommand*{\getDoctype}{Master's Thesis in Informatics: Computational Science and Engineering}
@@ -45,16 +45,16 @@
 % (see https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#Problems_with_Links_and_Pages).
 \pagenumbering{alph}
 \input{pages/cover}
-
+ 
 \frontmatter{}
 
-\input{pages/title}
-\input{pages/disclaimer}
-\input{pages/acknowledgements}
-\input{pages/abstract}
+%\input{pages/title}
+%\input{pages/disclaimer}
+%\input{pages/acknowledgements}
+%\input{pages/abstract}
 
 
-\input{list-of-abbreviations.tex}
+%\input{•}-of-abbreviations.tex}
 \printnomenclature
 
 
@@ -63,11 +63,12 @@
 \microtypesetup{protrusion=true}
 
 \mainmatter{}
-%\input{chapters/roadmap}
-%\input{chapters/01_introduction}
-%\input{chapters/01_chapter}
+\input{chapters/introduction}
+\input{chapters/software-overview}
+\input{chapters/problem-statement}
+\input{chapters/test-environment-and-matrix-sets}
 \input{chapters/02_chapter}
-% TODO: add more chapters here
+%\input{chapters/03_chapter}
 
 \appendix{}
 \input{chapters/appendices.tex}
@@ -82,36 +83,3 @@
 \end{document}
 
 %PRESENTATION: say about INRIA cluster (8 nodes where each node had 8 cores only with unknown interconnection parameters)
-
-
-
-
-%Introduction
-%Overview of ATHELT and NuT
-%Problem Statment
-%Choice and configuration of a linear solver for ODE problems
-%	Iterative methods
-%		Theory overview
-%		Parallel aspects of Iterative Methods
-%		Preconditioning
-%
-%	Sparse Direct Methods
-%		Theory overview
-%		Parallel aspects of Sparse Direct Methods
-%		Strong Scaling issues with Dense Direct Kernels
-%
-%	Hybrid Mehod
-%		Motivation
-%		Choice of Direct Sparce Library
-%		Overview of the MUMPS library
-%		MUMPS tuning
-%			Choice of Fill in reodering method
-%			Choice of a BLAS library
-%			MPI/OpenMP
-%		Conclusion
-
-%Transfer of Jacobian Matrix
-%	Jacobian Matrix Compression
-	
-
-	 

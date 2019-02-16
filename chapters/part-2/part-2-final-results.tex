@@ -1,50 +1,51 @@
 \label{subseq:final-results}
 
 
-Figures \ref{fig:mumps-final-comparison-1} and \ref{fig:mumps-final-comparison-2} show a comparison of MUMPS parallel performance before and after application of above mentioned tuning to GRS matrix set. In case of experiments labeled as \textit{default}, we used ParMetis as a fill reducing reordering algorithm because it had been used by GRS engineers before the current study.\\
+Figures \ref{fig:mumps-final-comparison-1} and \ref{fig:mumps-final-comparison-2} show comparisons of MUMPS parallel performance before and after application of the optimal MUMPS settings, found in subsections \ref{subseq:fill-in-reordering}, \ref{subseq:mm-mumps-process-pinning}, \ref{subseq:blas-comparison}, and \ref{subseq:mpi-openmp}, to GRS matrix set. Results labeled as \textit{default} were obtained using the fill reducing reordering algorithm provided by ParMetis library because it had been used by ATHLET users before the current study.\\
 
 
-\figpointer{\ref{fig:mumps-final-comparison-1}}
+%\figpointer{\ref{fig:mumps-final-comparison-1}}
 \begin{figure}[h!]
 \centering
 	\begin{tabular}{cc}
-		\subfloat[small system: cube-5]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/final-comparison/cube-5.png}} &
-		\subfloat[small system: pwr-3d]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/final-comparison/pwr-3d.png}} \\
+		\subfloat[small system: cube-5\label{fig:mumps-final-comparison-cube-5}]{\includegraphics[width=0.41\textwidth]{figures/chapter-2/final-comparison/cube-5.png}} &
+		\subfloat[small system: pwr-3d\label{fig:mumps-final-comparison-pwr-3d}]{\includegraphics[width=0.41\textwidth]{figures/chapter-2/final-comparison/pwr-3d.png}} \\
+		\subfloat[medium system: cube-64]{\includegraphics[width=0.41\textwidth]{figures/chapter-2/final-comparison/cube-64.png}} & 			        \subfloat[medium system: k3-2]{\includegraphics[width=0.41\textwidth]{figures/chapter-2/final-comparison/k3-2.png}} \\
 	\end{tabular}
-	\caption{MUMPS: comparison of different BLAS libraries with using both GRS and SuiteSparse matrix sets on HW1 machine}
+	\caption{Comparison of MUMPS parallel performance before and after application of optimal settings to small- and middle-sized GRS problems}
 	\label{fig:mumps-final-comparison-1}
 \end{figure}
 
 
 
-\figpointer{\ref{fig:mumps-final-comparison-2}}
+%\figpointer{\ref{fig:mumps-final-comparison-2}}
 \begin{figure}
 \centering
 	\begin{tabular}{cc}
-		\subfloat[medium system: cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/final-comparison/cube-64.png}} & 			        \subfloat[medium system: k3-2]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/final-comparison/k3-2.png}} \\
-		\subfloat[large system: cube-645\label{fig:mumps-final-comparison-cube-645}]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/final-comparison/cube-645.png}} & 			        \subfloat[large system: k3-18\label{fig:mumps-final-comparison-k3-18}]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/final-comparison/k3-18.png}} \\
+		\subfloat[large system: cube-645\label{fig:mumps-final-comparison-cube-645}]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/final-comparison/cube-645.png}} & 			        \subfloat[large system: k3-18\label{fig:mumps-final-comparison-k3-18}]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/final-comparison/k3-18.png}} \\
 	\end{tabular}
-	\caption{MUMPS: comparison of different BLAS libraries with using both GRS and SuiteSparse matrix sets on HW1 machine}
+	\caption{Comparison of MUMPS parallel performance before and after application of optimal settings to large-sized GRS problems}
 	\label{fig:mumps-final-comparison-2}
 \end{figure}
 
 \newpage
 
 
-\todo{include statistics}
-By and large, we have observed significant improvement of applied tuning techniques, mentioned above, for the entire GRS matrix set. \\
 
-
-In average, the factorization time has been reduced in \textbf{51.4\%} for small sized systems. The significant performance gain mainly came from the optimal choice of fill-in reduction algorithm. Moreover, application of PT-Scotch for small sized systems allowed to drastically change strong scaling behavior and reduce the execution time by approximately \textbf{17\%} in contrast to sequential execution of the default MUMPS configuration that was a challenge before the study.\\
+On average, factorization time is reduced by \textbf{51.4\%} for small-sized linear systems, \textit{cube-5} and \textit{pwr-3d}. As it was expected, the most significant performance gain mainly comes from a correct choice of a fill reducing reordering algorithm. Moreover, application of PT-Scotch for these systems of equations results in a drastic change of strong scaling behavior, see figures \ref{fig:mumps-final-comparison-cube-5} and  \ref{fig:mumps-final-comparison-pwr-3d}, which allows to reduce execution time by approximately \textbf{17\%} in contrast to the sequential execution of MUMPS running with the default parameters.\\
 
 
 % medium sized systems
-The execution time spent on factorization of medium sized systems dropped in \textbf{1.4} times. Additionally, we have noticed that scaling of \textit{cube-64} test case has been considerably changed as it happened in case of small sized systems. Application of PT-Scotch, to \textit{cube-64}, allowed to shift the saturation point from 5 to 10 process count without significant drop of parallel efficiency. All in all, tuning of MUMPS made it possible to reduce the execution time around the saturation points in almost \textbf{31\%} in average for medium sized GRS systems of equations.\\
+Execution time spent on factorization of medium-sized systems, such as \textit{cube-64} and \textit{k3-2}, drops in \textbf{1.4} times on an average. We have noticed that strong scaling of \textit{cube-64} test-case considerably improves. Additionally, application of PT-Scotch to \textit{cube-64} matrix results in shifting of the optimal MPI process count, the saturation point, from 5 to 10 and, as a result, improves efficiency of the solver. Applied settings reduce execution time around the corresponding saturation points by almost \textbf{31\%} on average for these type of GRS matrices.\\
 
 
 % larged sized sized system
-The factorization performance gain of large sized systems manly came from configuration of MUMPS with optimized BLAS library, OpenBLAS, and MPI \textit{spread} process distribution because it turned out that ParMetis was the best fill-in reduction algorithm for large systems. A noticeable performance gain difference was observed between \textit{cube-645} and \textit{k3-18} test cases. In average, run-time of MUMPS-OpenBLAS configuration reduced by almost \textbf{20\%} in contrast to the default installation in case of \textit{k3-18} whereas factorization time of \textit{cube-645} was improved only by 
-\textbf{1.3\%}. However, the saturation points of both cases were shifted towards lower values of the process count which allows to considerably improve hardware utilization  together with improvement of library performance. For example, a detailed study of \textit{k3-18} performance graph, figure \ref{fig:mumps-final-comparison-k3-18}, shows that the saturation point has been moved from 17 to 8 process count. At the same time, the execution time drops by almost \textbf{19\%} and parallel efficiency jumped in about \textbf{13\%}. The same but less significant results can be observed for \textit{cube-645} test case, figure \ref{fig:mumps-final-comparison-cube-645}. \\
+%Only optimal processes pinning and application of OpenBLAS library result in parallel performance gain of large-sized systems because of usage of the same fill reducing reordering algorithm, ParMetis.
+
+Performance improvements in parallel factorization of large-sized GRS systems comes only from optimal processes pinning and application of OpenBLAS library because of usage of the same optimal fill reducing reordering algorithm, ParMetis. On average, performance increased almost by \textbf{20\%} in case of \textit{k3-18} test-case and only by \textbf{1.3\%} for \textit{cube-645} one. This difference in results can be explained by the fact that the assembly tree of \textit{cube-645} test-case lacks type 2 nodes. However, the saturation points of both test-cases are shifted towards lower values of MPI process count which result in a considerably improvement of hardware utilization. For example, a detailed study of \textit{k3-18} performance graph, figure \ref{fig:mumps-final-comparison-k3-18}, shows the optimal MPI process count value decreases from 17 to 8 and, at the same time, execution time drops by almost \textbf{19\%}. These two effects result in almost \textbf{13\%} jump of parallel efficiency. The same trend can be observed for \textit{cube-645} test-case as well.\\
+
+
+By and large, in this subsection we have shown that application of the optimal settings leads to the total accumulative improvements of factorization time and hardware utilization.\\
 
 
 
