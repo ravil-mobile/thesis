@@ -51,7 +51,7 @@
 %\input{pages/title}
 %\input{pages/disclaimer}
 %\input{pages/acknowledgements}
-%\input{pages/abstract}
+\input{pages/abstract}
 
 
 %\input{•}-of-abbreviations.tex}

@@ -10,10 +10,3 @@
 
 \subsection{Results and Conclusion}
 \input{chapters/part-2/part-2-hybrid-method-description}
-
-\todo{insert in the correct place: start}
-We can see the algorithm requires to perform some preprocessing steps in order to estimate the size of working space for matrix manipulations. If the working space has not been predicted correctly the algorithm will terminate during factorization. Additionally it can happen that even with the correct estimation we can be run out of space in the main memory, in case of huge sparse matrices. This fact can require to use the secondary memory and, as a result, the execution time will increase significantly. Therefore, different optimal postordering schemes have been proposed which allow to shrink the amount of space needed during factorization \cite{mm:optimal-tree-postordering} \cite{mm:elimination-tree-rotations}. Some schemes, for example elimination tree rotations \cite{mm:elimination-tree-rotations}, can lead to deep and unbalanced trees which might have their negative effect on task parallelism as we will see later.\\
-
-
-In general, the estimation of working space can be tricky due to pivoting. Because pivoting happens only during the numerical factorization it is not always possible to estimate enough space correctly beforehand. There exist some heuristics which allow to use some numerical matrix information during symbolic factorization to better predict the amount of required space \cite{wsmp:direct-solution-of-general-system}.\\
-\todo{insert in the correct place: end}
