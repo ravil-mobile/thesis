@@ -33,6 +33,9 @@
 \newcommand{\extendadd}{\mbox{\: \CrossClowerTips \:}}
 \newcommand\figpointer[1]{\todo[color=blue!40]{place for figure #1}}
 
+% Generate the glossary
+\makeglossaries
+
 \begin{document}
 
 
@@ -51,11 +54,17 @@
 \input{pages/title}
 \input{pages/disclaimer}
 %\input{pages/acknowledgements}
+\input{acronyms}
+\printglossaries
+
 \input{pages/abstract}
 
 
+
+
 %\input{•}-of-abbreviations.tex}
-\printnomenclature
+%\printnomenclature
+
 
 
 \microtypesetup{protrusion=false}
