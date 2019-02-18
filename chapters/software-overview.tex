@@ -1,10 +1,10 @@
-\chapter{Overview of ATHLET and NuT software}\label{chapter:athlet-nut}
+\chapter{Overview of \gls{athlet} and \gls{nut} software}\label{chapter:athlet-nut}
 
-\section{ATHLET}
+\section{\gls{athlet}}
 \label{sec:athlet-overview}
 
 
-The thermal-hydraulic system code ATHLET (Analysis of THermal-hydraulics of LEaks and Transients) is developed by GRS for the analysis of the whole spectrum of operational conditions, incidental transients, design-basis accidents and beyond design-basis accidents without core damage anticipated for nuclear energy facilities \cite{grs:athlet-info}. The code provides specific models and methods for the simulation of many types of nuclear power plants comprising current light water reactors (PWR, BWR, VVER, RBMK), advanced Generation III+ and IV reactors as well as Small Modular Reactors \cite{grs:athlet-info}.\\
+The thermal-hydraulic system code \gls{athlet} (Analysis of THermal-hydraulics of LEaks and Transients) is developed by \gls{grs} for the analysis of the whole spectrum of operational conditions, incidental transients, design-basis accidents and beyond design-basis accidents without core damage anticipated for nuclear energy facilities \cite{grs:athlet-info}. The code provides specific models and methods for the simulation of many types of nuclear power plants comprising current light water reactors (PWR, BWR, VVER, RBMK), advanced Generation III+ and IV reactors as well as Small Modular Reactors \cite{grs:athlet-info}.\\
 
 
 Physical processes inside of hydraulic circuits of light-water reactors can be naturally described by a two-phase thermo-fluiddynamic model based on conservation equations of mass, momentum and energy for liquid and vapor.\\
@@ -61,7 +61,7 @@ Spacial integration of the conservation equations, the ssystem \ref{eq:athlet-1}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.55\textwidth]{figures/introduction-1d-fvm.png}
-\caption{ATHLET: one dimensional finite volume formulation of thermo-hydraulic modeling, \cite{tims-presentation}}
+\caption{\gls{athlet}: one dimensional finite volume formulation of thermo-hydraulic modeling, \cite{tims-presentation}}
 \label{fig:introduction-1d-fvm}
 \end{figure}
 
@@ -77,22 +77,22 @@ where $y \in \mathbb{R}^{N}$ is a composite vector of variables, $f$ is a non-li
 
 
 % Rosenbrock-Wanner
-Analysis of system \ref{eq:athlet-8} shows the problem is rather and thus must to be solved with an implicit solver. Rosenbrock methods are a class of linear implicit methods which is capable of solving such stiff systems of ODEs efficiently. The methods replace non-linear systems with a sequence of linear ones, however, some stability and accuracy properties are usually lost \cite{blom2013rosenbrock}. An additional drawback of the methods is evaluation of the exact Jacobian at every time step which affects computational cost.\\
+Analysis of system \ref{eq:athlet-8} shows the problem is rather and thus must to be solved with an implicit solver. Rosenbrock methods are a class of linear implicit methods which is capable of solving such stiff systems of \gls{ode}s efficiently. The methods replace non-linear systems with a sequence of linear ones, however, some stability and accuracy properties are usually lost \cite{blom2013rosenbrock}. An additional drawback of the methods is evaluation of the exact Jacobian at every time step which affects computational cost.\\
 
 
-To decrease the cost and preserve sufficient accuracy of numerical integration, ATHLET, instead, uses a W-method of the third order. W-methods belong to the family of Rosenbrock methods, however, calculate the Jacobian matrix occasionally. The ATHLET developers spent much of their time and efforts to develop heuristics to identify instances of time when evaluation of the Jacobian must be performed. In other words, the algorithm can re-use the same Jacobian matrix approximation between steps with some partial matrix updates. However, when a hydraulic circuit state drastically changes due to transitivity, the evaluation of the full Jacobian is demanded.\\
+To decrease the cost and preserve sufficient accuracy of numerical integration, \gls{athlet}, instead, uses a W-method of the third order. W-methods belong to the family of Rosenbrock methods, however, calculate the Jacobian matrix occasionally. The \gls{athlet} developers spent much of their time and efforts to develop heuristics to identify instances of time when evaluation of the Jacobian must be performed. In other words, the algorithm can re-use the same Jacobian matrix approximation between steps with some partial matrix updates. However, when a hydraulic circuit state drastically changes due to transitivity, the evaluation of the full Jacobian is demanded.\\
 
 
 \figpointer{\ref{fig:introduction-w-method-scheme}}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/introduction-rosenbrock-scheme.png}
-\caption{A general view on the W-method solver implemented in ATHLET}
+\caption{A general view on the W-method solver implemented in \gls{athlet}}
 \label{fig:introduction-w-method-scheme}
 \end{figure}
 
 
-In the general case, a step of the W-method method, implemented in ATHLET, can be viewed as a sequence of six stages in the following way. Each stage uses implicit Euler method and exactly one Newton's iteration to evaluate the value of vector $y$ at the next integration step $h$ with different accuracy. Then, the obtained values are extrapolated, in order explained in figure \ref{fig:introduction-w-method-scheme}, to achieve desired order of integration. By and large, the algorithm can be expressed in a compact form of equation \ref{eq:athlet-9}.
+In the general case, a step of the W-method method, implemented in \gls{athlet}, can be viewed as a sequence of six stages in the following way. Each stage uses implicit Euler method and exactly one Newton's iteration to evaluate the value of vector $y$ at the next integration step $h$ with different accuracy. Then, the obtained values are extrapolated, in order explained in figure \ref{fig:introduction-w-method-scheme}, to achieve desired order of integration. By and large, the algorithm can be expressed in a compact form of equation \ref{eq:athlet-9}.
 
 \begin{equation} \label{eq:athlet-9}
 	((h \gamma)^{-1}I - J) \Delta z^{l}_{i} = - h^{-1} z^{l}_{i} + f(t_0 + \tau_{i} h, y_{0} + z^{l}_{i})
@@ -101,55 +101,55 @@ In the general case, a step of the W-method method, implemented in ATHLET, can b
 where $\Delta z^{l}_{i} = z^{l+1}_{i} - z^{l}_{i}$, $z^{l}_{i} = y^{l}_{i} - y^{l}_{i - 1}$, $J \approx \frac{\partial f}{\partial y}$ - approximation of Jacobian matrix, $l = 1,2$ - Newton's iteration index, $i = 1, 2, 3$ - integration step index.\\
 
 
-\section{NuT}
+\section{\gls{nut}}
 
-Numerical Toolkit, or just NuT, can be viewed as a container of various dense and sparse linear algebra subroutines which can run in parallel on distributed-memory machines. NuT design follows the paradigm of \textit{Adapter/Wrapper} pattern which provides a uniform common interface for its services to various GRS simulation tools (outlined in table \ref{table:introduction-grs-software}) and thus helps to achieve re-usability, flexibility and extensibility properties of the code.\\
-
-
-Currently, NuT is based heavily on Portable, Extensible Toolkit for Scientific Computation, known as PETSc library. It is one of the most widely used parallel numerical software  library \cite{wiki:petsc-general-info}. It includes a large suite of parallel linear and nonlinear equation solvers as well as its software-infrastructure to handle computations on distributed-memory machines by means of Message Passing Interface (MPI) and specific data structures. Fortunately, though a careful selection of the design pattern, NuT can be easily extended to provide an extra service or an external library access which has not been implemented in PETSc yet.\\ 
+Numerical Toolkit, or just \gls{nut}, can be viewed as a container of various dense and sparse linear algebra subroutines which can run in parallel on distributed-memory machines. \gls{nut} design follows the paradigm of \textit{Adapter/Wrapper} pattern which provides a uniform common interface for its services to various \gls{grs} simulation tools (outlined in table \ref{table:introduction-grs-software}) and thus helps to achieve re-usability, flexibility and extensibility properties of the code.\\
 
 
-\section{ATHLET-NuT coupling}
+Currently, \gls{nut} is based heavily on Portable, Extensible Toolkit for Scientific Computation, known as \gls{petsc} library. It is one of the most widely used parallel numerical software  library \cite{wiki:petsc-general-info}. It includes a large suite of parallel linear and nonlinear equation solvers as well as its software-infrastructure to handle computations on distributed-memory machines by means of Message Passing Interface (\gls{mpi}) and specific data structures. Fortunately, though a careful selection of the design pattern, \gls{nut} can be easily extended to provide an extra service or an external library access which has not been implemented in \gls{petsc} yet.\\ 
+
+
+\section{\gls{athlet}-\gls{nut} coupling}
 \label{sec:athlet-nut-coupling}
 
 \figpointer{\ref{fig:introduction-nut-process-groups}}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/introduction-nut-process-groups.png}
-\caption{NuT process groups}
+\caption{\gls{nut} process groups}
 \label{fig:introduction-nut-process-groups}
 \end{figure}
 
-Coupling of NuT with GRS tools is based on the client-server architecture where NuT acts as a server and the tools can be viewed as clients. Communication between two parts is done via MPI.\\
+Coupling of \gls{nut} with \gls{grs} tools is based on the client-server architecture where \gls{nut} acts as a server and the tools can be viewed as clients. Communication between two parts is done via \gls{mpi}.\\
 
 
-To provide a clear and concise external interface, NuT contains a client module called "NuT Plug-in". It can be  considered as a socket, from the client side, using the analogy of Transmission Control Protocol (TCP). The plug-in hides all MPI calls to the sever which considerably improves readability of the code.\\
+To provide a clear and concise external interface, \gls{nut} contains a client module called "\gls{nut} Plug-in". It can be  considered as a socket, from the client side, using the analogy of Transmission Control Protocol (TCP). The plug-in hides all \gls{mpi} calls to the sever which considerably improves readability of the code.\\
 
 
 % communicators
-In the general case, NuT allows multiple clients to work concurrently with the server. To handle the traffic, the library splits the default MPI communicator at start-up time of the application into appropriate process groups, as it is shown in figure \ref{fig:introduction-nut-process-groups}.\\
+In the general case, \gls{nut} allows multiple clients to work concurrently with the server. To handle the traffic, the library splits the default \gls{mpi} communicator at start-up time of the application into appropriate process groups, as it is shown in figure \ref{fig:introduction-nut-process-groups}.\\
 
 
 
-The design of NuT allows sharing of some NuT-MPI processes among different process groups due to performance reasons i.e. finite number of processing units on hardware. To resolve possible deadlocks, each process group has its own representative, called the head. Each client has two views on its respective group which is achieved by means of distinct MPI communicators. The first communicator is responsible for client-head communication whereas the second one allows the client to talk to any NuT process within the group.\\
+The design of \gls{nut} allows sharing of some \gls{nut}-\gls{mpi} processes among different process groups due to performance reasons i.e. finite number of processing units on hardware. To resolve possible deadlocks, each process group has its own representative, called the head. Each client has two views on its respective group which is achieved by means of distinct \gls{mpi} communicators. The first communicator is responsible for client-head communication whereas the second one allows the client to talk to any \gls{nut} process within the group.\\
 
 
 
-A general view of client-server communication looks like a 3-way handshake in the following way: a client sends a request to the head which is a signal to reserve all compute-units of the group for an upcoming task. Having possessed the resources and prepared them for a specific service, the head notifies the client about resource acquisition and the entire process group waits for data. Afterwards, the client sends data either to a specific NuT-process or to the entire group using the second communicator and waits for a result of the service. In the current implementation of NuT, the communication between client and server is synchronous i.e. the client gets blocked while waiting for a result from the server. \\
+A general view of client-server communication looks like a 3-way handshake in the following way: a client sends a request to the head which is a signal to reserve all compute-units of the group for an upcoming task. Having possessed the resources and prepared them for a specific service, the head notifies the client about resource acquisition and the entire process group waits for data. Afterwards, the client sends data either to a specific \gls{nut}-process or to the entire group using the second communicator and waits for a result of the service. In the current implementation of \gls{nut}, the communication between client and server is synchronous i.e. the client gets blocked while waiting for a result from the server. \\
 
 
-As an example, figure \ref{fig:introduction-athlet-nut-coupling} represents a general view of ATHLET-NuT coupling where ATHLET is responsible for marching of the numerical integration solver whereas NuT computes solutions of systems \ref{eq:athlet-9}.\\
+As an example, figure \ref{fig:introduction-athlet-nut-coupling} represents a general view of \gls{athlet}-\gls{nut} coupling where \gls{athlet} is responsible for marching of the numerical integration solver whereas \gls{nut} computes solutions of systems \ref{eq:athlet-9}.\\
 
 
 \figpointer{\ref{fig:introduction-athlet-nut-coupling}}
 \begin{figure}
   \centering
   \includegraphics[width=0.75\textwidth]{figures/introduction-athlet-nut-coupling.png}
-\caption{ATHEL-NuT software coupling}
+    \caption{\gls{athlet}-\gls{nut} software coupling}
 \label{fig:introduction-athlet-nut-coupling}
 \end{figure}
 
 
-Partial and full Jacobian matrix updates derived from finite differences are computed on the client side since only the client has the access to function $f(y)$, equation \ref{eq:athlet-8}. Due to decoupling of the underlying system of PDEs and specifics of finite volume discretization, Jacobian matrix is rather sparse and, therefore, ATHLET uses a Jacobian matrix compression algorithm, described in section \ref{sec:jacobian-matrix-compression}, to reduce the amount of Jacobian column evaluations. Having computed a matrix column, ATHLET immediately broadcasts it to its entire NuT process group by means of 3-way handshake mechanism as described above. It is worth mentioning that this approach allows to circumvent potential memory limits on the client side and thus store the entire sparse Jacobian matrix in a distributed fashion on the server. In other words, ATHLET never holds the entire Jacobian matrix in its memory; conversely, the matrix is distributed across multiple NuT processes according to block-row distribution induced by PETSc. In turn, NuT is waiting for the entire Jacobian matrix information from ATHLET and starts solving systems \ref{eq:athlet-9} right after the corresponding request from the client.\\
+Partial and full Jacobian matrix updates derived from finite differences are computed on the client side since only the client has the access to function $f(y)$, equation \ref{eq:athlet-8}. Due to decoupling of the underlying system of \gls{pde}s and specifics of finite volume discretization, Jacobian matrix is rather sparse and, therefore, \gls{athlet} uses a Jacobian matrix compression algorithm, described in section \ref{sec:jacobian-matrix-compression}, to reduce the amount of Jacobian column evaluations. Having computed a matrix column, \gls{athlet} immediately broadcasts it to its entire \gls{nut} process group by means of 3-way handshake mechanism as described above. It is worth mentioning that this approach allows to circumvent potential memory limits on the client side and thus store the entire sparse Jacobian matrix in a distributed fashion on the server. In other words, \gls{athlet} never holds the entire Jacobian matrix in its memory; conversely, the matrix is distributed across multiple \gls{nut} processes according to block-row distribution induced by \gls{petsc}. In turn, \gls{nut} is waiting for the entire Jacobian matrix information from \gls{athlet} and starts solving systems \ref{eq:athlet-9} right after the corresponding request from the client.\\
 
 

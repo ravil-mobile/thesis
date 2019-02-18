@@ -3,7 +3,7 @@
 
 
 
-A simple concept, named \textit{accumulator}, has been proposed to improve MPI communication during a Jacobian matrix transfer preserving the current AHLET-NuT architecture and coupling.\\
+A simple concept, named \textit{accumulator}, has been proposed to improve \gls{mpi} communication during a Jacobian matrix transfer preserving the current AHLET-\gls{nut} architecture and coupling.\\
 
 
 The concept represents two arrays of length $2L$ where the first one, called \textit{accumulator}, is used for accumulation of Jacobian matrix elements, stored in compressed sparse matrix format, till the critical array length equaled to $L = F \cdot N$, where $N$ is a size of the underlying Jacobian matrix and $F$ is a so-called capacity factor. Once the current array length of \textit{accumulator} exceeds its critical length, the accumulated data are moved to \textit{send buffer} by means of a simple swap of pointers, \textit{ACC\_PTR} and \textit{SEND\_BUFF\_PTR}, see figure \ref{fig:accumulator-concept}. Having swapped the pointers and reset control variables, accumulation procedure can be immediately continued together with an immediate instantiation of the corresponding non-blocking broadcast operation with respect to \textit{send buffer} content.\\
@@ -16,16 +16,16 @@ The concept represents two arrays of length $2L$ where the first one, called \te
 \end{figure}
 
 
-The second array part of \textit{accumulator}, also called the critical part, is used for safe placement of data surplus without any extra program checks and manipulations, using an assumption that a column vector cannot exceed the Jacobian matrix size. The assumption is based on long-term and first-hand experience of ATHLET-NuT users. On another hand, the event, described above, triggers a signal for a regular pointer swap and, therefore, the subsequent non-blocking data transfer.\\
+The second array part of \textit{accumulator}, also called the critical part, is used for safe placement of data surplus without any extra program checks and manipulations, using an assumption that a column vector cannot exceed the Jacobian matrix size. The assumption is based on long-term and first-hand experience of \gls{athlet}-\gls{nut} users. On another hand, the event, described above, triggers a signal for a regular pointer swap and, therefore, the subsequent non-blocking data transfer.\\
 
 
-The factor $F$, depicted in figure \ref{fig:accumulator-concept}, can be used by the user for two purposes. Mainly, it allows the user to adjust the \textit{send buffer} length $L$ till the point of saturation of physical interconnection bandwidth, see figure \ref{fig:hw1-bandwidth} as an example, and, thus, achieve efficient resource utilization. Additionally, it reduces the amount of handshakes, the amount of resource acquisition requests, between NuT and clients. The default value of the factor is equal to 1, however, we insistently recommend to increase the value via the corresponding environment variable for small-sized problems and operation of NuT in a multi-client mode.\\
+The factor $F$, depicted in figure \ref{fig:accumulator-concept}, can be used by the user for two purposes. Mainly, it allows the user to adjust the \textit{send buffer} length $L$ till the point of saturation of physical interconnection bandwidth, see figure \ref{fig:hw1-bandwidth} as an example, and, thus, achieve efficient resource utilization. Additionally, it reduces the amount of handshakes, the amount of resource acquisition requests, between \gls{nut} and clients. The default value of the factor is equal to 1, however, we insistently recommend to increase the value via the corresponding environment variable for small-sized problems and operation of \gls{nut} in a multi-client mode.\\
 
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/chapter-3/hw1-bandwidth.png}
-  \caption{Technical characteristics of HW1 interconnection} \label{fig:hw1-bandwidth}
+  \caption{Technical characteristics of \gls{hw1} interconnection} \label{fig:hw1-bandwidth}
 \end{figure}
 
 
@@ -46,4 +46,4 @@ Figure \ref{fig:accumulator-in-action} depicts an application of the \textit{acc
 \end{figure}
 
 
-Before ATHLET can send a request to NuT to start solving systems \ref{eq:athlet-10} it has to be certain that the entire Jacobian matrix has been transfered to the NuT side. For this reason, the last column transfer is done by means of the corresponding blocking MPI operations. It means ATHLET gets blocked only during the last column transfer and MPI gives the execution control back only when the last piece of data has been successfully distributed among NuT processes.\\ 
+Before \gls{athlet} can send a request to \gls{nut} to start solving systems \ref{eq:athlet-10} it has to be certain that the entire Jacobian matrix has been transfered to the \gls{nut} side. For this reason, the last column transfer is done by means of the corresponding blocking \gls{mpi} operations. It means \gls{athlet} gets blocked only during the last column transfer and \gls{mpi} gives the execution control back only when the last piece of data has been successfully distributed among \gls{nut} processes.\\ 

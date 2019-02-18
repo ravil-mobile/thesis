@@ -1,14 +1,14 @@
-\subsection{Overview of MUMPS Library}
+\subsection{Overview of \gls{mumps} Library}
 \label{subseq:mumps-review}
 
-Originally, MUltifrontal Massively Parallel sparse direct Solver (MUMPS) was a part of the PARASOL Project. The project was an ESPRIT IV long term research with the main goal to build and test a portable library for solving large sparse systems of equations on distributed memory systems \cite{PARASOL}. An important aspect of the researh was a strong link between the developers of the sparse solvers and industrial end users, who provided a range of test problems and evaluated the solvers \cite{MUMPS:description}. Since 2000 MUMPS had continued as an ongoing project and, by the time of writing, the library have contained almost 5 main releases.\\
+Originally, MUltifrontal Massively Parallel sparse direct Solver (\gls{mumps}) was a part of the PARASOL Project. The project was an ESPRIT IV long term research with the main goal to build and test a portable library for solving large sparse systems of equations on distributed memory systems \cite{PARASOL}. An important aspect of the researh was a strong link between the developers of the sparse solvers and industrial end users, who provided a range of test problems and evaluated the solvers \cite{MUMPS:description}. Since 2000 \gls{mumps} had continued as an ongoing project and, by the time of writing, the library have contained almost 5 main releases.\\
 
 
 
-As it was mentioned in section \ref{subseq:mm-library-choice}, MUMPS is an implementation of the multi-frontal method. Therefore, MUMPS performs all three phases in sequence, namely: analysis, numerical factorization and solution. The numerical factorization and solution phases were fully described in detail in subsection \ref{subseq:direct-sparse methods}. In this subsection, the analysis phase of MUMPS is examined since implementation of this phase often varies between libraries due to different parallel performance considerations.\\
+As it was mentioned in section \ref{subseq:mm-library-choice}, \gls{mumps} is an implementation of the multi-frontal method. Therefore, \gls{mumps} performs all three phases in sequence, namely: analysis, numerical factorization and solution. The numerical factorization and solution phases were fully described in detail in subsection \ref{subseq:direct-sparse methods}. In this subsection, the analysis phase of \gls{mumps} is examined since implementation of this phase often varies between libraries due to different parallel performance considerations.\\
 
 
-According to the library documentation, the analysis phases of MUMPS consists of several pre-processing steps:
+According to the library documentation, the analysis phases of \gls{mumps} consists of several pre-processing steps:
 
 \begin{enumerate}
   \item Fill-reducing pivot order \label{mumps:analysis-steps:1}
@@ -20,7 +20,7 @@ According to the library documentation, the analysis phases of MUMPS consists of
 
 
 % Fill-reducing pivot order
-\ref{mumps:analysis-steps:1}) To handle both symmetric and unsymmetric cases, MUMPS performs fill-reducing reordering based on $\boldsymbol{A} + \boldsymbol{A^T}$ sparsity pattern. The library provides numerous sequantial algorithms for the reordering such as Approximate Minimum Degree (AMD) \cite{reordering:AMD}, Approximate Minimum Fill (AMF), Approximate Minimum Degree with automatic quasi-dense row detection (QAMD) \cite{reordering:QAMD}, Bottom-up and Top-down Sparse Reordering (PORD) \cite{reordering:PORD}, Nested Dissection coupled with AMD (Scotch) \cite{reordering:SCOTCH}, Multilevel Nested Dissection coupled with Multiple Minimum Degree (METIS) \cite{reordering:METIS}. Additionally, MUMPS can work together with ParMETIS and PT-Scotch which are extensions of METIS and Scotch libraries for parallel execution, respectively. MUMPS also provides the user with an option to select a fill-in reducing algorithm in run-time based on matrix type, size and the number of processors \cite{mumps-manual}.\\
+\ref{mumps:analysis-steps:1}) To handle both symmetric and unsymmetric cases, \gls{mumps} performs fill-reducing reordering based on $\boldsymbol{A} + \boldsymbol{A^T}$ sparsity pattern. The library provides numerous sequantial algorithms for the reordering such as Approximate Minimum Degree (AMD) \cite{reordering:AMD}, Approximate Minimum Fill (AMF), Approximate Minimum Degree with automatic quasi-dense row detection (QAMD) \cite{reordering:QAMD}, Bottom-up and Top-down Sparse Reordering (PORD) \cite{reordering:PORD}, Nested Dissection coupled with AMD (Scotch) \cite{reordering:SCOTCH}, Multilevel Nested Dissection coupled with Multiple Minimum Degree (METIS) \cite{reordering:METIS}. Additionally, \gls{mumps} can work together with ParMETIS and PT-Scotch which are extensions of METIS and Scotch libraries for parallel execution, respectively. \gls{mumps} also provides the user with an option to select a fill-in reducing algorithm in run-time based on matrix type, size and the number of processors \cite{mumps-manual}.\\
 
 
 % Symbolic factorization
@@ -28,7 +28,7 @@ According to the library documentation, the analysis phases of MUMPS consists of
 
 
 % Scaling
-\ref{mumps:analysis-steps:3}) Matrix $A$ is tried to scale in such a way to get absolute values of \textit{one} along the main diagonal and \textit{less than one} for all off-diagonal entries. Scaling algorithms are described in detail in works \cite{mm:scaling:duff1999design}, \cite{mm:scaling:duff2001algorithms} (for the unsymmetric case) and \cite{mm:scaling:duff2005strategies} (for the symmetric case). This pre-processing step is supposed to improve numerical accuracy and makes all estimations performed during analysis more reliable \cite{mumps-manual}. MUMPS also provides an option to switch off scaling or perform it during the factorization phase.\\
+\ref{mumps:analysis-steps:3}) Matrix $A$ is tried to scale in such a way to get absolute values of \textit{one} along the main diagonal and \textit{less than one} for all off-diagonal entries. Scaling algorithms are described in detail in works \cite{mm:scaling:duff1999design}, \cite{mm:scaling:duff2001algorithms} (for the unsymmetric case) and \cite{mm:scaling:duff2005strategies} (for the symmetric case). This pre-processing step is supposed to improve numerical accuracy and makes all estimations performed during analysis more reliable \cite{mumps-manual}. \gls{mumps} also provides an option to switch off scaling or perform it during the factorization phase.\\
 
 
 
@@ -38,7 +38,7 @@ According to the library documentation, the analysis phases of MUMPS consists of
 
 
 % Mapping
-\ref{mumps:analysis-steps:5}) A host process, chosen by MUMPS, creates a pool of tasks where each task belongs to one out of three different types, figure \ref{fig:mumps:mapping-and-scheduling}. Then, the host distributes tasks among all available processes in such a way to achieve good memory and compute balance.\\
+\ref{mumps:analysis-steps:5}) A host process, chosen by \gls{mumps}, creates a pool of tasks where each task belongs to one out of three different types, figure \ref{fig:mumps:mapping-and-scheduling}. Then, the host distributes tasks among all available processes in such a way to achieve good memory and compute balance.\\
 
  
 Type 1 nodes are grouped in subtrees, according to the Geist-Ng algorithm \cite{geist1989task}, and each subtree is processed by a single process to avoid the finest granularity, which can cause high communication overheads. \\
@@ -50,7 +50,7 @@ In case of type 2 nodes, the host process assigns each node to one process, call
 The root node belongs to the type 3. The host \underline{\textit{statically}} assigns the master for the root, as it is in case of type 2 nodes, to hold all the indices describing the structure of its frontal matrix. Before factorization, the structure of the root frontal matrix is statically mapped onto a 2D grid of processes using block cyclic distribution. This allows to determine, during the analysis phase, which process an entry of the root is assigned. Hence, the original matrix entries and the part of the contribution blocks can be assembled as soon as they are available. Because of threshold pivoting, the master process collects the information of indices for all delayed variables of its sons, builds the final structure of the root frontal matrix and broadcast the corresponding symbolic information to all slaves. The slaves, in turn, adjust their local data structure and, right after that, perform numerical factorization in parallel.\\
 
 
-It is important to mention if the root node size is less than a certain computer depended parameter, defined internally by MUMPS, the root node will be treated as the type 2, \cite{mumps-manual}.\\
+It is important to mention if the root node size is less than a certain computer depended parameter, defined internally by \gls{mumps}, the root node will be treated as the type 2, \cite{mumps-manual}.\\
 
 
 An example of static/dynamic scheduling i.e. process mapping, is represented in figure \ref{fig:mumps:mapping-and-scheduling}.\\
@@ -60,7 +60,7 @@ An example of static/dynamic scheduling i.e. process mapping, is represented in 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/chapter-2/mumps-task-data-parallelism-2.png}
-\caption{MUMPS: static and dynamic scheduling \cite{l2012multifrontal}}
+    \caption{\gls{mumps}: static and dynamic scheduling \cite{l2012multifrontal}}
 \label{fig:mumps:mapping-and-scheduling}
 \end{figure}
 

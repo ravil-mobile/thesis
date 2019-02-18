@@ -35,10 +35,10 @@ The compression algorithm is based on the notion of \textit{structurally orthogo
 Having obtained a compressed form of Jacobian, another set of vectors $d \in \mathbb{R}^{N}$, also known as seed vectors, can be used to perform function perturbation instead of unit vectors $e_{k}$. A seed vector $d$ has 1’s in components corresponding to the indices of columns in a structurally orthogonal group of columns, and zeros in all other components \cite{gebremedhin2005color}. By differencing the function $F$ along the vector $d$, one can simultaneously determine the nonzero elements in all of these columns through one additional function evaluation at $F(y+d)$ \cite{gebremedhin2005color}.\\
 
 
-It is obvious the algorithm requires to partition a matrix into the fewest amount of groups, colors, in order to achieve the most of efficiency. There exist various methods and huristics dedicated to that particular problem. \citeauthor{gebremedhin2005color}, in work \cite{gebremedhin2005color}, conducted one of the most recent comprehensive studies in this field and summarized different matrix partitioning algorithms proposed over the last 20 years. Currently, Jacobian matrix compression has been successfully implemented in ATHLET by means of the corresponding built-in PETSc subroutines through NuT interface.\\
+It is obvious the algorithm requires to partition a matrix into the fewest amount of groups, colors, in order to achieve the most of efficiency. There exist various methods and huristics dedicated to that particular problem. \citeauthor{gebremedhin2005color}, in work \cite{gebremedhin2005color}, conducted one of the most recent comprehensive studies in this field and summarized different matrix partitioning algorithms proposed over the last 20 years. Currently, Jacobian matrix compression has been successfully implemented in \gls{athlet} by means of the corresponding built-in \gls{petsc} subroutines through \gls{nut} interface.\\
 
 
-% unequal length of MPI messages 
+% unequal length of \gls{mpi} messages 
 Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an efficient matrix partitioning where an initial 100 by 100 Jacobian matrix is transformed into its 100 by 28 compressed form using 28 distinct colors. It can be clearly observed from the figure the column vector length of the compressed Jacobian form is gradually decreasing. Figure \ref{fig:matrix-column-distribution} provides a detailed and clear view on the problem, using data from figure \ref{fig:matrix-partitioning-example} as an example, where a bar represents the corresponding column length.\\
 
 
@@ -57,18 +57,18 @@ Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an
 \end{figure}
 
 
-According to the ATHLET-NuT coupling design, each column is transfered to NuT by means of the synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, immediately after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
+According to the \gls{athlet}-\gls{nut} coupling design, each column is transfered to \gls{nut} by means of the synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, immediately after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
 
 
 % listing
-Code listings \ref{lst:athlet-grs-defaul:athlet} and \ref{lst:athlet-grs-defaul:nut} represent the default compressed Jacobian matrix transfer between ATHLET and NuT. This code was used as a baseline for the remaining part of the study.\\
+Code listings \ref{lst:athlet-grs-defaul:athlet} and \ref{lst:athlet-grs-defaul:nut} represent the default compressed Jacobian matrix transfer between \gls{athlet} and \gls{nut}. This code was used as a baseline for the remaining part of the study.\\
 
 
-All \textbf{code listings}, presented in this part of the study, are written in \textbf{pseudo-code} and intended for for convenience of reading. The aim is to show and display the main ideas skipping non-relevant parts of the source code. The \textbf{pseudo-code} is a mixture of several programming languages, namely: \textbf{Python}, \textbf{C/C++}, \textbf{Fortran}, \textbf{MPI}.\\
+All \textbf{code listings}, presented in this part of the study, are written in \textbf{pseudo-code} and intended for for convenience of reading. The aim is to show and display the main ideas skipping non-relevant parts of the source code. The \textbf{pseudo-code} is a mixture of several programming languages, namely: \textbf{Python}, \textbf{C/C++}, \textbf{Fortran}, \textbf{\gls{mpi}}.\\
 
 
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[language=python, caption={Pseudocode of the default ATHLET-NuT coupling: ATHLET part}, frame=single, label={lst:athlet-grs-defaul:athlet}]
+\begin{lstlisting}[language=python, caption={Pseudocode of the default \gls{athlet}-\gls{nut} coupling: \gls{athlet} part}, frame=single, label={lst:athlet-grs-defaul:athlet}]
 # GIVEN PARAMETERS:
 # acomm - the athlet communicator
 # acomm_id - athlet identification number 
@@ -80,7 +80,7 @@ eps = 1e-4
 center = f(y)
 column = zeros(N)
 
-# compute Jacobian and send it to NuT column-by-column
+# compute Jacobian and send it to \gls{nut} column-by-column
 for seed_vector in seed_vectors:
 
 	# compute the next column
@@ -105,7 +105,7 @@ for seed_vector in seed_vectors:
 
 
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[language=python, caption={Pseudocode of the default ATHLET-NuT coupling: NuT part}, frame=single, label={lst:athlet-grs-defaul:nut}]
+\begin{lstlisting}[language=python, caption={Pseudocode of the default \gls{athlet}-\gls{nut} coupling: \gls{nut} part}, frame=single, label={lst:athlet-grs-defaul:nut}]
 # N - problem size
 # J - allocated distributed jacobian matrix
 # COO - compressed matrix coordinate format

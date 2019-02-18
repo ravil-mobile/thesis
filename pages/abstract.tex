@@ -1,5 +1,10 @@
 \chapter{\abstractname}
 
+\textit{\textbf{Key words.} numerical time integration, direct sparse linear methods, multi-frontal methods, \gls{mumps}, \gls{blas}, parallel performance, distributed-memory computations,  multi-threading, \gls{mpi}, \gls{openmp}, non-blocking communication}
+
+\vspace{10mm}
+
+
 An application of linearly implicit methods for time integration of stiff systems of \gls{ode}s  results in solving sparse systems of linear equations. The optimal selection and configuration of a parallel linear solver can sufficiently accelerate the time integration process and, therefore, reduce execution time of such simulations.\\
 
 
@@ -11,7 +16,3 @@ In this study, we have mainly focused on configurations of \gls{mumps} with the 
 
 
 Additionally, we have shown that an intelligent application of non-blocking \gls{mpi} communications in some parts of the existing thermo-hydraulic simulation code, \gls{athlet}, can additionally solve issues of inefficient data transfer preserving the current software design and implementation without drastic changes in the source code.\\
-
-\vspace{20mm}
-
-\textit{\textbf{Key words.} numerical time integration, direct sparse linear methods, multi-frontal methods, parallel performance, distributed-memory computations,  multi-threading, \gls{mpi}, \gls{openmp}, \gls{blas}, non-blocking communication}
