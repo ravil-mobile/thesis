@@ -4,7 +4,7 @@
 \label{sec:athlet-overview}
 
 
-The thermal-hydraulic system code \gls{athlet} (Analysis of THermal-hydraulics of LEaks and Transients) is developed by \gls{grs} for the analysis of the whole spectrum of operational conditions, incidental transients, design-basis accidents and beyond design-basis accidents without core damage anticipated for nuclear energy facilities \cite{grs:athlet-info}. The code provides specific models and methods for the simulation of many types of nuclear power plants comprising current light water reactors (PWR, BWR, VVER, RBMK), advanced Generation III+ and IV reactors as well as Small Modular Reactors \cite{grs:athlet-info}.\\
+The thermal-hydraulic system code \gls{athlet} (Analysis of THermal-hydraulics of LEaks and Transients) is developed by \gls{grs} for the analysis of the whole spectrum of operational conditions, incidental transients, design-basis accidents and beyond design-basis accidents without core damage anticipated for nuclear energy facilities \cite{grs:athlet-info}. The code provides specific models and methods for the simulation of many types of nuclear power plants comprising current light water reactors (PWR\footnote{Pressurized Water Reactor}, BWR\footnote{Boiling Water Reactor}, WWER\footnote{Water-Water Energetic Reactor}, HPCR\footnote{High Power Channel-type Reactor}), advanced Generation III+ and IV reactors as well as SMRs\footnote{Small Modular Reactor} \cite{grs:athlet-info}.\\
 
 
 Physical processes inside of hydraulic circuits of light-water reactors can be naturally described by a two-phase thermo-fluiddynamic model based on conservation equations of mass, momentum and energy for liquid and vapor.\\
@@ -61,7 +61,7 @@ Spacial integration of the conservation equations, the ssystem \ref{eq:athlet-1}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.55\textwidth]{figures/introduction-1d-fvm.png}
-\caption{\gls{athlet}: one dimensional finite volume formulation of thermo-hydraulic modeling, \cite{tims-presentation}}
+\caption{One dimensional finite volume formulation of thermo-hydraulic modeling in \gls{athlet}, \cite{tims-presentation}}
 \label{fig:introduction-1d-fvm}
 \end{figure}
 
@@ -87,7 +87,7 @@ To decrease the cost and preserve sufficient accuracy of numerical integration, 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/introduction-rosenbrock-scheme.png}
-\caption{A general view on the W-method solver implemented in \gls{athlet}}
+\caption{A general view on the 6-stage W-method implemented in \gls{athlet}}
 \label{fig:introduction-w-method-scheme}
 \end{figure}
 
@@ -116,7 +116,7 @@ Currently, \gls{nut} is based heavily on Portable, Extensible Toolkit for Scient
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/introduction-nut-process-groups.png}
-\caption{\gls{nut} process groups}
+\caption{An example of \gls{nut} process groups}
 \label{fig:introduction-nut-process-groups}
 \end{figure}
 

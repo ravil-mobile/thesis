@@ -148,7 +148,7 @@ parasail                                                   & hypre              
 SPAI                                                       & \begin{tabular}[c]{@{}c@{}}Grote,\\ Barnard\end{tabular} & SPAI                                                          & \begin{tabular}[c]{@{}c@{}}-pc\_spai\_epsilon\\ -pc\_spai\_nbstep\\ -pc\_spai\_max\\ -pc\_spai\_max\_new\\ -pc\_spai\_block\_size\\ -pc\_spai\_cache\_size\end{tabular}                & -                                                                         \\ \hline
 BoomerAMG                                                  & hypre                                                    & \begin{tabular}[c]{@{}c@{}}algebraic\\ multigrid\end{tabular} & \begin{tabular}[c]{@{}c@{}}-pc\_hypre\_boomeramg\_cycle\_type\\ -pc\_hypre\_boomeramg\_max\_levels\\ -pc\_hypre\_boomeramg\_max\_iter\\ -pc\_hypre\_boomeramg\_tol\\ etc.\end{tabular} & \begin{tabular}[c]{@{}c@{}}39 tuning\\ parameters\\ in total\end{tabular} \\ \hline
 \end{tabular}
-\caption{Parallel preconditioning algorithms available in \gls{petsc}}
+\caption{A list of parallel preconditioning algorithms available in \gls{petsc}}
 \label{table:preconditioners}
 \end{table}
 
@@ -159,7 +159,7 @@ It is worth mentioning both block Jacobi and additive Schwarz algorithms
 split the original system into smaller blocks where each block is usually computed on a single processor. Therefore, these algorithms require an explicit specification of another preconditioning algorithm  or a linear solver, called as sub-preconditioner, for local block computations. As an example, code listing \ref{lst:petsc-preconditioner-setups} shows usage of a \textit{sequential} \gls{petsc} built-in $LU$ matrix decomposition subroutine as a sub-preconditioner for the block Jacobi algorithm. As a result, the number of tuning parameters for these two algorithms can grow significantly.\\
 
 
-\begin{lstlisting}[language=python, caption={Usage of a PETSc built-in sparse direct linear solver as a sub-preconditioner for a PETSc Block Jacobi preconditioning algorithm}, frame=single, label={lst:petsc-preconditioner-setups}]
+\begin{lstlisting}[language=python, caption={An example of usage of a PETSc built-in sparse direct linear solver as a sub-preconditioner for a PETSc Block Jacobi preconditioning algorithm}, frame=single, label={lst:petsc-preconditioner-setups}]
 -pc_bjacobi_blocks 4
 -sub_pc_type lu
 -pc_factor_mat_ordering_type rcm

@@ -9,7 +9,7 @@ To perform column eliminations of a fully summed block of a frontal matrix, \gls
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.45\textwidth]{figures/chapter-2/mumps-type-2-frontal-matrix.png}
-\caption{\gls{mumps}: 1D block column distribution of a type 2 node}
+\caption{One dimensional block column distribution of a type 2 node in \gls{mumps}}
 \label{fig:mumps:type-2-frontal-matrix}
 \end{figure}
 
@@ -18,7 +18,7 @@ To perform column eliminations of a fully summed block of a frontal matrix, \gls
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/chapter-2/mumps-type-2-part-1.png}
-\caption{\gls{mumps}: An example of a type 2 node factorization}
+\caption{An example of a type 2 node factorization implemented in \gls{mumps}}
 \label{fig:mumps:steps-of-type-2-factorization}
 \end{figure}
 
@@ -58,7 +58,7 @@ PDLIB/SX                                                             & BLAS libr
 SCSL                                                                 & BLAS implementations for SGI's Irix workstations                                                                                                            & \begin{tabular}[c]{@{}c@{}}proprietary\\ license\end{tabular} \\ \hline
 \begin{tabular}[c]{@{}c@{}}Sun\\ Performance \\ Library\end{tabular} & \begin{tabular}[c]{@{}c@{}}Optimized BLAS and LAPACK for SPARC, Core \\ and AMD64 architectures under \\ Solaris 8, 9, and 10 as well as Linux\end{tabular} & \begin{tabular}[c]{@{}c@{}}proprietary\\ license\end{tabular} \\ \hline
 \end{tabular}
-\caption{Commercial and open source \gls{blas} implementations \cite{wiki:blas-implementations}}
+\caption{Commercial and open source \gls{blas} libraries \cite{wiki:blas-implementations}}
 \label{table:list-of-blas-implementations}
 \end{table}
 
@@ -76,7 +76,7 @@ Among all libraries listed in table \ref{table:list-of-blas-implementations} the
 		\subfloat[k3-2]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/k3-2.png}} &
 		\subfloat[cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/cube-64.png}} \\
 	\end{tabular}
-	\caption{\gls{mumps}: comparison of different \gls{blas} libraries with using \gls{grs} matrix set on \gls{hw1} machine}
+	\caption{Comparisons of parallel factorization of \gls{grs} matrix set performed on \gls{hw1} machine using  MUMPS solver linked to different \gls{blas} implementations}
 	\label{fig:mumps-blas-configuration-1}
 \end{figure}
 
@@ -89,7 +89,7 @@ Among all libraries listed in table \ref{table:list-of-blas-implementations} the
 		\subfloat[pwr-3d]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/pwr-3d.png}} \\
 		\subfloat[PFlow\_742]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/PFlow_742.png}} & \subfloat[torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/torso3.png}} \\
 	\end{tabular}
-	\caption{\gls{mumps}: comparison of different \gls{blas} libraries with using both \gls{grs} and SuiteSparse matrix sets on \gls{hw1} machine}
+	\caption{Comparisons of parallel factorizations of \gls{grs} and SuiteSparse matrix sets performed on \gls{hw1} machine using  MUMPS solver linked to different \gls{blas} implementations}
 	\label{fig:mumps-blas-configuration-2}
 \end{figure}
 
@@ -131,7 +131,7 @@ pkustk10                                              & 35.089                  
 torso3                                                & 66.185                                                                                                  & 66.988                                                                                               & -2.837                                                                                                  \\ \hline
 x104                                                  & 41.82                                                                                                   & 41.936                                                                                               & -0.445                                                                                                  \\ \hline
 \end{tabular}
-\caption{Comparison of different \gls{mumps}-\gls{blas} configurations applied to SuiteSparse matrix set}
+\caption{Comparisons of different \gls{mumps}-\gls{blas} configurations applied to SuiteSparse matrix set}
 \label{table:mumps-blas-performance-gain-suitesprase}
 \end{table}
 

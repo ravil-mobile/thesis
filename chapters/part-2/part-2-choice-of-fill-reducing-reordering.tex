@@ -22,7 +22,7 @@ To perform testing, \gls{petsc}, \gls{mumps}, PT-Scotch and ParMETIS libraries w
 		\subfloat[pwr-3d]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/ordering/pwr-3d.png}} &
 		\subfloat[k3-2]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/ordering/k3-2.png}} \\
 	\end{tabular}
-	\caption{Comparison of different fill-reducing algorithms}
+	\caption{An influence of different fill-reducing algorithms on parallel factorization of \gls{grs} matrix set}
 	\label{fig:mumps-ordering-1}
 \end{figure}
 
@@ -48,7 +48,7 @@ During the test, we noticed that application of ParMetis to small systems of equ
 		\subfloat[pwr-3d]{\includegraphics[width=0.475\textwidth]{figures/chapter-2/ordering/profiling/total-time-pwr-3d.png}} &
 		\subfloat[cube-5]{\includegraphics[width=0.475\textwidth]{figures/chapter-2/ordering/profiling/total-time-cube-5.png}} \\
 	\end{tabular}
-	\caption{\gls{mumps}-ParMetis parallel performance in case of relatively small matrices}
+	\caption{Parallel performance of \gls{mumps}-ParMetis configuration in case of parallel factorizations of relatively small matrices}
 	\label{fig:mumps-ordering-matrices-total-time}
 \end{figure}
 
@@ -66,7 +66,7 @@ A careful investigation revealed the analysis phase contained several peaks at p
 		\subfloat[pwr-3d]{\includegraphics[width=0.475\textwidth]{figures/chapter-2/ordering/profiling/profiling-pwr-3d.png}} &
 		\subfloat[cube-5]{\includegraphics[width=0.475\textwidth]{figures/chapter-2/ordering/profiling/profiling-cube-5.png}} \\
 	\end{tabular}
-	\caption{Profiling of \gls{mumps} library with using ParMetis as a fill-in reducing algorithm in case of factorization of relatively small matrices}
+	\caption{Profiling of \gls{mumps}-ParMetis configuration applied to parallel factorizations of relatively small matrices}
 	\label{fig:mumps-ordering-matrices-profiling}
 \end{figure}
 
@@ -83,7 +83,7 @@ k3-2        & PT-Scotch & 130101  & 787997   & 6.0568  \\ \hline
 k3-18       & ParMetis  & 1155955 & 7204723  & 6.2327  \\ \hline
 pwr-3d      & PT-Scotch & 6009    & 32537    & 5.4147  \\ \hline
 \end{tabular}
-\caption{\gls{grs} matrix set: assignment of matrices to a specific fill-in reducing algorithm based on parallel performance of flat-\gls{mpi} tests}
+\caption{Assignment of \gls{grs} matrices to a specific fill-in reducing algorithm based on parallel performance of testing}
 \label{table:GRS-ordering-assignment}
 \end{table}
 
@@ -106,7 +106,7 @@ x104        & PT-Scotch & 108384  & 8713602  & 80.3956 \\ \hline
 CurlCurl\_3 & PT-Scotch & 1219574 & 13544618 & 11.1060 \\ \hline
 Geo\_1438   & ParMetis  & 1437960 & 63156690 & 43.9210 \\ \hline
 \end{tabular}
-\caption{SuiteSparse matrix set: assignment of matrices to a specific fill-in reducing algorithm based on parallel performance of flat-\gls{mpi} tests}
+\caption{Assignment of SuiteSparse matrices to a specific fill-in reducing algorithm based on parallel performance of testing}
 \label{table:SuiteSparse-ordering-assignment}
 \end{table}
 

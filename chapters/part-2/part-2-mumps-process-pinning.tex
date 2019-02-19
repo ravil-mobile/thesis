@@ -18,7 +18,7 @@ Therefore, a couple of tests were carried out with both \gls{grs} and SuiteSpars
 		\subfloat[HW1 - cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/cube-64.png}} &
 		\subfloat[HW2 - cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/cube-64.png}} \\
 	\end{tabular}
-	\caption{Comparison of \textit{close} and \textit{spread} pinning strategies}
+	\caption{Comparisons of \textit{close} and \textit{spread} pinning strategies applied to parallel factorizations of \textit{pwr-3d} and \textit{cube-64} matrices}
 	\label{fig:mumps-close-vs-spread-1}
 \end{figure}
 
@@ -33,7 +33,7 @@ Therefore, a couple of tests were carried out with both \gls{grs} and SuiteSpars
 		\subfloat[HW1 - k3-18]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/k3-18.png}} &
 		\subfloat[HW2 - k3-18]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/k3-18.png}} \\
 	\end{tabular}
-	\caption{Comparison of \textit{close} and \textit{spread} pinning strategies}
+	\caption{Comparisons of \textit{close} and \textit{spread} pinning strategies applied to parallel factorizations of \textit{cube-645} and \textit{k3-18} matrices}
 	\label{fig:mumps-close-vs-spread-2}
 \end{figure}
 
@@ -49,7 +49,7 @@ Therefore, a couple of tests were carried out with both \gls{grs} and SuiteSpars
 		\subfloat[HW1 - CurlCurl\_3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/CurlCurl_3.png}} &
 		\subfloat[HW2 - CurlCurl\_3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/CurlCurl_3.png}} \\
 	\end{tabular}
-	\caption{Comparison of \textit{close} and \textit{spread} pinning strategies}
+	\caption{Comparisons of \textit{close} and \textit{spread} pinning strategies applied to parallel factorizations of \textit{PFlow\_742} and \textit{CurlCurl\_3} matrices}
 	\label{fig:mumps-close-vs-spread-3}
 \end{figure}
 
@@ -74,7 +74,7 @@ It is also important to investigate performance gain around the saturation point
 \multicolumn{1}{|c|}{k3-2}                                                  & 7   & 7.788                                                              & 2.899                                              & 0.414                                                  & \multicolumn{1}{c|}{} & 8   & 9.947                                                              & 3.298                                              & 0.412                                                  \\ \cline{1-5} \cline{7-10} 
 \multicolumn{1}{|c|}{k3-18}                                                 & 8   & 6.716                                                              & 3.472                                              & 0.434                                                  & \multicolumn{1}{c|}{} & 8   & 9.567                                                              & 3.896                                              & 0.487                                                  \\ \cline{1-5} \cline{7-10} 
 \end{tabular}
-\caption{Analysis and comparison of \gls{mumps} performance at the saturation point between \gls{hw1} and \gls{hw2} for \gls{grs} matrix set}
+\caption{Comparisons of \gls{mumps} parallel performance at the saturation points in case of factorization of \gls{grs} matrix set}
 \label{table:pinning-comparison-grs-matrix-set}
 \end{table}
 
@@ -97,8 +97,8 @@ It is also important to investigate performance gain around the saturation point
 \multicolumn{1}{|c|}{torso3}                                                & 18  & 5.607                                                                 & 8.149                                              & 0.453                                                  &  & 19  & 6.028                                                                 & 9.493                                              & 0.499                                                  \\ \cline{1-5} \cline{7-10} 
 \multicolumn{1}{|c|}{x104}                                                  & 6   & 9.537                                                                 & 1.789                                              & 0.298                                                  &  & 6   & 7.829                                                                 & 1.763                                              & 0.294                                                  \\ \cline{1-5} \cline{7-10} 
 \end{tabular}
-\caption{Analysis and comparison of \gls{mumps} performance at the saturation point between \gls{hw1} and \gls{hw2} for SuiteSparse matrix set.\\
-*ROM - run out of memory}
+\caption{Comparisons of \gls{mumps} parallel performance at the saturation points in case of factorization of SuiteSparse matrix set}
+where ROM - Run Out of Memory
 \label{table:pinning-comparison-suitesparse-matrix-set}
 \end{table}
 
@@ -116,6 +116,6 @@ The result of this study can be relevant for energy-efficient parallel computing
 
 Taken into account results of the tests, \textit{spread}-pinning has been chosen for the rest of the study. This process distribution can be easily achieved by means of some advanced OpenMPI command line options, for example \textit{--rank-by} and \textit{--bind-to}, as following:. \\
 
-\begin{lstlisting}[language=bash, mathescape=false, caption={An example of \textit{spread}-pinning with using  advanced OpenMPI command line options}, frame=single, label={lst:iterative-refinement}]
+\begin{lstlisting}[language=bash, mathescape=false, caption={An example of setting up \textit{spread} process pinning using  advanced OpenMPI command line options}, frame=single, label={lst:iterative-refinement}]
 mpiexec --rank-by numa --bind-to core -n $num_proc $executable_name $parameters
 \end{lstlisting}

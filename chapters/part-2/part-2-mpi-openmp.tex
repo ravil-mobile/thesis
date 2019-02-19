@@ -62,7 +62,7 @@ During the testing, we found that sometimes execution time of \gls{mumps}-OpenBL
 		\subfloat[k3-18]{\includegraphics[width=0.4\textwidth]{figures/chapter-2/openmp-mpi/anomalies-k3-18.png}} &
 		\subfloat[cube-645]{\includegraphics[width=0.4\textwidth]{figures/chapter-2/openmp-mpi/anomalies-cube-645.png}} \\
 	\end{tabular}
-	\caption{Anomalies of \gls{mumps}-OpenBLAS configuration running with 2 \gls{openmp} threads per \gls{mpi} process}
+	\caption{Anomalies of parallel execution of \gls{mumps}-OpenBLAS configuration during factorizations of large-sized \gls{grs} matrices running \ with 2 \gls{openmp} threads per \gls{mpi} process}
 	\label{fig:mumps-openblas-anomalies}
 \end{figure}
 
@@ -74,7 +74,7 @@ Multiple conflicts between application and system threads were observed using \t
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.75\textwidth]{figures/chapter-2/openmp-mpi/thread-conflict.png}
-\caption{A \gls{mumps}-OpenBLAS thread conflict in case of \textit{k3-18} matrix factorization (green - application threads, red - system threads)}
+\caption{Thread conflicts of \gls{mumps}-OpenBLAS configuration detected during \textit{k3-18} matrix parallel factorization (green - application threads, red - system threads)}
 \label{fig:mumps:openblas-thread-conflcit}
 \end{figure}
 
@@ -98,7 +98,7 @@ cube-64                                               & 0.756                   
 cube-5                                                & 0.181                                                     & 0.132                                                      & \textbf{0.104}                                            & 0.126                                                      & 0.117                                                      & 1.744                                                            \\ \hline
 pwr-3d                                                & 0.130                                                     & 0.114                                                      & 0.0972                                                    & \textbf{0.077}                                             & 0.109                                                      & 1.691                                                            \\ \hline
 \end{tabular}
-\caption{Compassion of different hybrid \gls{mpi}/\gls{openmp} modes used for \gls{grs} matrix set on \gls{hw1}}
+\caption{Compassions of different hybrid \gls{mpi}/\gls{openmp} modes used for parallel factorization of \gls{grs} matrix set on \gls{hw1}}
 \label{fig:mpi-omp-grs-hw1}
 \end{table}
 
@@ -116,7 +116,7 @@ cube-64                                               & 0.805                   
 cube-5                                                & 0.241                                                     & 0.121                                                      & \textbf{0.093}                                            & 0.129                                                      & 0.126                                                      & 2.582                                                            \\ \hline
 pwr-3d                                                & 0.234                                                     & 0.095                                                      & 0.098                                                     & \textbf{0.070}                                             & 0.094                                                      & 3.341                                                            \\ \hline
 \end{tabular}
-\caption{Compassion of different hybrid \gls{mpi}/\gls{openmp} modes used for \gls{grs} matrix set on \gls{hw2}}
+\caption{Compassions of different hybrid \gls{mpi}/\gls{openmp} modes used for parallel factorization of \gls{grs} matrix set on \gls{hw2}}
 \label{fig:mpi-omp-grs-hw2}
 \end{table}
 
@@ -137,7 +137,7 @@ x104                                                  & \textbf{1.597}          
 CurlCurl\_3                                           & 49.250                                                    & 44.120                                                     & \textbf{39.909}                                           & 43.311                                                     & 63.001                                                     & 1.234                                                            \\ \hline
 Geo\_1438                                             & 478.101                                                   & 234.697                                                    & \textbf{151.603}                                          & 157.697                                                    & 158.102                                                    & 3.154                                                            \\ \hline
 \end{tabular}
-\caption{Compassion of different hybrid \gls{mpi}/\gls{openmp} modes used for SuiteSparse matrix set on \gls{hw1}}
+\caption{Compassions of different hybrid \gls{mpi}/\gls{openmp} modes used for parallel factorization of SuiteSparse matrix set on \gls{hw1}}
 \label{fig:mpi-omp-suitesparse-hw1}
 \end{table}
 
@@ -160,8 +160,8 @@ x104                                                  & 2.676                   
 CurlCurl\_3                                           & 39.890                                                    & \textbf{34.579}                                            & 38.620                                                    & 41.171                                                     & 67.760                                                     & 1.154                                                           \\ \hline
 Geo\_1438                                             & ROM                                                       & ROM                                                        & ROM                                                       & ROM                                                        & ROM                                                        & ROM                                                             \\ \hline
 \end{tabular}
-\caption{Compassion of different hybrid \gls{mpi}/\gls{openmp} modes used for SuiteSparse matrix set on \gls{hw2}\\
-*ROM - run out of memory}
+\caption{Compassions of different hybrid \gls{mpi}/\gls{openmp} modes used for parallel factorization of SuiteSparse matrix set on \gls{hw2}\\}
+where ROM - Run Out of Memory
 \label{fig:mpi-omp-suitesparse-hw2}
 \end{table}
 

@@ -20,7 +20,7 @@ The algorithm starts with symbolic factorization of system \ref{eq:chol-1} with 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/chapter-2/sparsity-pattern-example-mm.png}
-\caption{An example of a sparse matrix and its Cholesky factor \cite{mult-frontal-original:2}}
+\caption{An example of a sparse matrix and its Cholesky factor, \cite{mult-frontal-original:2}}
 \label{fig:sparsity-pattern-example-mm}
 \end{figure}
 
@@ -46,7 +46,7 @@ Given definition \ref{eq:elimination-tree-1} and a sparsity pattern of factor $L
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.45\textwidth]{figures/chapter-2/elimination-tree-mm.png}
-\caption{An elimination tree of matrix $A$ from example depicted in figure \ref{fig:sparsity-pattern-example-mm}
+\caption{An elimination tree of matrix $A$ of the example depicted in figure \ref{fig:sparsity-pattern-example-mm},
  \cite{mult-frontal-original:2}}
 \label{fig:elimination-tree-mm}
 \end{figure}
@@ -178,7 +178,7 @@ Update column matrix $U_{j}$, also called as a contribution matrix, together wit
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.45\textwidth]{figures/chapter-2/information-flow.png}
-\caption{Information flow of the multifrontal method}
+\caption{Information flow of the multi-frontal method}
 \label{fig:information-float}
 \end{figure}
 
@@ -270,7 +270,7 @@ A post-ordered tree implies that each node is ordered before its parent and node
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.75\textwidth]{figures/chapter-2/elimination-tree-mm-postordering.png}
-\caption{An example of matrix postordering from \cite{mult-frontal-original:2}}
+\caption{An example of matrix postordering, \cite{mult-frontal-original:2}}
 \label{fig:mm-matrix-postordering}
 \end{figure}
 
@@ -279,7 +279,7 @@ A post-ordered tree implies that each node is ordered before its parent and node
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.75\textwidth]{figures/chapter-2/mm-contrib-matrix-manipulation.png}
-\caption{The stack contents for the postordering \cite{mult-frontal-original:2}}
+\caption{An example of an efficient data treatment during matrix factorization using stacking, \cite{mult-frontal-original:2}}
 \label{fig:mm-contrib-matrix-manipulation}
 \end{figure}
 
@@ -300,7 +300,7 @@ A super-node is formed by a set of contiguous columns which have identical off-d
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/chapter-2/supernodal-method-postordering-and-etree.png}
-\caption{An example of a supernodal elimination tree \cite{mult-frontal-original:2}}
+\caption{An example of a supernodal elimination tree, \cite{mult-frontal-original:2}}
 \label{fig:supernodal-method-postordering-and-etree}
 \end{figure}
  
@@ -377,7 +377,7 @@ quadratic decrease of computational cost between nodes of adjacent levels wherea
 			\subfloat[Model 1: equal cost per level]{\includegraphics[width=0.5\textwidth]{figures/chapter-2/mm-parallel-model-tree-1.png} \label{fig:mm-parallel-model-tree-linear}} & 
 		\subfloat[Model 2: quadratically decreasing cost per level]{\includegraphics[width=0.5\textwidth]{figures/chapter-2/mm-parallel-model-tree-2.png} \label{fig:mm-parallel-model-tree-quadratic}} \\
 	\end{tabular}
-	\caption{Simple parallel models of the multifrontal method}
+	\caption{Examples of tree-task parallelism}
 	\label{fig:mm-parallel-model-tree}
 \end{figure}
 
@@ -401,10 +401,10 @@ Figures \ref{fig:mm-parallel-model-tree-linear} and \ref{fig:mm-parallel-model-t
 \begin{figure}
 \centering
 	\begin{tabular}{cc}
-			\subfloat[Theoretical speed-up of Model 1]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/mm-parallel-model-tree-1-speedup.png}} &
-		\subfloat[Theoretical speed-up of Model 2]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/mm-parallel-model-tree-2-speedup.png}} \\
+			\subfloat[Model 1]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/mm-parallel-model-tree-1-speedup.png}} &
+		\subfloat[Model 2]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/mm-parallel-model-tree-2-speedup.png}} \\
 	\end{tabular}
-	\caption{Theoretical speed-up}
+	\caption{Theoretical speed-up of models 1 and 2}
 	\label{fig:mm-parallel-model-speed-up}
 \end{figure}
 
@@ -418,7 +418,7 @@ Figures \ref{fig:mm-parallel-model-tree-linear} and \ref{fig:mm-parallel-model-t
 Model 1 & 6.3492  & 8.0000    \\ \hline
 Model 2 & 1.4972 & 1.5000   \\ \hline
 \end{tabular}
-\caption{Potential speed-up of linear and quadratic models}
+\caption{Theoretical speed-up of models 1 and 2}
 \label{table:mm-potential-model-speed-up}
 \end{table}
 
@@ -556,7 +556,7 @@ where $\hat{x}$ is the computed solution; $|\bullet|$ is the element-wise module
 
 \begin{minipage}{\linewidth}
 
-\begin{lstlisting}[language=python, caption={Iterative refinement}, frame=single, label={lst:iterative-refinement}]
+\begin{lstlisting}[language=python, caption={Pseudocode of an iterative refinement method}, frame=single, label={lst:iterative-refinement}]
 # perform analysis and numerical factorization  phases
 LU = SparseDirectSolver(matrix=A)
 

@@ -55,9 +55,15 @@
 \input{pages/disclaimer}
 %\input{pages/acknowledgements}
 \input{acronyms}
-\printglossaries
-
 \input{pages/abstract}
+\printglossaries
+\microtypesetup{protrusion=false}
+\listoffigures{}
+\listoftables{}
+\lstlistoflistings
+\microtypesetup{protrusion=true}
+
+
 
 
 
@@ -83,10 +89,7 @@
 \input{chapters/appendices.tex}
 
 
-\microtypesetup{protrusion=false}
-\listoffigures{}
-\listoftables{}
-\microtypesetup{protrusion=true}
+
 \printbibliography{}
 
 \end{document}

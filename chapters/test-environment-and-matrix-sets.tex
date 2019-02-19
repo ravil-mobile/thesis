@@ -18,7 +18,7 @@ The main matrix properties as well as matrix sparsity patterns are shown in tabl
 \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Name     & N       & NNZ      & NNZ / N & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\  Number\end{tabular} & Structure     \\ \hline
+Name     & \textit{n}       & \textit{nnz}      & \textit{nnz} / \textit{n} & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\  Number\end{tabular} & Structure     \\ \hline
 pwr-3d   & 6009    & 32537    & 5.4147  & 1.019e+07                                                                 & SYMM-PTRN \\ \hline
 cube-5   & 9325    & 117897   & 12.6431 & 1.592e+09                                                                 & SYMM-PTRN \\ \hline
 cube-64  & 100657  & 1388993  & 13.7993 & 7.406e+08                                                                 & SYMM-PTRN \\ \hline
@@ -26,7 +26,7 @@ cube-645 & 1000045 & 13906057 & 13.9054 & 6.474e+08                             
 k3-2     & 130101  & 787997   & 6.0568  & 1.965e+15                                                                 & SYMM-PTRN \\ \hline
 k3-18    & 1155955 & 7204723  & 6.2327  & 1.947e+12                                                                 & SYMM-PTRN \\ \hline
 \end{tabular}
-\caption{\gls{grs} matrix set \textit{(SYMM - symmetric; NON-SYMM - non-symmetric; SYMM-PTRN- non-symmetric but with symmetric sparsity pattern)}}
+\caption{\gls{grs} matrix set \textit{(where SYMM - symmetric; NON-SYMM - non-symmetric; SYMM-PTRN- non-symmetric but with symmetric sparsity pattern)}}
 \label{table:grs-matrix-set}
 \end{table}
 
@@ -38,7 +38,7 @@ k3-18    & 1155955 & 7204723  & 6.2327  & 1.947e+12                             
 \small
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Name        & N       & NNZ      & NNZ / N & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\ Number\end{tabular} & Structure & Problem                                                      \\ \hline
+Name        & \textit{n}       & \textit{nnz}      & \textit{nnz} / \textit{n} & \begin{tabular}[c]{@{}c@{}}Approximate\\ Condition\\ Number\end{tabular} & Structure & Problem                                                      \\ \hline
 cant        & 62451   & 4007383  & 64.1684 & 5.082e+05 & SYMM      & -                                                            \\ \hline
 consph      & 83334   & 6010480  & 72.1251 & 2.438e+05 & SYMM      & -                                                            \\ \hline
 CurlCurl\_3 & 1219574 & 13544618 & 11.1060 & 2.105e+05                                                                & SYMM      & \begin{tabular}[c]{@{}c@{}}Model\\ Reduction\end{tabular}    \\ \hline
@@ -49,11 +49,11 @@ pkustk10    & 80676   & 4308984  & 53.4110 & 5.589e+02 & SYMM      & Structural 
 torso3      & 259156  & 4429042  & 7.0903  & 2.456e+03                                                                      & NON\_SYMM & -                                                            \\ \hline
 x104        & 108384  & 8713602  & 80.3956 & 3.124e+05 & SYMM      & Structural                                                   \\ \hline
 \end{tabular}
-\caption{SuiteSparse matrix set \textit{(SYMM - symmetric; NON-SYMM - non-symmetric; SYMM-PTRN- non-symmetric but with symmetric sparsity pattern)}}
+\caption{SuiteSparse matrix set \textit{(where SYMM - symmetric; NON-SYMM - non-symmetric; SYMM-PTRN- non-symmetric but with symmetric sparsity pattern)}}
 \label{table:suite-sparse-matrix-set}
 \end{table}
 
-Approximations of condition numbers, shown in tables \ref{table:grs-matrix-set} and \ref{table:suite-sparse-matrix-set},  were computed using Rayleigh–Ritz procedure \cite{rayleigh-ritz-procedure}. GMRES solver configured with $1000$ iteration steps was applied to un-preconditioned systems to generate a Krylov subspace for each matrix. Then, the resulting Hessenberg matrices were used for approximating eigenspaces and the corresponding eigenvalues. The approximations should be treated as lower bounds since the algorithm overestimates the smallest eigenvalue.\\
+Approximations of condition numbers, shown in tables \ref{table:grs-matrix-set} and \ref{table:suite-sparse-matrix-set},  were computed using Rayleigh–Ritz procedure \cite{rayleigh-ritz-procedure}. \gls{gmres} solver configured with $1000$ iteration steps was applied to un-preconditioned systems to generate a Krylov subspace for each matrix. Then, the resulting Hessenberg matrices were used for approximating eigenspaces and the corresponding eigenvalues. The approximations should be treated as lower bounds since the algorithm overestimates the smallest eigenvalue.\\
 
 
 %The objective of this study is to find and configure a sparse linear solver which can fulfill all requirements listed above for the \gls{grs} matrix set. It is worth pointing out, as it was mentioned in section \ref{sec:athlet-overview}, \gls{athlet} performs many mathematical transformations upon the original system and, finally, generates an approximation of a Jacobian matrix. For that reason, one can assume that \gls{grs} matrix set can be structurally different from matrices coming naturally from finite-volume, finite-elements discretization or optimization problems. Therefore, SuiteSparse matrix set was used, from time to time, to examine this statement.\\
@@ -108,7 +108,7 @@ To make process pinning explicit and deterministic, a python script was develope
 			\subfloat[\textit{Spread} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/spread-mode.png}} &
 		\subfloat[\textit{Close} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/close-mode.png}} \\
 	\end{tabular}
-	\caption{An example of process pinning of 5 \gls{mpi} processes with 2 \gls{openmp} threads per rank in case of \gls{hw1} hardware}
+	\caption{An example of pinning 5 \gls{mpi} processes with 2 \gls{openmp} threads per process in case of \gls{hw1} hardware}
 	\label{fig:python-script-rankfile-example}
 \end{figure}
 
