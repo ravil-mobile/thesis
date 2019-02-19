@@ -29,14 +29,14 @@ where the vector $x$ can be written in the basis $U_m$ as:
 		x = U_{m} y
 \end{equation}
 
-In the general case, orthogonalization of the basis can be performed in different ways. Saad and Schultz, in work \cite{sparse-la:gmrese-origin}, proposed to use the Arnoldi process [REF] \todo{reference} for constructing an $l_2$-orthogonal basis. As a result, equation \ref{eq:Gmres-1} can be written in a form:  \\
+In the general case, orthogonalization of the basis can be performed in different ways. Saad and Schultz, in work \cite{sparse-la:gmrese-origin}, proposed to use the Arnoldi process for constructing an $l_2$-orthogonal basis. As a result, equation \ref{eq:Gmres-1} can be written in a form:  \\
 
 \begin{equation} \label{eq:Gmres-3}
 	r_{m} = \underset{x \in U_m}{min}||U_{m+1}H_{m+1,m} y_{m} - ||b||u_1||^2 = \\
 	\underset{x \in U_m}{min}||H_{m+1,m} y_{m} - ||b||e_1||^2 
 \end{equation}
 
-where $H_{m}$ is an upper Hessenberg matrix i.e. the matrix with zeros below the first sub-diagonal. Application of the Givens rotation algorithm [REF] \todo{reference} results in computing of the corresponding $QR$ decomposition of Hessenberg matrix $H_{m}$. After the substitution of matrix $H_{m}$ with the decomposition and some mathematical transformations, equation \ref{eq:Gmres-3} can be written as follows:\\
+where $H_{m}$ is an upper Hessenberg matrix i.e. the matrix with zeros below the first sub-diagonal. Application of the Givens rotation algorithm results in computing of the corresponding $QR$ decomposition of Hessenberg matrix $H_{m}$. After the substitution of matrix $H_{m}$ with the decomposition and some mathematical transformations, equation \ref{eq:Gmres-3} can be written as follows:\\
 
  
 \begin{equation} \label{eq:Gmres-4}

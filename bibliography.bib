@@ -1,9 +1,11 @@
-@report{articles:blas-performance,
-author = {Kazushige Goto and Robert van de Geijn},
-title = {High-Performance Implementation of the Level-3 BLAS},
-type = {FLAME Working Note 20},
-institution = {The University of Texas at Austin},
-year = {2006},
+@article{articles:blas-performance,
+  title={High-performance implementation of the level-3 BLAS},
+  author={Goto, Kazushige and Van De Geijn, Robert},
+  journal={ACM Trans. Math. Softw.},
+  volume={35},
+  number={1},
+  pages={4--1},
+  year={2008}
 }
 
 
@@ -15,15 +17,14 @@ url = "https://en.wikipedia.org/w/index.php?title=Runge%E2%80%93Kutta_methods&ol
 note = "[Online; accessed 10-November-2018]"
 }
   
-  
-@article{netlib:lapack-1,
-author = {E. Anderson and J. J. Dongarra},
-title = {Evaluating Block Algorithm Variants in LAPACK},
-journaltitle = {UT, CS-90-103},
-year = {1990}
+@book{netlib:lapack-1,
+  title={Evaluating block algorithm variants in LAPACK},
+  author={Anderson, Edward and Dongarra, Jack J},
+  year={1990},
+  publisher={University of Tennessee. Computer Science Department}
 }
   
-  
+
 @online{netlib:lapack-scalapack-general-view,
 title = {Intel Math Kernel Library Documentation, Overview of ScaLAPACK Routines},
 year = {2017},
@@ -32,42 +33,54 @@ url = {https://software.intel.com/en-us/mkl-developer-reference-c-overview-of-sc
 
 
 @article{sparse-la:gmrese-origin,
-author = {Youcef Saad and Martin H. Schultz},
-title = {GMRES: A Generalized Minimal Residual Algorithm For Solving Nonsymmetric Linear Systems},
-journaltitle = {SIAM Journal on Scientific and Statistical Computing},
-year = {1986}
+  title={GMRES: A generalized minimal residual algorithm for solving nonsymmetric linear systems},
+  author={Saad, Youcef and Schultz, Martin H},
+  journal={SIAM Journal on scientific and statistical computing},
+  volume={7},
+  number={3},
+  pages={856--869},
+  year={1986},
+  publisher={SIAM}
 }
+
  
- 
-@article{sparse-la:triangular-solve,
-author = {Mahesh V. Joshi and Anshul Guptam and George Karypis and Vipin Kumar},
-title = {A High Performance Two Dimensional Scalable Parallel Algorithm for Solving Sparse Triangular Systems},
-journaltitle = {IEEE Xplore},
-year = {1998}
+
+@inproceedings{sparse-la:triangular-solve,
+  title={A high performance two dimensional scalable parallel algorithm for solving sparse triangular systems},
+  author={Joshi, Mahesh V and Gupta, Anshul and Karypis, George and Kumar, Vipin},
+  booktitle={Proceedings Fourth International Conference on High-Performance Computing},
+  pages={137--143},
+  year={1997},
+  organization={IEEE}
 }
+
 
 
 @article{sparse-la:cg,
-author = {Jeffrey Cornelis and Siegfried Cools and Wim Vanroose},
-title = {The Communication-hiding Conjugate Gradient Method with Deep Pipelines},
-journaltitle = {arXiv:1801.04728 [cs.DC]},
-year = {2018}
-}
- 
-
-@article{wsmp,
-author = {Anshul Gupta and Seid Koric and Thomas George},
-title = {Sparse matrix factorization on massively parallel computers},
-journaltitle = {IEEE Xplore},
-year = {2009},
+  title={The communication-hiding Conjugate Gradient method with deep pipelines},
+  author={Cornelis, Jeffrey and Cools, Siegfried and Vanroose, Wim},
+  journal={arXiv preprint arXiv:1801.04728},
+  year={2018}
 }
 
 
-@PhdThesis{complexity-of-spdm,
-author = {Cinna Julie Wu},
-title = {Partial Left-Looking Structured Multifrontal Factorization and Algorithms for Compressed Sensing},
-school = {University of California},
-year = {2012},
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+@inproceedings{wsmp,
+  title={Sparse matrix factorization on massively parallel computers},
+  author={Gupta, Anshul and Koric, Seid and George, Thomas},
+  booktitle={Proceedings of the Conference on High Performance Computing Networking, Storage and Analysis},
+  pages={1},
+  year={2009},
+  organization={ACM}
+}
+
+
+  
+@phdthesis{complexity-of-spdm,
+  title={Partial Left-Looking Structured Multifrontal Factorization \& Algorithms for Compressed Sensing},
+  author={Wu, Cinna Julie},
+  year={2012},
+  school={UC Berkeley}
 }
 
 
@@ -79,52 +92,66 @@ url = {http://www.netlib.org/misc/faq.html#2.1},
 
 
 @article{mult-frontal-original:1,
-author = {I. S. Duff and J. K. Reid},
-title = {The Multifrontal Solution of Indefinite Sparse Symmetric Linear},
-journaltitle = {ACM Transactions on Mathematical Software, (TOMS)},
-year = {1983},
-OPTmonth = {September},
-OPTpages = {302-325},
+  title={The multifrontal solution of indefinite sparse symmetric linear},
+  author={Duff, Iain S and Reid, John K},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={9},
+  number={3},
+  pages={302--325},
+  year={1983},
+  publisher={ACM}
 }
+
 
 
 @article{frontal-original,
-author = {Irons and Bruce},
-title = {A frontal solution program for finite element analysis},
-journaltitle = {International Journal for Numerical Methods in Engineering},
-year = {1970},
+  title={A frontal solution program for finite element analysis},
+  author={Irons, Bruce M},
+  journal={International Journal for Numerical Methods in Engineering},
+  volume={2},
+  number={1},
+  pages={5--32},
+  year={1970},
+  publisher={Wiley Online Library}
 }
 
 
-@article{elimination-tree,
-author = {A. Pothen and S. Toledo},
-title = {Elimination Structures in Scientific Computing},
-journaltitle = {CRC Press, LLC},
-year = {2001},
+
+@misc{elimination-tree,
+  title={Elimination Structures in Scientific Computing.},
+  author={Pothen, Alex and Toledo, Sivan},
+  year={2004}
 }
 
 
 @article{mult-frontal-original:2,
-author = {Joseph W. H. Liu},
-title = {The Multifrontal Method for Sparse Matrix Solution: Theory and Practice},
-journaltitle = {SIAM},
-year = {1992},
+  title={The multifrontal method for sparse matrix solution: Theory and practice},
+  author={Liu, Joseph WH},
+  journal={SIAM review},
+  volume={34},
+  number={1},
+  pages={82--109},
+  year={1992},
+  publisher={SIAM}
 }
 
 
-@inbook{recursion-tree,
-author = {Thomas H. Cormen and Charles E. Leiserson and Ronald L. Rivest and Clifford Stein},
-title = {The recursion-tree method for solving recurrences},
-booktitle = {Introduction to Algorithms},
-year = {2009},
+
+@book{recursion-tree,
+  title={Introduction to algorithms},
+  author={Cormen, Thomas H and Leiserson, Charles E and Rivest, Ronald L and Stein, Clifford},
+  year={2009},
+  publisher={MIT press}
 }
 
 
-@article{mumps:task-data-parallelism,
-author = {Beaumont Olivier and Guermouche Abdou},
-title = {Task Scheduling for Parallel Multifrontal Methods},
-journaltitle = {Proceedings of the 13th International Euro-Par Conference on Parallel Processing},
-year = {2007},
+@inproceedings{mumps:task-data-parallelism,
+  title={Task scheduling for parallel multifrontal methods},
+  author={Beaumont, Olivier and Guermouche, Abdou},
+  booktitle={European Conference on Parallel Processing},
+  pages={758--766},
+  year={2007},
+  organization={Springer}
 }
 
 
@@ -138,48 +165,56 @@ year = {2007},
 
 
 @manual{mumps-manual,
-title = {MUltifrontal Massively Parallel Solver, Users’ guide},
+title = {Multifrontal massively parallel solver users’ guide},
+author={MUMPS Team and others},
 year = {2017},
 }
 
 
-
-@manual{superlu-manual,
-title = {SuperLU Users’ Guide},
-year = {2011},
+@article{superlu-manual,
+  title={SuperLU users' guide},
+  author={SuperLU Team and others},
+  year={2011}
 }
 
 
 @manual{pastix-manual,
 title = {PaStiX User’s manual},
+author={PaStiX Team and others},
 year = {2013},
 }
 
 
 
 @article{mm:elimination-tree-rotations,
-author = {Joseph W. H. Liu},
-title = {Equivalent Sparse Matrix Reordering by Elimination Tree Rotations},
-journaltitle = {SIAM J. Sci. Statist. Comput.},
-year = {1988},
+  title={Equivalent sparse matrix reordering by elimination tree rotations},
+  author={Liu, Joseph WH},
+  journal={SIAM Journal on Scientific and Statistical Computing},
+  volume={9},
+  number={3},
+  pages={424--444},
+  year={1988},
+  publisher={SIAM}
 }
 
 
 @article{mm:optimal-tree-postordering,
-author = {Joseph W. H. Liu},
-title = {On the storage requirement in the out-of-core multifrontal method for sparse factorization},
-journaltitle = {ACM Trans. Math. Software},
-year = {1986},
+  title={On the storage requirement in the out-of-core multifrontal method for sparse factorization},
+  author={Liu, Joseph WH},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={12},
+  number={3},
+  pages={249--264},
+  year={1986},
+  publisher={ACM}
 }
 
 
-@report{wsmp:direct-solution-of-general-system,
-author = {Anshul Gupta},
-title = {WSMP: Watson Sparse Matrix Package,
-Part II - direct solution of general systems},
-type = {Research Report},
-institution = {IBM T. J. Watson Research Center},
-year = {2000},
+@techreport{wsmp:direct-solution-of-general-system,
+  title={WSMP: Watson Sparse Matrix Package (Part-II: direct solution of general sparse systems)},
+  author={Gupta, Anshul},
+  year={2000},
+  institution={Citeseer}
 }
 
 
@@ -234,12 +269,16 @@ year = {2018}
 }
 
 
-@article{shylu-hybrid-solver,
-author = {Sivasankaran Rajamanickam and Erik G. Boman and Michael A. Heroux},
-title = {ShyLU: A Hybrid-Hybrid Solver for Multicore Platforms},
-journaltitle = {2012 IEEE 26th International Parallel and Distributed Processing Symposium},
-year = {2012},
+
+@inproceedings{shylu-hybrid-solver,
+  title={ShyLU: A hybrid-hybrid solver for multicore platforms},
+  author={Rajamanickam, Sivasankaran and Boman, Erik G and Heroux, Michael A},
+  booktitle={2012 IEEE 26th International Parallel and Distributed Processing Symposium},
+  pages={631--643},
+  year={2012},
+  organization={IEEE}
 }
+
 
 
 @online{list-of-sparse-direct-solvers,
@@ -252,19 +291,23 @@ url = {http://crd-legacy.lbl.gov/~xiaoye/SuperLU/SparseDirectSurvey.pdf},
 
 
 @inproceedings{mm-comparison-of-packages,
-author = {Kwack, Jae Hyuk and Bauer, Gregory and Koric, Seid},
-year = {2016},
-month = {05},
-pages = {},
-title = {Performance Test of Parallel Linear Equation Solvers on Blue Waters – Cray XE6/XK7 system}
+  title={Performance test of parallel linear equation solvers on Blue Waters--Cray XE6/XK7 system},
+  author={Kwack, J and Bauer, G and Koric, Seid},
+  booktitle={Preceedings of the Cray Users Group Meeting (CUG2016), London, England},
+  year={2016}
 }
 
 
+
 @article{mm-backward-error,
-author = {M. Arioli and J. Demmel and I. S. Duff},
-title = {Solving sparse linear systems with sparse backward error},
-journaltitle = {SIAM Journal on Matrix Analysis and Applications},
-year = {1989},
+  title={Solving sparse linear systems with sparse backward error},
+  author={Arioli, Mario and Demmel, James W and Duff, Iain S},
+  journal={SIAM Journal on Matrix Analysis and Applications},
+  volume={10},
+  number={2},
+  pages={165--190},
+  year={1989},
+  publisher={SIAM}
 }
 
 
@@ -281,19 +324,27 @@ year = {1989},
 }
 
 
-@online{MUMPS:description,
-author = {Amestoy, Patrick R. and Duff, Iain S. and  Koster, Jacko and L'Excellent, Jean-Yves},
-title = {MUMPS: A Multifrontal Massively Parallel Solver},
-year = {2002},
-url = {https://www.ercim.eu/publication/Ercim_News/enw50/amestoy.html},
+@article{MUMPS:description,
+  title={MUMPS: A multifrontal massively parallel solver},
+  author={Amestoy, Patrick R and Duff, Iain S and Koster, Jacko and L'Excellent, Jean-Yves},
+  journal={ERCIM News},
+  volume={50},
+  pages={14--15},
+  year={2001}
 }
 
+
 @article{reordering:AMD,
-author = {Amestoy, Patrick R. and Davis, Timothy A. and Duff, Iain S.},
-title = {An Approximate Minimum Degree Ordering Algorithm},
-journaltitle = {SIAM Journal on Matrix Analysis and Applications},
-year = {1996},
+  title={An approximate minimum degree ordering algorithm},
+  author={Amestoy, Patrick R and Davis, Timothy A and Duff, Iain S},
+  journal={SIAM Journal on Matrix Analysis and Applications},
+  volume={17},
+  number={4},
+  pages={886--905},
+  year={1996},
+  publisher={SIAM}
 }
+
 
 
 @MISC{reordering:METIS,
@@ -305,11 +356,13 @@ organization = {University of Minnesota, Minneapolis, MN},
 }
 
 
+
 @article{reordering:SCOTCH,
   title={Scotch and libScotch 5.1 user's guide},
   author={Pellegrini, Fran{\c{c}}ois},
   year={2008}
 }
+
 
 
 @article{reordering:PORD,
@@ -322,6 +375,8 @@ organization = {University of Minnesota, Minneapolis, MN},
   year={2001},
   publisher={Springer}
 }
+
+
 
 @inproceedings{reordering:QAMD,
   title={Recent progress in parallel multifrontal solvers for unsymmetric sparse matrices},
@@ -407,6 +462,7 @@ organization = {University of Minnesota, Minneapolis, MN},
   year={2003},
   organization={IEEE}
 }
+
 
 
 @phdthesis{l2013introduction,
@@ -495,6 +551,7 @@ url = "% https://energyeducation.ca/encyclopedia/Nuclear_power_plant"
   year={2005},
   publisher={SIAM}
 }
+
 
 
 @online{mpi:protocols-explanation,
