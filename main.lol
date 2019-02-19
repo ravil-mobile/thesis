@@ -23,9 +23,9 @@
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {lstlisting}{\numberline {6.1}Pseudocode of the default \gls {athlet}-\gls {nut} coupling: \gls {athlet} part}{77}{lstlisting.6.1}
+\contentsline {lstlisting}{\numberline {6.1}Pseudocode of the default \acrshort {athlet}-\acrshort {nut} coupling: \acrshort {athlet} part}{77}{lstlisting.6.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {lstlisting}{\numberline {6.2}Pseudocode of the default \gls {athlet}-\gls {nut} coupling: \gls {nut} part}{78}{lstlisting.6.2}
+\contentsline {lstlisting}{\numberline {6.2}Pseudocode of the default \acrshort {athlet}-\acrshort {nut} coupling: \acrshort {nut} part}{78}{lstlisting.6.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {lstlisting}{\numberline {6.3}Pseudocode of an auxiliary \textit {Accumulator} class}{83}{lstlisting.6.3}
 \defcounter {refsection}{0}\relax 

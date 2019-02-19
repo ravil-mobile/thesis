@@ -1,7 +1,7 @@
 \chapter{Problem Statement}\label{chapter:problem-statment}
 
 
-Integration of a system of \gls{ode}s by means of W-methods can be considered as a solution of a sequence of linear systems from another point of view. Equations \ref{eq:athlet-9} can be rewritten in a form \ref{eq:athlet-10}, after grouping both the right- and left-hand sides in a single matrix and vector, respectively.\\
+Integration of a system of \acrshort{ode}s by means of W-methods can be considered as a solution of a sequence of linear systems from another point of view. Equations \ref{eq:athlet-9} can be rewritten in a form \ref{eq:athlet-10}, after grouping both the right- and left-hand sides in a single matrix and vector, respectively.\\
 
 
 \begin{equation} \label{eq:athlet-10}
@@ -26,36 +26,36 @@ There exist two families of linear sparse solvers, namely: iterative and direct 
 These above mentioned properties can be treated as non-functional requirements for a sparse linear solver for efficient numerical time integration.\\
 
  
-Finding solutions of sparse linear systems is a well-known and commonly occurring problem in the field of scientific computing and, therefore, numerous implementations of different kind of linear solvers exist. However, the \gls{nut} project imposes some extra constrains due to the design philosophy adopted by \gls{grs}: \\
+Finding solutions of sparse linear systems is a well-known and commonly occurring problem in the field of scientific computing and, therefore, numerous implementations of different kind of linear solvers exist. However, the \acrshort{nut} project imposes some extra constrains due to the design philosophy adopted by \acrshort{grs}: \\
 
 
 \begin{itemize}
 	\item open-source license
-	\item direct interface to \gls{petsc}
+	\item direct interface to \acrshort{petsc}
 \end{itemize}
 
-%In particular, it requires a particular solver implementation to have its \textbf{open-source license} and to have its direct \textbf{interface to \gls{petsc}} library.\\
+%In particular, it requires a particular solver implementation to have its \textbf{open-source license} and to have its direct \textbf{interface to \acrshort{petsc}} library.\\
 
 
 In this study, we are primarily concerned with selection and configuration of a linear sparse solver that can cover all requirements listed above.\\
 
 
 This report is organized as follows. Chapter \ref{subseq:matrix-sets-and-hardware} provides information about methodology, data, software hardware used in this study. Subsections \ref{subseq:iterative-theory} and \ref{subseq:direct-sparse methods} give an overview of the theory and parallelization aspects of iterative and sparse direct methods. Then, in subsection \ref{subseq:hybrid-method-description}, we make a conclusion about which type of sparse linear methods is the best suited for numerical time integration governed by the W-method. In subsection 
-\ref{subseq:mm-library-choice}, a particular implementation of a specific method is selected by means of testing. From chapter \ref{mumps:solver-configuration} onwards, we perform configuration and adaptation of the solver for distributed-memory computations. At the end, subsection \ref{subseq:mm-conclusion} summarizes obtained results and makes a general conclusion with respect to data and compute environment provided by  \gls{grs}.\\
+\ref{subseq:mm-library-choice}, a particular implementation of a specific method is selected by means of testing. From chapter \ref{mumps:solver-configuration} onwards, we perform configuration and adaptation of the solver for distributed-memory computations. At the end, subsection \ref{subseq:mm-conclusion} summarizes obtained results and makes a general conclusion with respect to data and compute environment provided by  \acrshort{grs}.\\
 
 
 
 
-An additional topic, considered in this study, is improvement of \gls{athlet}-\gls{nut} communication during Jacobian matrix transfer. As it was described in section \ref{sec:athlet-nut-coupling}, \gls{athlet}, the client, transfers Jacobian matrix in a column-wise fashion. \gls{nut}, the server, treats each column transfer as a service and, therefore, each transfer passes through a 3-way handshake. Moreover, it is important to mention one more time,   due to the current implementation of \gls{athlet}-\gls{nut} coupling, the client-server communication is blocking. In other words, \gls{athlet} gets blocked till completion of a column transfer. \\
+An additional topic, considered in this study, is improvement of \acrshort{athlet}-\acrshort{nut} communication during Jacobian matrix transfer. As it was described in section \ref{sec:athlet-nut-coupling}, \acrshort{athlet}, the client, transfers Jacobian matrix in a column-wise fashion. \acrshort{nut}, the server, treats each column transfer as a service and, therefore, each transfer passes through a 3-way handshake. Moreover, it is important to mention one more time,   due to the current implementation of \acrshort{athlet}-\acrshort{nut} coupling, the client-server communication is blocking. In other words, \acrshort{athlet} gets blocked till completion of a column transfer. \\
 
 
 The main goal of Jacobian matrix compression, described in section \ref{sec:jacobian-matrix-compression}, is to minimize the number of perturbations of non-linear function $f(y)$, equation \ref{eq:athlet-8}, derived from finite differences. Additionally it allows to reduce the amount of column transfers as well. Therefore, it improves overall application performance from both computational and communication point of view. However, there are still some aspects to be considered.\\
 
 
-Due to specifics of matrix compression algorithm, described in section \ref{sec:athlet-nut-coupling}, column length is decreasing between the first and last columns of compressed Jacobian matrix form which, as a result, leads to unequal \gls{mpi} message sizes.\\
+Due to specifics of matrix compression algorithm, described in section \ref{sec:athlet-nut-coupling}, column length is decreasing between the first and last columns of compressed Jacobian matrix form which, as a result, leads to unequal \acrshort{mpi} message sizes.\\
 
 
-In this part of the study, we introduce a concept called \textit{accumulator} which allows to transfer a compressed Jacobian matrix in equal chunks. This approach potentially solves three important problems at once. First of all, \textit{accumulator} can help to get rid of small \gls{mpi} messages and thus improves network bandwidth utilization. Secondly, it helps to reduce the amount of synchronizations between the client and server and, therefore, improves operation of \gls{nut} as the server. Lastly, it allows to apply non-blocking \gls{mpi} communication on the client side and thus overlap Jacobian matrix transfer with its computations.\\
+In this part of the study, we introduce a concept called \textit{accumulator} which allows to transfer a compressed Jacobian matrix in equal chunks. This approach potentially solves three important problems at once. First of all, \textit{accumulator} can help to get rid of small \acrshort{mpi} messages and thus improves network bandwidth utilization. Secondly, it helps to reduce the amount of synchronizations between the client and server and, therefore, improves operation of \acrshort{nut} as the server. Lastly, it allows to apply non-blocking \acrshort{mpi} communication on the client side and thus overlap Jacobian matrix transfer with its computations.\\
 
 
-In section \ref{sec:jacobian-matrix-compression}, we briefly describe the Jacobian matrix compression algorithm and the resulting \gls{athlet}-\gls{nut} communication problem. In section \ref{sec:accumulator-approach}, we present and describe the algorithm which is supposed to resolve the problem. Section \ref{sec:benchmark-and-test-data} provides a description of developed benchmarks and test data. Then, we focus and explain obtained results in section \ref{sec:accumulator-results}. Finally, in section \ref{sec:accumulator-conclusions}, we provide a general conclusion of the performed study and summarize the results one more time.\\
+In section \ref{sec:jacobian-matrix-compression}, we briefly describe the Jacobian matrix compression algorithm and the resulting \acrshort{athlet}-\acrshort{nut} communication problem. In section \ref{sec:accumulator-approach}, we present and describe the algorithm which is supposed to resolve the problem. Section \ref{sec:benchmark-and-test-data} provides a description of developed benchmarks and test data. Then, we focus and explain obtained results in section \ref{sec:accumulator-results}. Finally, in section \ref{sec:accumulator-conclusions}, we provide a general conclusion of the performed study and summarize the results one more time.\\

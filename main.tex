@@ -35,6 +35,8 @@
 
 % Generate the glossary
 \makeglossaries
+\input{acronyms}
+\input{glossary}
 
 \begin{document}
 
@@ -54,9 +56,9 @@
 \input{pages/title}
 \input{pages/disclaimer}
 %\input{pages/acknowledgements}
-\input{acronyms}
 \input{pages/abstract}
-\printglossaries
+\printglossary[type=\acronymtype]
+\printglossary
 \microtypesetup{protrusion=false}
 \listoffigures{}
 \listoftables{}

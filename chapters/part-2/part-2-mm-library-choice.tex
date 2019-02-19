@@ -29,15 +29,15 @@ WSMP         & Multifrontal       & General                      & No           
 \end{tabular}
 \caption{A list of direct sparse linear solvers adapted for distributed-memory computations, \cite{list-of-sparse-direct-solvers}, \cite{petsc-web-page}.\\}
 where SPD - Symmetric Positive Definite; 
-Open* - an interface is not officially supported by the \gls{petsc} team
+Open* - an interface is not officially supported by the \acrshort{petsc} team
 \label{table:mm-library-spec}
 \end{table}
 
 
-It can be clearly observed, from table \ref{table:mm-library-spec}, that only \gls{mumps}, PaStiX and SuperLU\_DIST cover all requirements induced by \gls{grs}, see chapter \ref{chapter:problem-statment}, namely: open-source license and a direct interface to \gls{petsc}. It is interesting to notice that all libraries, mentioned above, are implementations of different sparse direct methods, namely: multi-frontal (\gls{mumps}), left-looking (PaStiX) and right-locking (SuperLU\_DIST). Moreover, PaStiX and SuperLU\_DIST use only static pivoting \cite{pastix-manual}, \cite{superlu-manual} whereas \gls{mumps} provides a full implementation of the threshold pivoting strategy \cite{mumps-manual}, described in subsection \ref{subseq:pivot-hadling}.\\
+It can be clearly observed, from table \ref{table:mm-library-spec}, that only \acrshort{mumps}, PaStiX and SuperLU\_DIST cover all requirements induced by \acrshort{grs}, see chapter \ref{chapter:problem-statment}, namely: open-source license and a direct interface to \acrshort{petsc}. It is interesting to notice that all libraries, mentioned above, are implementations of different sparse direct methods, namely: multi-frontal (\acrshort{mumps}), left-looking (PaStiX) and right-locking (SuperLU\_DIST). Moreover, PaStiX and SuperLU\_DIST use only static pivoting \cite{pastix-manual}, \cite{superlu-manual} whereas \acrshort{mumps} provides a full implementation of the threshold pivoting strategy \cite{mumps-manual}, described in subsection \ref{subseq:pivot-hadling}.\\
 
 
-To compare the libraries, a couple of flat-\gls{mpi} tests were performed using \gls{grs} matrix set on \gls{hw1} machine. \gls{petsc} library was compiled and configured with \gls{mumps} (version 5.1.2), PasTiX (version 6.0.0) and SuperLU\_DIST (version 5.4) packages using their default settings. An internal built-in \gls{petsc} profiler was used to measure execution time.  A time limit of 15 minutes was set up for each test-case to prevent blocking of a cluster compute node from unexpected long program execution. Results are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc} where numerical values are given in seconds.\\
+To compare the libraries, a couple of flat-\acrshort{mpi} tests were performed using \acrshort{grs} matrix set on \gls{hw1} machine. \acrshort{petsc} library was compiled and configured with \acrshort{mumps} (version 5.1.2), PasTiX (version 6.0.0) and SuperLU\_DIST (version 5.4) packages using their default settings. An internal built-in \acrshort{petsc} profiler was used to measure execution time.  A time limit of 15 minutes was set up for each test-case to prevent blocking of a cluster compute node from unexpected long program execution. Results are summarized in tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc} where numerical values are given in seconds.\\
 
 
 
@@ -57,7 +57,7 @@ MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \
 9   & 7.50E-02 & 8.28E-02 & 5.02E-01 &  & 19  & 8.58E-02 & 1.33E-01 & 5.47E-01 \\ \cline{1-4} \cline{6-9} 
 10  & 7.22E-02 & 8.52E-02 & 4.64E-01 &  & 20  & 8.64E-02 & 1.49E-01 & 3.39E-01 \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Comparisons of parallel performance of  \textit{cube-5} matrix factorization using \gls{mumps}, PasTiX and SuperLU\_DIST solvers with their default settings}
+\caption{Comparisons of parallel performance of  \textit{cube-5} matrix factorization using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default settings}
 \label{table:lc-cube-5-result}
 \end{table}
 
@@ -78,7 +78,7 @@ MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \
 9   & 7.93E-01 & 8.35E-01 & time-out &  & 19  & 8.04E-01 & 8.65E-01 & time-out \\ \cline{1-4} \cline{6-9} 
 10  & 8.07E-01 & 8.15E-01 & time-out &  & 20  & 6.85E-01 & 8.87E-01 & time-out \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Comparisons of parallel performance of  \textit{cube-64} matrix factorization using \gls{mumps}, PasTiX and SuperLU\_DIST solvers with their default settings}
+\caption{Comparisons of parallel performance of  \textit{cube-64} matrix factorization using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default settings}
 \label{table:lc-cube-64-result}
 \end{table}
 
@@ -99,7 +99,7 @@ MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ 
 9   & 1.95E+01 & 4.08E+01 & crashed &  & 19  & 1.52E+01 & 3.31E+01 & crashed \\ \cline{1-4} \cline{6-9} 
 10  & 1.91E+01 & 3.81E+01 & crashed &  & 20  & 1.38E+01 & 3.16E+01 & crashed \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Comparisons of parallel performance of \textit{k3-18} matrix factorization using \gls{mumps}, PasTiX and SuperLU\_DIST solvers with their default settings}
+\caption{Comparisons of parallel performance of \textit{k3-18} matrix factorization using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default settings}
 \label{table:lc-k3-18-result}
 \end{table}
 
@@ -108,7 +108,7 @@ MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ 
 Some problems were detected during  SuperLU\_DIST library testing. First of all, execution of \textit{cube-64} and \textit{k3-2} test-cases exceeded the set time limit. Secondly, it was noticed the library was crashing during processing of \textit{k3-18}, \textit{cube-645} and (partially) \textit{pwr-3d} test-cases. Debugging revealed that a segmentation fault occurred in function \textit{pdgstrf}  during the numerical factorization phase. Nonetheless, it is still unclear whether the problem was software or hardware specific. A solution or a reason of such program behavior has not been found at the moment of writing.\\
 
 
-% FOR PRESENTATION: it can be due to wrong matrix representation in binary \gls{petsc} files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
+% FOR PRESENTATION: it can be due to wrong matrix representation in binary \acrshort{petsc} files. I ran into the same problem with METIS when it spinned the CPU for hours due to wrong CRS format
 
 To complete comparison and evaluate parallel performance SuperLU\_DIST library, an additional test was conducted using 2D formulation of the Poisson problem with \textit{100000} unknown. According to the results, SuperLU\_DIST managed to complete matrix factorization within the set time limit without crashing, however, it showed abnormal jagged strong scaling behavior. Moreover, it turned out it was the slowest in comparison to the other solvers. The results are shown in figure \ref{fig:5-point-stencil-solvers-comparison}.\\
 
@@ -119,16 +119,16 @@ To complete comparison and evaluate parallel performance SuperLU\_DIST library, 
   \centering
   \includegraphics[width=0.85\textwidth]{figures/chapter-2/solvers-comparison-5-point-stencil.png}
 \caption{Comparisons of parallel performance of a 5 point-stencil Poisson matrix (1000000  equations) factorization using 
-\gls{mumps}, PasTiX and SuperLU\_DIST libraries with their default parameter settings}
+\acrshort{mumps}, PasTiX and SuperLU\_DIST libraries with their default parameter settings}
 \label{fig:5-point-stencil-solvers-comparison}
 \end{figure}
 
 % FOR PRESENTATION: we think that 
 
-According to the initial and additional tests, \gls{mumps} library showed the best parallel performance and scaling in contrast to other solvers. No abnormal behavior during its operation was detected. In some cases, it only required to increase a multiplicative factor of estimated working space which was used to hold frontal matrices and factors $L$ and $U$ in memory. PaStiX was the second fastest solver in our test. However,  it was often considerably slower than \gls{mumps}. At the same time, SuperLU\_DIST showed the worst results. Additionally, as it was mentioned above, we experienced some technical problems during operation of that library.\\
+According to the initial and additional tests, \acrshort{mumps} library showed the best parallel performance and scaling in contrast to other solvers. No abnormal behavior during its operation was detected. In some cases, it only required to increase a multiplicative factor of estimated working space which was used to hold frontal matrices and factors $L$ and $U$ in memory. PaStiX was the second fastest solver in our test. However,  it was often considerably slower than \acrshort{mumps}. At the same time, SuperLU\_DIST showed the worst results. Additionally, as it was mentioned above, we experienced some technical problems during operation of that library.\\
 
 
-A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in work \cite{wsmp}, came to nearly the same outcome, as we did, comparing parallel performance of WSMP, \gls{mumps} and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving  systems of linear equations in contrast to other solvers used in their work. It needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
+A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in work \cite{wsmp}, came to nearly the same outcome, as we did, comparing parallel performance of WSMP, \acrshort{mumps} and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving  systems of linear equations in contrast to other solvers used in their work. It needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
 
 
-In this chapter, we compared different sparse direct methods and their concrete implementations with their default settings with regard to \gls{grs} matrix set. Based on the obtained results and literature review, \gls{mumps} library was chosen for the following study. In subsection \ref{subseq:mumps-review}, we make a detail review of \gls{mumps} libraries and its specific traits. \\
+In this chapter, we compared different sparse direct methods and their concrete implementations with their default settings with regard to \acrshort{grs} matrix set. Based on the obtained results and literature review, \acrshort{mumps} library was chosen for the following study. In subsection \ref{subseq:mumps-review}, we make a detail review of \acrshort{mumps} libraries and its specific traits. \\

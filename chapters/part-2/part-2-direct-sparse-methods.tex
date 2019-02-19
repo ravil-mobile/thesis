@@ -288,7 +288,7 @@ A post-ordered tree implies that each node is ordered before its parent and node
 In practice, an improved version of multi-frontal method, called super-nodal method, is used. The method tends to shrink an elimination tree by grouping some certain nodes/columns in a single node. As a result, more floating point operations can be performed per memory access by eliminating few columns at once within the same frontal matrix.\\
 
 
-% FOR PRESENTATION: Working on supernodes instead of individual variables is essential in order to speed-up the computations and use high-level \gls{blas} [72] (Basic Linear Algebra Subprograms): supernodes lead to a higher flops to memory access ratio, and this allows a better usage of memory hierarchy and better performance thanks to the blocking techniques used in \gls{blas} routines.
+% FOR PRESENTATION: Working on supernodes instead of individual variables is essential in order to speed-up the computations and use high-level \acrshort{blas} [72] (Basic Linear Algebra Subprograms): supernodes lead to a higher flops to memory access ratio, and this allows a better usage of memory hierarchy and better performance thanks to the blocking techniques used in \acrshort{blas} routines.
 
 
 
@@ -381,7 +381,7 @@ quadratic decrease of computational cost between nodes of adjacent levels wherea
 	\label{fig:mm-parallel-model-tree}
 \end{figure}
 
-%We have to say that our models mimic only numerical factorization and do not include time spent on any per-processing steps, for example, fill-in reduction reodering. A cost per level can be interpreted in different ways e.g. increase of partial factorization time due to growth of frontal matrices in size, time increase spent on numerical pivoting, increase of \gls{mpi} communication overheads due to growth of contribution matrices, etc. It should be mentioned that real computer implementations of the multifrontal algorithm (\gls{mumps}, SuperLU, etc.) are quite sophisticated in many aspects and our models do not have any intention to analyze performance of a particular package. Instead the objective of these models is to show possible strong scaling behavior and possible bottlenecks. \\
+%We have to say that our models mimic only numerical factorization and do not include time spent on any per-processing steps, for example, fill-in reduction reodering. A cost per level can be interpreted in different ways e.g. increase of partial factorization time due to growth of frontal matrices in size, time increase spent on numerical pivoting, increase of \acrshort{mpi} communication overheads due to growth of contribution matrices, etc. It should be mentioned that real computer implementations of the multifrontal algorithm (\acrshort{mumps}, SuperLU, etc.) are quite sophisticated in many aspects and our models do not have any intention to analyze performance of a particular package. Instead the objective of these models is to show possible strong scaling behavior and possible bottlenecks. \\
 
 
 %We will consider only task parallelism at the beginning to a first approximation and later we will discuss how additional data parallelism can affect algorithm performance.\\
@@ -459,7 +459,7 @@ two more pre-processing steps, namely: process mapping and load balancing. Both 
 %By and large, reduction of time spent on the top nodes is a way to improve strong scaling behavior. To do so, data parallelism can be additionally exploited for these nodes. It is worth noting that data parallelism at bottom levels does not make sense because it leads to increase of granularity there and thus increase communication overheads which can lead to significant performance drop.\\
 
 
-%Figure \ref{fig:mumps-task-data-parallelism} shows an example of two types of parallelism applied to the algorithm. First of all, we can see the leaves are grouped in subtrees and a single PE is assigned to each subtree. Other nodes are distributed among three different types. Nodes of the first type uses task parallelism only, which is induced by the tree, and each node is executed in a single processor. The second type exploits data parallelism with 1D block row distribution among the processors. The root belongs to the third type where data parallelism is used with 2D block cyclic distribution. The details of \gls{mumps} parallelism management is carefully explained and can be found in \cite{mumps:task-data-parallelism}.\\
+%Figure \ref{fig:mumps-task-data-parallelism} shows an example of two types of parallelism applied to the algorithm. First of all, we can see the leaves are grouped in subtrees and a single PE is assigned to each subtree. Other nodes are distributed among three different types. Nodes of the first type uses task parallelism only, which is induced by the tree, and each node is executed in a single processor. The second type exploits data parallelism with 1D block row distribution among the processors. The root belongs to the third type where data parallelism is used with 2D block cyclic distribution. The details of \acrshort{mumps} parallelism management is carefully explained and can be found in \cite{mumps:task-data-parallelism}.\\
 
 
 %\figpointer{\ref{fig:mumps-task-data-parallelism}}
@@ -467,22 +467,22 @@ two more pre-processing steps, namely: process mapping and load balancing. Both 
 %\begin{figure}[htpb]
 %  \centering
 %  \includegraphics[width=0.65\textwidth]{figures/chapter-2/mumps-task-data-parallelism.png}
-%\caption{\gls{mumps} parallelism management in case of 4 PEs \cite{mumps:task-data-parallelism}}
+%\caption{\acrshort{mumps} parallelism management in case of 4 PEs \cite{mumps:task-data-parallelism}}
 %\label{fig:mumps-task-data-parallelism}
 %\end{figure}
 
 
-%All the techniques mentioned above were designed to improve strong scaling behavior by splitting the most intensive parts among all available processors. Going back to our models, we can also think about that in a slightly different way, namely: \textit{data parallelism helps to re-distribute cost per node/level on the corresponding elimination tree}. However, we have to notice that efficiency of data parallelism totally depends on sizes of frontal matrices at the top part of the tree. In case of skinny sparse matrices, oversubscription of processing elements can lead to strong performance penalties as we could see from section \ref{subseq:direct methods}. A machine-dependent minimal frontal matrix size was introduced in \gls{mumps} in order to control whether to use ScaLAPACK at the root node or not \cite{mumps-manual}. It can happen that the algorithm uses only task parallelism, due to the threshold, and, as a results, scaling will only depend on the tree structure that can be deep and unbalanced.\\
+%All the techniques mentioned above were designed to improve strong scaling behavior by splitting the most intensive parts among all available processors. Going back to our models, we can also think about that in a slightly different way, namely: \textit{data parallelism helps to re-distribute cost per node/level on the corresponding elimination tree}. However, we have to notice that efficiency of data parallelism totally depends on sizes of frontal matrices at the top part of the tree. In case of skinny sparse matrices, oversubscription of processing elements can lead to strong performance penalties as we could see from section \ref{subseq:direct methods}. A machine-dependent minimal frontal matrix size was introduced in \acrshort{mumps} in order to control whether to use ScaLAPACK at the root node or not \cite{mumps-manual}. It can happen that the algorithm uses only task parallelism, due to the threshold, and, as a results, scaling will only depend on the tree structure that can be deep and unbalanced.\\
 
 
-%Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{memchip}} (Table \ref{table:suite-sparse-matrix-set}) done with using \gls{mumps} library. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:memchip-matrix-sparsity-pattern}. 
+%Figure \ref{fig:model-1-vs-mumps} shows comparison of strong scaling between model 1 and parallel numerical factorization of the matrix \textit{\textbf{memchip}} (Table \ref{table:suite-sparse-matrix-set}) done with using \acrshort{mumps} library. The sparsity pattern before and after fill-in reduction is shown in figure \ref{fig:memchip-matrix-sparsity-pattern}. 
 
 %\todo{add some examples to the appendix}
 %\figpointer{\ref{fig:model-1-vs-mumps}. Show standard deviation}
 %\begin{figure}[htpb]
 %  \centering
 %  \includegraphics[width=0.65\textwidth]{figures/chapter-2/model-1-vs-mumps.png}
-%\caption{Comparison between model 1 and numerical factorization of the matrix \textit{\textbf{memchip}} using \gls{mumps} library}
+%\caption{Comparison between model 1 and numerical factorization of the matrix \textit{\textbf{memchip}} using \acrshort{mumps} library}
 %\label{fig:model-1-vs-mumps}
 %\end{figure}
 
@@ -498,10 +498,10 @@ two more pre-processing steps, namely: process mapping and load balancing. Both 
 
 
 
-%As we can see, our model and the experiment show the same trend and the results are pretty much close to each other. However, our model takes into consideration only task parallelism whereas \gls{mumps} exploits both data and task parallelism. Additionally, we have to mention that our model 1 works well only for relatively big sparse matrices. It can be quite inaccurate in case of small/skinny sparse systems. \\
+%As we can see, our model and the experiment show the same trend and the results are pretty much close to each other. However, our model takes into consideration only task parallelism whereas \acrshort{mumps} exploits both data and task parallelism. Additionally, we have to mention that our model 1 works well only for relatively big sparse matrices. It can be quite inaccurate in case of small/skinny sparse systems. \\
 
 
-%In general, it is possible to refine our models and make them more accurate, using Bulk Synchronous Parallel (BSP) approach, for example. However, it will require to possess a real postordered elimination tree, extracted from a specific implementation of multifrontal method, together with information about supernodes sizes. We strongly believe the new enhanced model can explain the jagged strong scaling behavior of the \gls{mumps} solver that we can observe in figure \ref{fig:model-1-vs-mumps}. But, this approach seems to be quite cumbersome and requires to delve into the source code of a particular library. It is needless to say that data can be retrieved only during run time and only after the analysis phase. This makes it less valuable and we can see that it is definitely a wrong way to go.\\
+%In general, it is possible to refine our models and make them more accurate, using Bulk Synchronous Parallel (BSP) approach, for example. However, it will require to possess a real postordered elimination tree, extracted from a specific implementation of multifrontal method, together with information about supernodes sizes. We strongly believe the new enhanced model can explain the jagged strong scaling behavior of the \acrshort{mumps} solver that we can observe in figure \ref{fig:model-1-vs-mumps}. But, this approach seems to be quite cumbersome and requires to delve into the source code of a particular library. It is needless to say that data can be retrieved only during run time and only after the analysis phase. This makes it less valuable and we can see that it is definitely a wrong way to go.\\
 
 
 %There are few important aspects to discuss at the end of the section. Numerical robustness is the main advantage of the multifrontal method. It does not require any preconditioner to solve a system of equations. As we discussed in the previous section, tuning a specific preconditioning algorithm can take a considerable amount of time, especially in case of our systems. As another advantage, the method (heavily) exploits matrix sparsity which lowers computational complexity up to $O(n^2)$. In case of massively huge matrices, the algorithm can utilize the secondary memory which sometimes is only one way to solve a system.\\
@@ -579,6 +579,6 @@ while r > $\omega$
 \end{minipage}
 
 
-As an alternative to the iterative refinement method, one can use the resulting $LU$ decomposition of matrix $A$ as a preconditioner for an iterative solver, for instance GMRES. The practice, in particular of \gls{athlet} users, has been shown that it usually takes 1 \dots 3 iterations to achieve desired numerical accuracy even with extreme small values of $\alpha$.\\
+As an alternative to the iterative refinement method, one can use the resulting $LU$ decomposition of matrix $A$ as a preconditioner for an iterative solver, for instance \acrshort{gmres}. The practice, in particular of \acrshort{athlet} users, has been shown that it usually takes 1 \dots 3 iterations to achieve desired numerical accuracy even with extreme small values of $\alpha$.\\
 
 At the end, it is worth mentioning that both refinement techniques, mentioned above, exploit only data-based parallelism and, therefore, scale well on distributed-memory machines.\\

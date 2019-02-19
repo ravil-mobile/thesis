@@ -2,16 +2,16 @@
 \label{sec:benchmark-and-test-data}
 
 
-\gls{athlet} is a dedicated industrial Computational Fluid Dynamic (CFD) package meant for simulation of thermal-hydraulic circuits in various nuclear power plant facilities. Besides the main part, the solver, it includes some pre-processing steps that allow the user to conveniently set up different simulation parameters, computational mesh, output data, etc.\\
+\acrshort{athlet} is a dedicated industrial Computational Fluid Dynamic (CFD) package meant for simulation of thermal-hydraulic circuits in various nuclear power plant facilities. Besides the main part, the solver, it includes some pre-processing steps that allow the user to conveniently set up different simulation parameters, computational mesh, output data, etc.\\
 
 
-Testing of new concepts and ideas directly in \gls{athlet} can be quite cumbersome, computationally expensive and inconvenient. Therefore, a dedicated benchmark has been developed to test the \textit{accumulator} concept.\\
+Testing of new concepts and ideas directly in \acrshort{athlet} can be quite cumbersome, computationally expensive and inconvenient. Therefore, a dedicated benchmark has been developed to test the \textit{accumulator} concept.\\
 
 
-The benchmark fully replicates all basic ideas of the default \gls{athlet} implementation and the \textit{accumulator} concept. It  focuses only on the compressed Jacobian matrix transfer and, therefore, does not include any expensive compute-operations such as function perturbations with seed vectors. The approach allowed to sufficiently speed up time of development, comparison and testing which, in turn, helped to design to the final concept, described in section \ref{sec:accumulator-approach}, excluding mistakes made at earlier steps of development after several iterations of testing.\\
+The benchmark fully replicates all basic ideas of the default \acrshort{athlet} implementation and the \textit{accumulator} concept. It  focuses only on the compressed Jacobian matrix transfer and, therefore, does not include any expensive compute-operations such as function perturbations with seed vectors. The approach allowed to sufficiently speed up time of development, comparison and testing which, in turn, helped to design to the final concept, described in section \ref{sec:accumulator-approach}, excluding mistakes made at earlier steps of development after several iterations of testing.\\
 
 
-In order to mimic the real run-time \gls{athlet}-\gls{nut} behavior during Jacobian matrix updates, a few communication patterns were recorded in \gls{athlet} and played in the benchmark. The recordings helped to generate column vectors with the length corresponding to that in the recordings, filled with random numbers, for each data transfer. Figure \ref{fig:communication-pattern} shows an example of a part of the \textit{cube-64} communication pattern used in the study, where \textit{COO} stands for compressed coordinate format. As it can be observed, the pattern includes both full and partial Jacobian updates.\\
+In order to mimic the real run-time \acrshort{athlet}-\acrshort{nut} behavior during Jacobian matrix updates, a few communication patterns were recorded in \acrshort{athlet} and played in the benchmark. The recordings helped to generate column vectors with the length corresponding to that in the recordings, filled with random numbers, for each data transfer. Figure \ref{fig:communication-pattern} shows an example of a part of the \textit{cube-64} communication pattern used in the study, where \textit{COO} stands for compressed coordinate format. As it can be observed, the pattern includes both full and partial Jacobian updates.\\
 
 
 \begin{figure}[htpb]
