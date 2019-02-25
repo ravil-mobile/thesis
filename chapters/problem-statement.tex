@@ -1,32 +1,37 @@
 \chapter{Problem Statement}\label{chapter:problem-statment}
 
 
-Integration of a system of \acrshort{ode}s by means of W-methods can be considered as a solution of a sequence of linear systems from another point of view. Equations \ref{eq:athlet-9} can be rewritten in a form \ref{eq:athlet-10}, after grouping both the right- and left-hand sides in a single matrix and vector, respectively.\\
+Integration of a system of \acrshort{ode}s by means of W-methods can be considered as solutions of a sequence of linear systems from another point of view. Equations \ref{eq:athlet-9} can be rewritten in a form \ref{eq:athlet-10}, after grouping both the right- and left-hand sides in a single matrix and vector, respectively.\\
 
+
+%\begin{equation} \label{eq:athlet-10}
+%	A_{i} \Delta z^{l}_{i} =  b^{l}_{i} 
+%\end{equation}
 
 \begin{equation} \label{eq:athlet-10}
-	A_{i} \Delta z^{l}_{i} =  b^{l}_{i} 
+	A_{i} \delta y_{ij} =  b_{ij} 
 \end{equation}
 
-where $A = ((h \gamma)^{-1}I - J)$ is a $\mathbb{R}^{N} \times \mathbb{R}^{N}$ non-singular sparse matrix, $\Delta z^{l}_{i}$  and $b^{l}_{i}$ are $\mathbb{R}^{N}$ vectors.\\
+
+where $A = (I - h_{i}J)$  is a $\mathbb{R}^{N} \times \mathbb{R}^{N}$ nonsingular sparse matrix; $\delta y_{ij}$  and $b_{ij}$ are $\mathbb{R}^{N}$ vectors.\\
 
 
-According to the integration scheme, figure \ref{fig:introduction-w-method-scheme}, and definition of the method, each step of numerical integration requires to solve 6 linear systems with 3 distinct matrices, resulting from the Jacobian matrix by the corresponding shifts of the main diagonal. Therefore, the computational burden of the W-method mainly lies in solving of sparse linear systems.\\
+According to the integration scheme, figure \ref{fig:introduction-w-method-scheme}, and definition of the method, each step of numerical integration requires to solve 6 linear systems with 3 distinct matrices, resulting from the Jacobian matrix by the corresponding shifts of the main diagonal. Therefore, the computational burden of the W-method mainly lies in solving sparse linear systems.\\
 
 
-There exist two families of linear sparse solvers, namely: iterative and direct sparse methods. In the general case, execution time of any algorithm, regardless of the solver family, is bounded by $O(N^2)$ complexity due to matrix sparsity, where $N$ is number of equations in the system. However, the constant in front of the factor $N^2$ can vary significantly between the methods which explains differences in execution time. Additionally, it is important to mention the families use absolutely different approaches for solving sparse linear systems and thus posses different numerical properties. Among all  properties, there are some which are particularly important for efficient execution of W-methods, namely: \\
+There exist two families of linear sparse solvers, namely: iterative and direct sparse methods. In the general case, execution time of any method, regardless of a solver family, is bounded by $O(n^2)$ complexity due to matrix sparsity, where $n$ is number of equations in a system. However, a constant in front of the factor $n^2$ can vary significantly between the methods which explains differences in execution time. Additionally, it is important to mention the families use absolutely different approaches for solving sparse linear systems and thus posses different numerical properties. Among all  properties, there are some which are particularly important for efficient execution of W-methods, namely: \\
 
 
 \begin{itemize}
-	\item robustness (or numerical stability) with respect to ill-conditioner problems
-	\item parallel efficiency, with emphasis on strong scaling 
+	\item robustness of a methods to treat, in particular, ill-conditioned systems
+	\item parallel efficiency
 \end{itemize}
 
 
-These above mentioned properties can be treated as non-functional requirements for a sparse linear solver for efficient numerical time integration.\\
+These above mentioned properties can be treated as non-functional requirements to a sparse linear solver for efficient numerical time integration.\\
 
  
-Finding solutions of sparse linear systems is a well-known and commonly occurring problem in the field of scientific computing and, therefore, numerous implementations of different kind of linear solvers exist. However, the \acrshort{nut} project imposes some extra constrains due to the design philosophy adopted by \acrshort{grs}: \\
+Finding solutions of sparse linear systems is a well-known and commonly occurring problem in the field of scientific computing and, therefore, numerous implementations of different kinds of linear solvers exist. However, the \acrshort{nut} project imposes some extra constrains due to the design philosophy adopted by \acrshort{grs}: \\
 
 
 \begin{itemize}
@@ -37,25 +42,25 @@ Finding solutions of sparse linear systems is a well-known and commonly occurrin
 %In particular, it requires a particular solver implementation to have its \textbf{open-source license} and to have its direct \textbf{interface to \acrshort{petsc}} library.\\
 
 
-In this study, we are primarily concerned with selection and configuration of a linear sparse solver that can cover all requirements listed above.\\
+In this study, we are primarily concerned with a selection and configuration of a  sparse linear solver which can cover all requirements listed above.\\
 
 
-This report is organized as follows. Chapter \ref{subseq:matrix-sets-and-hardware} provides information about methodology, data, software hardware used in this study. Subsections \ref{subseq:iterative-theory} and \ref{subseq:direct-sparse methods} give an overview of the theory and parallelization aspects of iterative and sparse direct methods. Then, in subsection \ref{subseq:hybrid-method-description}, we make a conclusion about which type of sparse linear methods is the best suited for numerical time integration governed by the W-method. In subsection 
-\ref{subseq:mm-library-choice}, a particular implementation of a specific method is selected by means of testing. From chapter \ref{mumps:solver-configuration} onwards, we perform configuration and adaptation of the solver for distributed-memory computations. At the end, subsection \ref{subseq:mm-conclusion} summarizes obtained results and makes a general conclusion with respect to data and compute environment provided by  \acrshort{grs}.\\
+This report is organized as follows. Chapter \ref{subseq:matrix-sets-and-hardware} provides information about methodology, data, software and hardware used in this study. Subsections \ref{subseq:iterative-theory} and \ref{subseq:direct-sparse methods} give an overview of the theory and parallelization aspects of iterative and sparse direct methods. Then, in subsection \ref{subseq:hybrid-method-description}, we make a conclusion about which type of sparse linear methods is the best suited for numerical time integration governed by W-methods. In subsection 
+\ref{subseq:mm-library-choice}, a particular implementation of a specific method is selected by means of testing. From chapter \ref{mumps:solver-configuration} onwards, we perform configuration and adaptation of a solver for distributed-memory computations. At the end, subsection \ref{subseq:mm-conclusion} summarizes obtained results and makes a general conclusion with respect to data and compute environment provided by  \acrshort{grs}.\\
 
 
 
 
-An additional topic, considered in this study, is improvement of \acrshort{athlet}-\acrshort{nut} communication during Jacobian matrix transfer. As it was described in section \ref{sec:athlet-nut-coupling}, \acrshort{athlet}, the client, transfers Jacobian matrix in a column-wise fashion. \acrshort{nut}, the server, treats each column transfer as a service and, therefore, each transfer passes through a 3-way handshake. Moreover, it is important to mention one more time,   due to the current implementation of \acrshort{athlet}-\acrshort{nut} coupling, the client-server communication is blocking. In other words, \acrshort{athlet} gets blocked till completion of a column transfer. \\
+An additional topic, considered in this study, is an improvement of \acrshort{athlet}-\acrshort{nut} communication during Jacobian matrix transfers. As it was described in subsection \ref{sec:athlet-nut-coupling}, \acrshort{athlet}, the client, transfers a Jacobian matrix in a column-wise fashion. \acrshort{nut}, the server, treats each column transfer as a service and, therefore, each transfer passes through the 3-way handshake described in subsection \ref{sec:athlet-nut-coupling}. Moreover, it is important to mention one more time,   due to the current implementation of \acrshort{athlet}-\acrshort{nut} coupling, client-server communication is blocking. In other words, \acrshort{athlet} gets blocked till completion of a column transfer. \\
 
 
-The main goal of Jacobian matrix compression, described in section \ref{sec:jacobian-matrix-compression}, is to minimize the number of perturbations of non-linear function $f(y)$, equation \ref{eq:athlet-8}, derived from finite differences. Additionally it allows to reduce the amount of column transfers as well. Therefore, it improves overall application performance from both computational and communication point of view. However, there are still some aspects to be considered.\\
+The main goal of Jacobian matrix compression, described in section \ref{sec:jacobian-matrix-compression}, is to minimize the number of perturbations of non-linear function $f(y)$, equation \ref{eq:athlet-8}. Additionally it allows to reduce an amount of column transfers as well. Therefore, it improves the overall application performance from both computational and communication points of view. However, there are still some aspects to be considered.\\
 
 
-Due to specifics of matrix compression algorithm, described in section \ref{sec:athlet-nut-coupling}, column length is decreasing between the first and last columns of compressed Jacobian matrix form which, as a result, leads to unequal \acrshort{mpi} message sizes.\\
+Due to specifics of the matrix compression algorithm, described in section \ref{sec:jacobian-matrix-compression}, column lengths are decreasing between the first and last columns of a compressed Jacobian matrix form which, as a result, leads to unequal \acrshort{mpi} message sizes.\\
 
 
-In this part of the study, we introduce a concept called \textit{accumulator} which allows to transfer a compressed Jacobian matrix in equal chunks. This approach potentially solves three important problems at once. First of all, \textit{accumulator} can help to get rid of small \acrshort{mpi} messages and thus improves network bandwidth utilization. Secondly, it helps to reduce the amount of synchronizations between the client and server and, therefore, improves operation of \acrshort{nut} as the server. Lastly, it allows to apply non-blocking \acrshort{mpi} communication on the client side and thus overlap Jacobian matrix transfer with its computations.\\
+In this part of the study, we introduce a concept called \textit{accumulator} which allows to transfer a compressed Jacobian matrix in equal chunks. This approach potentially solves three important problems at once. First of all, \textit{accumulator} can help to get rid of small \acrshort{mpi} messages and thus improves network bandwidth utilization. Secondly, it helps to reduce an amount of synchronizations between the client and server and, therefore, improves operation of \acrshort{nut} as the server. Lastly, it allows to apply non-blocking \acrshort{mpi} communication on the client side and thus overlap Jacobian matrix transfers with computations.\\
 
 
-In section \ref{sec:jacobian-matrix-compression}, we briefly describe the Jacobian matrix compression algorithm and the resulting \acrshort{athlet}-\acrshort{nut} communication problem. In section \ref{sec:accumulator-approach}, we present and describe the algorithm which is supposed to resolve the problem. Section \ref{sec:benchmark-and-test-data} provides a description of developed benchmarks and test data. Then, we focus and explain obtained results in section \ref{sec:accumulator-results}. Finally, in section \ref{sec:accumulator-conclusions}, we provide a general conclusion of the performed study and summarize the results one more time.\\
+In section \ref{sec:jacobian-matrix-compression}, we briefly describe the Jacobian matrix compression algorithm and the resulting \acrshort{athlet}-\acrshort{nut} communication problem. In section \ref{sec:accumulator-approach}, we present and describe the algorithm which is supposed to resolve the problem. Section \ref{sec:benchmark-and-test-data} provides a description of developed benchmarks and test data. Then, we focus and explain obtained results in section \ref{sec:accumulator-results}. Finally, in section \ref{sec:accumulator-conclusions}, we provide a general conclusion of the performed part of the study and summarize the results.\\

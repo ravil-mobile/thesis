@@ -7,7 +7,7 @@ Direct sparse methods combine the main advantages of direct and iterative method
 A multi-frontal method is probably the most representative example of direct sparse solvers, inroduced by \citeauthor{mult-frontal-original:1} in work \cite{mult-frontal-original:1}. The method is, in fact, an improved version of the frontal method \cite{frontal-original} and can compute independent fronts in parallel. A front, also called a frontal matrix, can be considered as a small dense matrix resulting from a column elimination of the original system. There also exist left- and right-looking vatiants of the multi-frontal method explained in detail in \cite{elimination-tree}.\\
 
 
-In this subsection, the theory of multi-frontal method is explained, which helps to understand parallel aspects and strong scaling behavior of   direct sparse solvers in case of parallel execution. To keep the overview rather simple, we assume matrix $A$ is real, symmetric and sparse. In this case, $LU$ decomposition of matrix $A$ boils down to Cholesky factorization, equation \ref{eq:chol-1}.\\
+In this subsection, the theory of multi-frontal method is explained, which helps to understand parallel aspects and strong scaling behavior of   direct sparse solvers in case of parallel execution. To keep the overview rather simple, we assume that matrix $A$ is real, symmetric and sparse. In this case, $LU$ decomposition of matrix $A$ boils down to Cholesky factorization, equation \ref{eq:chol-1}.\\
 
 \begin{equation} \label{eq:chol-1}
 	A = LDL^T
@@ -25,10 +25,10 @@ The algorithm starts with symbolic factorization of system \ref{eq:chol-1} with 
 \end{figure}
 
 
-Figure \ref{fig:sparsity-pattern-example-mm} shows an illustrative example of a sparse matrix $A$ and its Cholesky factor $L$, taking from \cite{mult-frontal-original:2}. The solid circles represent original non-zero elements whereas hollow ones define fill-in factors of $L$. \\
+Figure \ref{fig:sparsity-pattern-example-mm} shows an illustrative example of a sparse matrix $A$ and its Cholesky factor $L$, taking from \cite{mult-frontal-original:2}. The solid circles represent the original non-zero elements whereas hollow ones define fill-in elements of $L$. \\
 
 
-The elimination tree is a crucial part of the method. It can be considered as a structure of $n$ nodes where node $p$ is the parent of $j$ if and only if it satisfies equation \ref{eq:elimination-tree-1}. It is worth pointing out the definition \ref{eq:elimination-tree-1} is not only one possible and one can define a strucutre of the elimination tree in a different way as well, \cite{mult-frontal-original:2}.\\% As an example, another definition of an ellimination tree, alos refered as an assembly tree, was defined by \citeauthor{mult-frontal-original:2} in \cite{mult-frontal-original:2}.\\
+The elimination tree is a crucial part of the method. It can be considered as a structure of $n$ nodes where a node $p$ is the parent of $j$ if and only if it satisfies equation \ref{eq:elimination-tree-1}. It is worth pointing out the definition \ref{eq:elimination-tree-1} is not only one possible and one can define a strucutre of the elimination tree in a different way as well, \cite{mult-frontal-original:2}.\\% As an example, another definition of an ellimination tree, alos refered as an assembly tree, was defined by \citeauthor{mult-frontal-original:2} in \cite{mult-frontal-original:2}.\\
 
 \begin{equation} \label{eq:elimination-tree-1}
 	p = min(i > j | l_{ij} \neq 0)
@@ -83,9 +83,9 @@ l_{j,k} & l_{i_1,k} & \dots & l_{i_1,k}
 
 Update matrix $\hat{U_{j}}$ is, in fact, can be considered as the second term of the Schur complement i.e. update contributions from already factorized columns of $A$.\\
 
-The subscript $k$ represents descendant columns of node $j$. Hence, only those elements of descendant columns are included and considered which correspond to the non-zero pattern of the $j$th column.\\
+The subscript $k$ represents descendant columns of node $j$. Hence, only those elements of descendant columns are included and considered which correspond to a non-zero pattern of the $j$th column.\\
 
-Let's consider a partial factorization of a 2-by-2 block dense matrix, equation \ref{eq:mm-3}, to better understand the essence of update matrix $\hat{U_{j}}$. Let's assume that  matrix $B$ has already been factorized and can be expressed as follows: \\
+Let's consider partial factorization of a 2-by-2 block dense matrix, equation \ref{eq:mm-3}, to better understand the essence of update matrix $\hat{U_{j}}$. Let's assume that  matrix $B$ has already been factorized and can be expressed as follows: \\
 
 
 \begin{equation} \label{eq:mm-4}
@@ -157,10 +157,10 @@ l_{j,j} & \dots & l_{i_{r},j} \\
 \end{bmatrix} 
 \end{equation}
 
-where sub-matrix $U_{j}$ represents the full update from all descendants of node $j$ and node $j$ itself. Equation \ref{eq:mm-7} expresses sub-matrix $U_{j}$ in a vector form: \todo{check formula}\\
+where sub-matrix $U_{j}$ represents the full update from all descendants of node $j$ and node $j$ itself. Equation \ref{eq:mm-7} expresses sub-matrix $U_{j}$ in a vector form: 
 
 \begin{equation} \label{eq:mm-7}
-\hat{U_{j}} = - \sum_{k \in T[j]}  \begin{bmatrix}
+U_{j} = - \sum_{k \in T[j]}  \begin{bmatrix}
 l_{i_1,k} \\
 \vdots \\
 l_{i_1,k} \\
@@ -191,7 +191,7 @@ It can happen that only a subset of rows and columns of matrices $U_{A}$ and $U_
 
 %It might happen that we do not need all rows and columns of $U_{A}$ and $U_{B}$ i.e. we need only some subset of them, because of sparsity of column $C$ . It is also important to place all necessary rows and columns of matrices $U_{A}$ and $U_{B}$ in a right place within matrix $\hat{U_{C}}$. For that reason, an additional matrix operation, called \textbf{\textit{extend-add}}, must be introduced.\\
 
-As an example, taking from \cite{mult-frontal-original:2}, let's consider the extend-add operation applied to 2-by-2 matrices $R$ and $S$ which correspond to indices ${5,8}$ and ${5,9}$ of a matrix $B$, respectively.\\
+As an example, taking from \cite{mult-frontal-original:2}, let's consider the \textit{extend-add} operation applied to 2-by-2 matrices $R$ and $S$ which correspond to indices ${5,8}$ and ${5,9}$ of a matrix $B$, respectively.\\
 
 \begin{equation}
 R = \begin{bmatrix}
@@ -228,7 +228,7 @@ y & 0 & z \\
 \end{bmatrix} 
 \end{equation}
 
-Hence, formation of frontal matrix $F_{j}$ can be expressed using the extend-add operation and all direct children of node $j$ as follows:
+Hence, the formation of frontal matrix $F_{j}$ can be expressed using the \textit{extend-add} operation and all direct children of node $j$ as follows:
 
 
 \begin{equation} \label{eq:mm-9}
@@ -242,7 +242,7 @@ a_{i_r,j} \\
 
 where $c_{1}, \: c_{2}, \: \dots \: c_{n}$ are indices of direct children of node $j$.\\
 
-At this point, it is worth mentioning the resulting frontal matrix $F_{j}$ forms a small dense block which has to be factorized along the first column. The partial factorization of such a block can be efficiently performed by means of the corresponding dense linear algebra kernels.\\
+At this point, it is worth mentioning the resulting frontal matrix $F_{j}$ forms a small dense block which has to be factorized along the first column. Partial factorization of such a block can be efficiently performed by means of the corresponding dense linear algebra kernels.\\
 
 
 After partial factorization of matrix $F_{j}$, assembly of contribution matrix $U_{j}$ must be completed by adding those elements of $U_{c_1}, \:, U_{c_2}, \: \dots, U_{c_s}$ to $U_{j}$ that have not been used in factorization of $F_{j}$ due to sparsity of column $j$. Then, the process continues moving up along the tree. Therefore, complete update matrices are growing in size while the global elimination process is moving towards the root of the tree.\\
@@ -325,10 +325,10 @@ a_{i_r,j} & a_{i_r,j+1} & \dots & a_{i_r,j+t} \\
 \end{equation}
 
 
-It is worth mentioning there exist other definitions of a super-node which allow to amalgamate even more nodes from the original post-ordered tree. For example, \citeauthor{mult-frontal-original:2} pointed out, in \cite{mult-frontal-original:2}, a super-node could be defined without the column contiguity constrain which can result in denser frame matrix $\mathcal{F}r_{j}$.\\
+It is worth mentioning there exist other definitions of super-nodes which allow to amalgamate even more nodes from the original post-ordered tree. For example, \citeauthor{mult-frontal-original:2} pointed out, in \cite{mult-frontal-original:2}, a super-node could be defined without the column contiguity constrain which can result in denser frame matrix $\mathcal{F}r_{j}$.\\
 
 
-It can be clearly observed the methods consist of three distinct phases, namely: analysis, numerical factorization and solution phases. The analysis phase includes fill reducing matrix re-ordering, symbolic factorization, post-ordering, node amalgamation, elimination tree construction, estimation of required memory space etc. During the numerical factorization phase, $L$ and $D$, or $U$, factors of the original matrix $A$ are computed based on sequence of partial factorizations of frontal matrices. Given matrix decomposition, the solution step computes a solution vector $x$ by means of backward and forward substitutions.\\
+It can be clearly observed the methods consist of three distinct phases, namely: analysis, numerical factorization and solution phases. The analysis phase includes fill reducing matrix re-ordering, symbolic factorization, post-ordering, node amalgamation, elimination tree construction, estimation of required memory space etc. During the numerical factorization phase, $L$ and $D$, or $U$, factors of the original matrix $A$ are computed based on sequence of partial factorizations of frontal matrices. Given a matrix decomposition, the solution step computes a solution vector $x$ by means of backward and forward substitutions.\\
 
 
 
@@ -389,12 +389,12 @@ quadratic decrease of computational cost between nodes of adjacent levels wherea
 % assumtion that cost is equal within the level!!!
 
 
-The models imply parallel computations within a  level but sequential execution between them. In other words, to start computations at the next top level, factorizations of all nodes at the current  one have to be fully performed. It also means that computations at the next level cannot be started  even if there are some available free processors but factorization of the last node at the current level has not been completed yet. Thereby, minimal execution time  of both models can be exactly evaluated based on the model descriptions. Essentially, it is equal to a sum of time spent on single node of each level. Therefore, it determines asymptotes on the corresponding speed-up graphs.\\
+The models imply parallel computations within a  level but sequential execution between them. In other words, to start computations at the next top level, factorizations of all nodes at the current  one have to be fully performed. It also means that computations at the next level cannot be started  even if there are some available free processors but factorization of the last node at the current level has not been completed yet. Thereby, minimal execution time  of both models can be exactly evaluated based on the model descriptions. Essentially, it is equal to a sum of time spent on a single node of each level i.e a sum of nodes of the deepest branch. Therefore, it determines asymptotes on the corresponding speed-up graphs.\\
 
 %As we mentioned above the root of the tree can be processed purely sequentially if we only consider task parallelism. As a first approximation, time spent on the root factorization determines the minimal execution time according to the Amdahl's low \cite{wiki:amdahls-low}. More precisely, the minimal execution time is equal to a sum of time spent on a single node at each level. This time determines the asymptote in the corresponding speed-up graph.\\
 
 
-Figures \ref{fig:mm-parallel-model-tree-linear} and \ref{fig:mm-parallel-model-tree-quadratic} represent strong scaling behavior of both models filled with 65535 nodes i.e. 16 levels. As it can be observed, the models demonstrate a rapid drop of parallel performance, especially in case of the quadratic one, figure \ref{fig:mm-parallel-model-tree-quadratic} . Table \ref{table:mm-potential-model-speed-up} compares speed-up of two models obtained with 32768 and 20 abstract processors. Number 32768 is equal to the number of leaves at the bottom level and thus implicitly determines maximum speed-up. It is worth mentioning that two models almost exhaust tree-task parallelism even with 20 processing elements. Further increase of processor count can only barely improve the overall parallel performance.\\
+Figures \ref{fig:mm-parallel-model-tree-linear} and \ref{fig:mm-parallel-model-tree-quadratic} represent strong scaling behavior of both models filled with 65535 nodes i.e. 16 levels. As it can be observed, the models demonstrate a rapid drop of parallel performance, especially in case of the quadratic one, figure \ref{fig:mm-parallel-model-tree-quadratic} . Table \ref{table:mm-potential-model-speed-up} compares speed-up of two models obtained with 32768 and 20 abstract processors. Number 32768 is equal to the number of leaves at the bottom level and thus implicitly determines maximum speed-up. It is worth mentioning that two models almost exhaust tree-task parallelism even with 20 processing elements. Further increase of the number of processor can only barely improve the overall parallel performance.\\
 
 
 \figpointer{\ref{fig:mm-parallel-model-speed-up}}
@@ -423,14 +423,14 @@ Model 2 & 1.4972 & 1.5000   \\ \hline
 \end{table}
 
 
-These, rather simple, models reveal the most important fact about tree-task parallelism of sparse direct methods. The performance depends heavily on an elimination tree structure and, in particular, on distribution of compute-intensity among nodes. As it was mentioned above, the intensity is usually centered on the top part of the tree where task-based parallelism is limited due to data dependency. As an example, \citeauthor{mult-frontal-original:2} observed that factorization of the last 6 nodes took slightly more than 25\% of the total number of floating point operations in case of application of the multi-frontal method to a $k-by-k$ regular model problem using a nine-point difference operator, \cite{mult-frontal-original:2}.\\
+These, rather simple, models reveal the most important fact about tree-task parallelism of sparse direct methods. The performance depends heavily on an elimination tree structure and, in particular, on a distribution of compute-intensity among nodes. As it was mentioned above, the intensity is usually centered on the top part of the tree where task-based parallelism is limited due to data dependency. As an example, \citeauthor{mult-frontal-original:2} observed that factorizations of the last 6 nodes took slightly more than 25\% of the total number of floating point operations in case of application of the multi-frontal method to a $k-by-k$ regular model problem using a nine-point difference operator, \cite{mult-frontal-original:2}.\\
 
 
-Node-data parallelism is often combined with tree-task parallelism which usually results in improvement of parallel performance of direct sparse methods. In the general case, frontal matrix $\mathcal{F}_{j}$ can be distributed across multiple processors and partially factorized in parallel. However, performance of node-data parallelism depends on both the matrix size and the number of processors assigned to perform factorization. Over-subscription of processing elements to a node can result in slow-down induced by communication overheads. Therefore,  data parallelism is only applied to top  and middle parts of elimination trees because of fine granularity of bottom levels.\\ 
+Node-data parallelism is often combined with tree-task one which usually results in an improvement of parallel performance of direct sparse methods. In the general case, frontal matrix $\mathcal{F}_{j}$ can be distributed across multiple processors and partially factorized in parallel. However, performance of node-data parallelism depends on both a matrix size and the number of processors assigned to perform factorization. Over-subscription of processing elements to a node can result in slow-down induced by communication overheads. Therefore,  data parallelism is only applied to top  and middle parts of elimination trees because of fine granularity of bottom levels.\\ 
 
 
 
-By and large, combined tree-task and node-data parallelism improves performance and strong scaling of sparse direct solvers, however, it cannot change the performance trend mainly induced by tree-task parallelism. Therefore, one can still expect  stagnation of speed-up even with a relatively small number of processors.\\
+By and large, combined tree-task and node-data parallelism improves performance and strong scaling of sparse direct solvers, however, it cannot change the performance trend induced by tree-task parallelism. Therefore, one can still expect  stagnation of speed-up even with a relatively small number of processors.\\
 
 
 A parallel implementation of sparse direct solvers demands to expand the analysis phase by adding 
@@ -521,13 +521,13 @@ two more pre-processing steps, namely: process mapping and load balancing. Both 
 \label{subseq:pivot-hadling}
 
 
-Because of the accumulative effect of inexact computer arithmetics due to a floating point representation of real numbers and, as a result, truncations and rounding errors, small numerical values along the matrix main diagonal can result in significant numerical inaccuracy of the Gaussian Elimination process. Therefore, partial pivoting is a crucial step of Gaussian Elimination. It implies to interchange rows and columns of a matrix in such a way to place distinct and distant values form zero to the main diagonal.\\
+Because of an accumulative effect of inexact computer arithmetics due to a floating point representation of real numbers and, as a result, truncations and rounding errors, small numerical values along the matrix main diagonal can result in significant numerical inaccuracy of the Gaussian Elimination process. Therefore, partial pivoting is a crucial step of Gaussian Elimination. It implies to interchange rows and columns of a matrix in such a way to place distinct and distant values form zero to the main diagonal.\\
 
 
-In case of direct dense methods, partial pivoting is a straightforward operation and can be expressed as multiplication of the original matrix $A$ by a permutation matrix $P$, where each row and column contain a single $1$, at the corresponding place, and $0$s everywhere. However, it becomes a problem when it deals with direct sparse methods.\\
+In case of direct dense methods, partial pivoting is a straightforward operation and can be expressed as multiplication of the original matrix $A$ by a permutation matrix $P$, where each row and column contain a single $1$, at the corresponding place, and $0$s everywhere. However, treatment of partial pivoting in direct sparse methods is an issue.\\
 
 
-On the one hand absence of numerical information during the analysis phase makes it impossible to perform partial pivoting at this step. On the other hand application of partial pivoting during numerical factorization usually distorts all matrix re-orderings and, therefore, the elimination tree structure. As a consequence, partial pivoting can lead to significant fill-in, load unbalance and, as a result, slow-down of numerical factorization. For that reason, threshold pivoting is used, in practice, instead of partial pivoting.\\
+On the one hand, absence of numerical information during the analysis phase makes it impossible to perform partial pivoting at this step. On the other hand, an application of partial pivoting during the numerical factorization phase usually distorts all matrix re-orderings and, therefore, the elimination tree structure. As a consequence, partial pivoting can lead to significant fill-in, load unbalance and, as a result, slow-down of numerical factorization. For that reason, threshold pivoting is commonly used, in practice, instead of partial pivoting.\\
 
 
 Threshold pivoting means that a pivot $|a_{i,i}|$ is accepted if it satisfies equation \ref{eq:lc-1}.\\
@@ -537,15 +537,15 @@ Threshold pivoting means that a pivot $|a_{i,i}|$ is accepted if it satisfies eq
 
 where $\alpha \in [0,1]$ and $k=i \dots n$ represents row indices of column $i$ within a frontal matrix.\\
 
-Factorization of a column is suspended i.e. delayed, if equation \ref{eq:lc-1} cannot be satisfied within a fully-summed block of a frontal matrix. In this case, the column and the corresponding row are moved to the parent's frontal matrix as a part its contribution block where the process repeats again. The process is also known as delayed pivoting and helps to improve numerical accuracy. Higher values of $\alpha$ leads to more accurate solutions but often generate extra fill-in and lead to load unbalance which, as a result, affect parallel performance. On the other hand, smaller values usually preserve the original elimination tree and, therefore,  keep load balance computed during the analysis phase by appropriate mapping of processors across nodes of the tree. However, in this case, numerical accuracy usually degrades. In practice, values of $\alpha$ lay in a range of $0.1$ to $0.01$ \cite{mumps-manual}.\\
+Factorization of a column is suspended i.e. delayed, if equation \ref{eq:lc-1} cannot be satisfied within a fully-summed block of a frontal matrix. In this case, the column and the corresponding row are moved to the parent's frontal matrix as a part its contribution block where the process repeats again. The process is also known as delayed pivoting and helps to improve numerical accuracy. Higher values of $\alpha$ leads to more accurate solutions but often generate extra fill-in and lead to load unbalance which, as a result, affect parallel performance. On the other hand, smaller values usually preserve the original elimination tree and, therefore,  preserve the load balance computed during the analysis phase by appropriate mapping of processors across nodes of the tree. However, in this case, numerical accuracy usually degrades. In practice, values of $\alpha$ lay in the range between $0.01$ and $0.1$ \cite{mumps-manual}.\\
 
 
 
-A case when parameter $\alpha$ is equal to $\bm{0}$ is known as static pivoting which means that no pivoting is being performed during the numerical factorization phase. This allows to better optimize data layout, load balancing, and communication scheduling \cite{superlu-manual} before numerical factorization which is supposed to result in better parallel performance.\\
+A case when parameter $\alpha$ is equal to $\bm{0}$ is known as static pivoting which means that no pivoting is being performed during the numerical factorization phase. This allows to better optimize data layout, load balancing, and communication scheduling, \cite{superlu-manual}, before numerical factorization which is supposed to result in better parallel performance.\\
 
 
 
-By and large, solutions computed by direct sparse methods are usually numerically inaccurate, in some degree, and often demands to perform solution refinement. As an example, solution accuracy can be improved using the iterative refinement method. Code listing \ref{lst:iterative-refinement} shows a psedu-code of the method where parameter $\omega$ represents an estimation of the backward error, equation \ref{eq:backward-error}, \cite{mm-backward-error}. In practice, the method usually takes 2 or 4 iterations to achieve sufficient numerical accuracy.\\
+By and large, solutions computed by direct sparse methods are usually numerically inaccurate, in some degree, and often demands to perform solution refinements. As an example, solution accuracy can be improved using the iterative refinement method. Code listing \ref{lst:iterative-refinement} shows a pseducode of the method where parameter $\omega$ represents an estimation of the backward error, equation \ref{eq:backward-error}, \cite{mm-backward-error}. In practice, the method usually takes 2 or 4 iterations to achieve sufficient numerical accuracy.\\
 
 \begin{equation} \label{eq:backward-error}
 \frac{|b - A\hat{x}|_{i}}{(|b| + |A| |\hat{x}|)_{i}}

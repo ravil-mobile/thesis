@@ -1,4 +1,5 @@
-\subsection{Choice of \gls{blas} Library}
+%\subsection{Choice of \acrshort{blas} Library}
+\subsection{Optimized \acrshort{blas} Implementations}
 \label{subseq:blas-comparison}
 
 
@@ -18,7 +19,7 @@ To perform column eliminations of a fully summed block of a frontal matrix, \acr
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/chapter-2/mumps-type-2-part-1.png}
-\caption{An example of a type 2 node factorization implemented in \acrshort{mumps}}
+\caption{An example of type 2 node factorization implemented in \acrshort{mumps}}
 \label{fig:mumps:steps-of-type-2-factorization}
 \end{figure}
 
@@ -64,7 +65,7 @@ SCSL                                                                 & BLAS impl
 
 
 
-Among all libraries listed in table \ref{table:list-of-blas-implementations} there were only four available in \gls{hw1} machine environment, namely: Netlib \acrshort{blas}, Intel MKL, OpenBLAS and ATLAS. However, installation of ATLAS requires to switch off dynamic frequency scaling, also called CPU throttling, to allow ATLAS configuration routines to find the best loop transformation parameters for specific hardware. In order to turn off CPU throttling, one has to reboot the entire machine and make appropriate changes in Basic Input/Output System (BIOS). This fact made ATLAS library not suitable for the study and we excluded it from our primary list of candidates. Moreover, during installation, one has to explicitly specify the number of \acrshort{openmp} threads that are going to be forked once a \acrshort{blas} subroutine is called. This means there is no way to change the number of threads per \acrshort{mpi} process in run-time without re-installation of the library. Thus, only 3 versions of \acrshort{mumps}-\acrshort{petsc} (linked with Netlib \acrshort{blas}, Intel MKL and OpenBLAS) library were compiled, installed and tested using both \acrshort{grs} and SuiteSparse matrix sets and 1 thread per \acrshort{mpi} process i.e. flat-\acrshort{mpi} mode. The test results were obtained on \gls{hw1} machine and are represented in figures \ref{fig:mumps-blas-configuration-1}, \ref{fig:mumps-blas-configuration-2} and appendix \ref{app:app-blas-configuration}.\\
+Among all libraries listed in table \ref{table:list-of-blas-implementations} there were only four available in \gls{hw1} machine environment, namely: Netlib \acrshort{blas}, Intel MKL, OpenBLAS and ATLAS. However, installation of ATLAS requires to switch off dynamic frequency scaling, also called CPU throttling, to allow ATLAS configuration routines to find the best loop transformation parameters for specific hardware. In order to turn off CPU throttling, one has to reboot the entire machine and make appropriate changes in Basic Input/Output System (BIOS). This fact made ATLAS library not suitable for the study and we excluded it from our primary list of candidates. Moreover, during installation, one has to explicitly specify the number of \acrshort{openmp} threads that are going to be forked once a \acrshort{blas} subroutine is called. This means there is no way to change the number of threads per \acrshort{mpi} process in run-time without re-installation of the library. Thus, only 3 versions of \acrshort{mumps}-\acrshort{petsc} (linked with Netlib \acrshort{blas}, Intel MKL and OpenBLAS) library were compiled, installed and tested using both \acrshort{grs} and SuiteSparse matrix sets and 1 thread per \acrshort{mpi} process i.e. flat-\acrshort{mpi} mode. Results of testing were obtained on \gls{hw1} machine and are represented in figures \ref{fig:mumps-blas-configuration-1}, \ref{fig:mumps-blas-configuration-2} and appendix \ref{app:app-blas-configuration}.\\
 
 
 \figpointer{\ref{fig:mumps-blas-configuration-1}}
@@ -95,7 +96,7 @@ Among all libraries listed in table \ref{table:list-of-blas-implementations} the
 
 
 
-The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of \acrshort{grs} matrix set. On average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice Intel MKL turns out to be slower than the default Netlib \acrshort{blas} implementation for small- and medium-sized \acrshort{grs} matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, show significant performance gain in comparison to the standard Netlib \acrshort{blas} implementation in case of SuiteSparse matrix set. The libraries reduce the execution time by almost \textbf{50\%} on an average. In opposite to \acrshort{grs} matrix set, it turns out that Intel MKL is often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of the comparison are summarized in tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
+The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of \acrshort{grs} matrix set. On average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice Intel MKL library turns out to be slower than the default Netlib \acrshort{blas} implementation for small- and medium-sized \acrshort{grs} matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, show significant performance gain in comparison to the standard Netlib \acrshort{blas} implementation in case of SuiteSparse matrix set. The libraries reduce the execution time by almost \textbf{50\%} on an average. In opposite to \acrshort{grs} matrix set, it turns out that Intel MKL is often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of the comparison are summarized in tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
 
 
 \begin{table}[h!]
@@ -141,7 +142,7 @@ It can be clearly observed from the tables that test-cases derived from \acrshor
 We assume that, in the general case, lack of type 2 nodes in an assembly tree can be due to an inefficient amalgamation process of the corresponding elimination tree resulted from the matrix sparsity pattern.\\
 
 
-Based on the obtained results, comparison between different matrix sets and our reasoning, we presume that \acrshort{athlet} generates linear systems resulting in such trees where type 1 nodes predominate over the others. We can assume it is due to specifics of numerical spacial and time integration explained in section \ref{sec:athlet-overview}.\\
+Based on the obtained results, comparisons between different matrix sets and our reasoning, we presume that \acrshort{athlet} generates linear systems resulting in such trees where type 1 nodes predominate over the others. We can assume it is due to specifics of numerical spacial and time integration explained in section \ref{sec:athlet-overview}.\\
 
 
-In this subsection, we have shown where and how \acrshort{mumps} utilizes \acrshort{blas} and \acrshort{lapack} libraries. We have compared two tuned \acrshort{blas} implementations with a baseline, Netlib \acrshort{blas}, using two different matrix sets. We have shown the overall statistics of the obtained results and come to the conclusion that \acrshort{mumps}-OpenBLAS configuration is the best one for \acrshort{grs} matrix set. Additionally, we have given reasoning for a noticeable difference between results of some test-cases as well as we have talked about probable specifics of linear systems generated by \acrshort{athlet}.\\
+In this subsection, we have shown where and how \acrshort{mumps} utilizes \acrshort{blas} and \acrshort{lapack} libraries. We have compared two tuned \acrshort{blas} implementations with a baseline, Netlib \acrshort{blas}, using two different matrix sets. We have shown the overall statistics of the obtained results and come to the conclusion that \acrshort{mumps}-OpenBLAS configuration is the best one for \acrshort{grs} matrix set. Additionally, we have given reasoning for a noticeable difference between results obtained from different matrix sets as well as we have talked about probable specifics of linear systems generated by \acrshort{athlet}.\\

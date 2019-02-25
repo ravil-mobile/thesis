@@ -13,22 +13,22 @@
   \vspace{5mm}
   {\large\MakeUppercase{\getUniversity{}}}\\
 
-  \vspace{20mm}
+  \vspace{10mm}
   {\Large \getDoctype{}}
 
   \makeatletter
-  \vspace{15mm}
+  \vspace{7.5mm}
   \ifthenelse{\pdf@strcmp{\languagename}{english}=0}
   {
   {\huge\bfseries \getTitle{}}
 
-  \vspace{10mm}
+  \vspace{7.5mm}
   {\huge\bfseries \foreignlanguage{ngerman}{\getTitleGer{}}}
   }
   {
   {\huge\bfseries \getTitleGer{}}
 
-  \vspace{10mm}
+  \vspace{7.5mm}
   {\huge\bfseries \foreignlanguage{english}{\getTitle{}}}
   }
   \makeatother
@@ -37,12 +37,13 @@
   \begin{tabular}{l l}
     Author:          & \getAuthor{} \\
     Supervisor:      & \getSupervisor{} \\
-    Advisor:         & \getAdvisor{} \\
+    Advisors:         & \getAdvisor{} \\
     Submission Date: & \getSubmissionDate{} \\
   \end{tabular}
 
+	\vspace{7.5mm}
   \IfFileExists{logos/faculty.png}{%
-    \vfill{}
-    \includegraphics[height=18mm]{logos/faculty.png}
+    
+    \includegraphics[height=20mm]{logos/faculty.png}
   }{}
 \end{titlepage}
