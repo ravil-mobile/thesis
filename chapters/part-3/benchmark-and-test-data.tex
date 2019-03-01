@@ -8,10 +8,10 @@
 Testing of new concepts and ideas directly in \acrshort{athlet} can be quite cumbersome, computationally expensive and inconvenient. Therefore, a dedicated benchmark has been developed to test the \textit{accumulator} concept.\\
 
 
-The benchmark fully replicates all basic ideas of the original \acrshort{athlet} implementation and the new data transfer concept. It  focuses only on compressed Jacobian matrix transfers and, therefore, does not include any compute-expensive operations such as non-linear function perturbations with seed vectors. The approach allowed to sufficiently speed up time of development, comparison and testing which, in turn, helped in designing the final concept described in section \ref{sec:accumulator-approach}.\\%, excluding mistakes made at earlier steps of development after several iterations of testing.\\
+The benchmark fully replicates all basic ideas of the original \acrshort{athlet} implementation and the new data transfer concept. It  focuses only on compressed Jacobian matrix transfers and, therefore, does not include any compute-expensive operations such as non-linear function perturbations with seed vectors. The approach allowed to sufficiently speed up time of development, comparison and testing which, in turn, helped in designing the final concept described in Section \ref{sec:accumulator-approach}.\\%, excluding mistakes made at earlier steps of development after several iterations of testing.\\
 
 
-In order to mimic the real run-time \acrshort{athlet}-\acrshort{nut} behavior during Jacobian matrix updates, a few communication patterns were recorded in \acrshort{athlet} and played in the benchmark. The recordings helped to generate column vectors with the lengths corresponding to that in the recordings, filled with random numbers. Figure \ref{fig:communication-pattern} shows an example of a part of  \textit{cube-64} communication pattern used in the study, where \textit{COO} stands for compressed coordinate format. As it can be observed, the pattern includes both full and partial Jacobian updates, described in section \ref{sec:athlet-overview}.\\
+In order to mimic the real run-time \acrshort{athlet}-\acrshort{nut} behavior during Jacobian matrix updates, a few communication patterns were recorded in \acrshort{athlet} and played in the benchmark. The recordings helped to generate column vectors with the lengths corresponding to that in the recordings, filled with random numbers. Figure \ref{fig:communication-pattern} shows an example of a part of  \textit{cube-64} communication pattern used in the study, where \textit{COO} stands for compressed coordinate format. As it can be observed, the pattern includes both full and partial Jacobian updates, described in Section \ref{sec:athlet-overview}.\\
 
 
 \begin{figure}[htpb]
@@ -21,7 +21,7 @@ In order to mimic the real run-time \acrshort{athlet}-\acrshort{nut} behavior du
 \end{figure}
 
 
-According to the \textit{accumulator} concept, described in section \ref{sec:accumulator-approach}, the main changes take place only on the client side and hence the server side remains unchanged which follows the original idea of the least code modifications. Code listing \ref{lst:bench:auxiliary-subroutines} represents an additional auxiliary class used for data accumulation. Pseudocode of the benchmark client side is in listing \ref{lst:beanch:pseudocode}.\\ 
+According to the \textit{accumulator} concept, described in Section \ref{sec:accumulator-approach}, the main changes take place only on the client side and hence the server side remains unchanged which follows the original idea of the least code modifications. Code Listing \ref{lst:bench:auxiliary-subroutines} represents an additional auxiliary class used for data accumulation. Pseudocode of the benchmark client side is in Listing \ref{lst:beanch:pseudocode}.\\ 
 
 
 \begin{minipage}{\linewidth}

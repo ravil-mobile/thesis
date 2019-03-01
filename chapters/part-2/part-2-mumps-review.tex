@@ -4,7 +4,7 @@ Originally, \acrfull{mumps} was a part of the PARASOL Project. The project was a
 
 
 
-As it was mentioned in section \ref{subseq:mm-library-choice}, \acrshort{mumps} is an implementation of the multi-frontal method. Therefore, \acrshort{mumps} performs all three phases in sequence, namely: analysis, numerical factorization and solution. The numerical factorization and solution phases were fully described in detail in subsection \ref{subseq:direct-sparse methods}. In this section, the analysis phase of \acrshort{mumps} is examined since implementations of this phase often vary between libraries due to different parallel performance considerations.\\
+As it was mentioned in Section \ref{subseq:mm-library-choice}, \acrshort{mumps} is an implementation of the multi-frontal method. Therefore, \acrshort{mumps} performs all three phases in sequence, namely: analysis, numerical factorization and solution. The numerical factorization and solution phases were fully described in detail in Subsection \ref{subseq:direct-sparse methods}. In this section, the analysis phase of \acrshort{mumps} is examined since implementations of this phase often vary between libraries due to different parallel performance considerations.\\
 
 
 According to the library documentation, the analysis phases of \acrshort{mumps} consists of several pre-processing steps:
@@ -32,18 +32,18 @@ According to the library documentation, the analysis phases of \acrshort{mumps} 
 
 
 % Amalgamantion
-\ref{mumps:analysis-steps:4}) During the  amalgamation step, described in subsection \ref{subseq:direct-sparse methods}, sets of columns with the same off-diagonal sparsity pattern are group together to create denser nodes, also known as super-nodes. The process leads to restructuring of the original elimination tree to an amalgamated one of super-nodes which is also know as the \textit{assembly tree}. The main purpose of this step is to improve efficiency of dense matrix operations.\\
+\ref{mumps:analysis-steps:4}) During the  amalgamation step, described in Subsection \ref{subseq:direct-sparse methods}, sets of columns with the same off-diagonal sparsity pattern are group together to create denser nodes, also known as super-nodes. The process leads to restructuring of the original elimination tree to an amalgamated one of super-nodes which is also know as the \textit{assembly tree}. The main purpose of this step is to improve efficiency of dense matrix operations.\\
 
 
 
 % Mapping
-\ref{mumps:analysis-steps:5}) A host process, chosen by \acrshort{mumps}, creates a pool of tasks where each task belongs to one out of three different types, figure \ref{fig:mumps:mapping-and-scheduling}. Then, the host distributes tasks among all available processes in such a way to achieve good memory and compute balances.\\
+\ref{mumps:analysis-steps:5}) A host process, chosen by \acrshort{mumps}, creates a pool of tasks where each task belongs to one out of three different types, Figure \ref{fig:mumps:mapping-and-scheduling}. Then, the host distributes tasks among all available processes in such a way to achieve good memory and compute balances.\\
 
  
 Type 1 nodes are grouped in subtrees, according to the Geist-Ng algorithm \cite{geist1989task}, and each subtree is processed by a single process to avoid the finest task granularity, which can cause high communication overheads. \\
 
 
-In case of type 2 nodes, the host process assigns each node to one process, called the \textit{master}, which holds fully summed rows and columns of a node as well as performs pivoting and partial factorization. During the numerical factorization phase, in run-time, a master process first receives symbolic information, describing  contribution block structures, from its children. Then, the master collects information concerning the load balances of all other processes and decides, \underline{\textit{dynamically}},  which of them, \textit{slaves}, are going to participate in the node factorization. After that, the master informs the chosen slaves that a new task has been allocated for them; maps them according to a 1D block column distribution and sends them the corresponding parts of the frontal matrix. Then, the slaves communicate the children of the master process and collect the corresponding numerical values. The slaves are in charge of assembly and computations of the partly summed rows. The computational process is illustrated in figure \ref{fig:mumps:steps-of-type-2-factorization}, subsection \ref{subseq:blas-comparison}.\\
+In case of type 2 nodes, the host process assigns each node to one process, called the \textit{master}, which holds fully summed rows and columns of a node as well as performs pivoting and partial factorization. During the numerical factorization phase, in run-time, a master process first receives symbolic information, describing  contribution block structures, from its children. Then, the master collects information concerning the load balances of all other processes and decides, \underline{\textit{dynamically}},  which of them, \textit{slaves}, are going to participate in the node factorization. After that, the master informs the chosen slaves that a new task has been allocated for them; maps them according to a 1D block column distribution and sends them the corresponding parts of the frontal matrix. Then, the slaves communicate the children of the master process and collect the corresponding numerical values. The slaves are in charge of assembly and computations of the partly summed rows. The computational process is illustrated in Figure \ref{fig:mumps:steps-of-type-2-factorization}, Subsection \ref{subseq:blas-comparison}.\\
 
 
 The root node belongs to the 3rd type. The host \underline{\textit{statically}} assigns a master for the root, as it is in case of type 2 nodes, to hold all the indices describing the structure of its frontal matrix. Before factorization, the structure of the root frontal matrix is statically mapped onto a 2D grid of processes using a block cyclic distribution. This allows to determine, during the analysis phase, which process an entry of the root is assigned to. Hence, the original matrix entries and parts of the contribution blocks can be assembled as soon as they are available. Because of threshold pivoting, the master process collects indices for all delayed variables of its sons; builds the final structure of the root frontal matrix and broadcasts the corresponding symbolic information to all slaves. The slaves, in turn, adjust their local data structure and, right after this, perform numerical factorization in parallel.\\
@@ -52,7 +52,7 @@ The root node belongs to the 3rd type. The host \underline{\textit{statically}} 
 It is important to mention if the root node size is less than a certain computer depended parameter value, defined internally by \acrshort{mumps}, the root node will be treated as a type 2 one, \cite{mumps-manual}.\\
 
 
-An example of static/dynamic scheduling i.e. process mapping, is depicted in figure \ref{fig:mumps:mapping-and-scheduling}.\\
+An example of static/dynamic scheduling i.e. process mapping, is depicted in Figure \ref{fig:mumps:mapping-and-scheduling}.\\
 
 
 \figpointer{\ref{fig:mumps:mapping-and-scheduling}}

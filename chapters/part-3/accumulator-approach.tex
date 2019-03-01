@@ -6,7 +6,7 @@
 A simple concept, named \textit{accumulator}, has been proposed to improve \acrshort{mpi} communication during Jacobian matrix transfers preserving the current \acrshort{athlet}-\acrshort{nut} architecture and coupling.\\
 
 
-The concept represents two arrays of length $2L$ where the first one, called \textit{accumulator}, is used for accumulation of Jacobian matrix elements, stored in the compressed coordinate sparse matrix format, till the critical array length equaled to $L = F \cdot N$; where $N$ is a size of the underlying Jacobian matrix and $F$ is a so-called capacity factor. Once the current array length of \textit{accumulator} exceeds its critical length, the accumulated data are moved to \textit{send buffer} by means of a simple swap of pointers, \textit{ACC\_PTR} and \textit{SEND\_BUFF\_PTR}, see figure \ref{fig:accumulator-concept}. Having swapped the pointers and reset control variables, the accumulation process can be immediately resumed together with an immediate instantiation of the corresponding non-blocking broadcast operation with respect to \textit{send buffer} content.\\
+The concept represents two arrays of length $2L$ where the first one, called \textit{accumulator}, is used for accumulation of Jacobian matrix elements, stored in the compressed coordinate sparse matrix format, till the critical array length equaled to $L = F \cdot N$; where $N$ is a size of the underlying Jacobian matrix and $F$ is a so-called capacity factor. Once the current array length of \textit{accumulator} exceeds its critical length, the accumulated data are moved to \textit{send buffer} by means of a simple swap of pointers, \textit{ACC\_PTR} and \textit{SEND\_BUFF\_PTR}, see Figure \ref{fig:accumulator-concept}. Having swapped the pointers and reset control variables, the accumulation process can be immediately resumed together with an immediate instantiation of the corresponding non-blocking broadcast operation with respect to \textit{send buffer} content.\\
 
 
 \begin{figure}[htpb]
@@ -19,7 +19,7 @@ The concept represents two arrays of length $2L$ where the first one, called \te
 The second array part of \textit{accumulator}, also called the critical part, is used for safe placement of data surplus without any extra program checks and manipulations, using an assumption that a column vector length cannot exceed the Jacobian matrix size $N$. The assumption is based on long-term and first-hand experience of \acrshort{athlet}-\acrshort{nut} developers. On another hand, the event, described above, triggers a signal for a regular pointer swap and, therefore, the subsequent non-blocking data transfer.\\
 
 
-The factor $F$, depicted in figure \ref{fig:accumulator-concept}, can be used by the user for two purposes. Mainly, it allows the user to adjust the \textit{send buffer} length $L$ till the point of saturation of physical interconnection bandwidth, see figure \ref{fig:hw1-bandwidth} as an example, and thus achieve efficient resource utilization. Additionally, it reduces an amount of handshakes, i.e. an amount of resource acquisition requests, between \acrshort{nut} and clients. The default value of the factor is equal to 1, however, we insistently recommend to increase the value via the corresponding environment variable for small-sized problems and operation of \acrshort{nut} in a multi-client mode.\\
+The factor $F$, depicted in Figure \ref{fig:accumulator-concept}, can be used by the user for two purposes. Mainly, it allows the user to adjust the \textit{send buffer} length $L$ till the point of saturation of physical interconnection bandwidth, see Figure \ref{fig:hw1-bandwidth} as an example, and thus achieve efficient resource utilization. Additionally, it reduces an amount of handshakes, i.e. an amount of resource acquisition requests, between \acrshort{nut} and clients. The default value of the factor is equal to 1, however, we insistently recommend to increase the value via the corresponding environment variable for small-sized problems and operation of \acrshort{nut} in a multi-client mode.\\
 
 
 \begin{figure}[htpb]
@@ -30,7 +30,7 @@ The factor $F$, depicted in figure \ref{fig:accumulator-concept}, can be used by
 
 
 
-Figure \ref{fig:accumulator-in-action} depicts an application of the \textit{accumulator} algorithm to the example represented in figure \ref{fig:matrix-column-distribution} with the following parameters: $N = 100$ and $F = 1$. It can be clearly observed the algorithm reduces the number of transfers from 28 to 12. Additionally, the average column length, excluding the last one, jumps from 56 to 131. By and large, the algorithm allows to transform an original distribution shape to a more or less rectangular one which, in turn, allows to transfer a matrix in approximately equal chunks.\\
+Figure \ref{fig:accumulator-in-action} depicts an application of the \textit{accumulator} algorithm to the example represented in Figure \ref{fig:matrix-column-distribution} with the following parameters: $N = 100$ and $F = 1$. It can be clearly observed the algorithm reduces the number of transfers from 28 to 12. Additionally, the average column length, excluding the last one, jumps from 56 to 131. By and large, the algorithm allows to transform an original distribution shape to a more or less rectangular one which, in turn, allows to transfer a matrix in approximately equal chunks.\\
 
 
 
@@ -41,9 +41,9 @@ Figure \ref{fig:accumulator-in-action} depicts an application of the \textit{acc
 		\subfloat[Before]{\includegraphics[width=0.48\textwidth]{figures/chapter-3/accumulation-before.png}} &
 		\subfloat[After]{\includegraphics[width=0.48\textwidth]{figures/chapter-3/accumulation-after.png}} \\
 	\end{tabular}
-	\caption{An application of the \textit{accumulator} concept to the example depicted in figure \ref{fig:matrix-column-distribution}, with $N=100$ and $F=1$}
+	\caption{An application of the \textit{accumulator} concept to the example depicted in Figure \ref{fig:matrix-column-distribution}, with $N=100$ and $F=1$}
 	\label{fig:accumulator-in-action}
 \end{figure}
 
 
-Before \acrshort{athlet} can send a request to \acrshort{nut} to start solving systems \ref{eq:athlet-10} it has to be certain that the entire Jacobian matrix has been transfered to the \acrshort{nut} side. For this reason, the last column transfer is done by means of the corresponding blocking \acrshort{mpi} operation. It means \acrshort{athlet} gets blocked only during the last column transfer and \acrshort{mpi} gives the execution control back only when the last piece of data has been successfully distributed among \acrshort{nut} processes.\\ 
+Before \acrshort{athlet} can send a request to \acrshort{nut} to start solving Systems \ref{eq:athlet-10} it has to be certain that the entire Jacobian matrix has been transfered to the \acrshort{nut} side. For this reason, the last column transfer is done by means of the corresponding blocking \acrshort{mpi} operation. It means \acrshort{athlet} gets blocked only during the last column transfer and \acrshort{mpi} gives the execution control back only when the last piece of data has been successfully distributed among \acrshort{nut} processes.\\ 

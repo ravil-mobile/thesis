@@ -22,6 +22,6 @@ for root, dirs, files in os.walk("."):
 
                 what_word, with_word = item
 
-                bash_command = f'vim -c %s/{what_word}/{with_word}/gc {filename}'
+                bash_command = f'vim -c %s/{what_word}/{with_word}/gc {root}/{filename}'
                 subprocess.run(bash_command.split())
                 

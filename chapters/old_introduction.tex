@@ -41,7 +41,7 @@ It is obvious the algorithm requires to partition a matrix into the fewest amoun
 
 
 % unequal length of MPI messages 
-Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an efficient matrix partitioning where an initial 100 by 100 Jacobian matrix is transformed into its 100 by 28 compressed form with using 28 distinct colors. It can be easily observed from the figure the column vector length of the compressed Jacobian form is gradually decreasing. Figure \ref{fig:matrix-column-distribution} provides a detailed and clear view on the problem, using data from figure \ref{fig:matrix-partitioning-example} as an example, where a bar represents  the corresponding column length.\\
+Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an efficient matrix partitioning where an initial 100 by 100 Jacobian matrix is transformed into its 100 by 28 compressed form with using 28 distinct colors. It can be easily observed from the figure the column vector length of the compressed Jacobian form is gradually decreasing. Figure \ref{fig:matrix-column-distribution} provides a detailed and clear view on the problem, using data from Figure \ref{fig:matrix-partitioning-example} as an example, where a bar represents  the corresponding column length.\\
 
 
 \figpointer{\ref{fig:matrix-partitioning-example}}
@@ -55,11 +55,11 @@ Figure \ref{fig:matrix-partitioning-example} shows an illustrative example of an
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/matrix-compression-2.png}
-  \caption{Column length distribution of the example of figure \ref{fig:matrix-partitioning-example}} \label{fig:matrix-column-distribution}
+  \caption{Column length distribution of the example of Figure \ref{fig:matrix-partitioning-example}} \label{fig:matrix-column-distribution}
 \end{figure}
 
 
-According to the ATHLET-NuT coupling design, each column, figure \ref{fig:matrix-column-distribution}, is transfered to NuT by means of synchronous 3-way handshake procedure, described in section \ref{sec:athlet-nut-coupling}, right after its evaluation. Thus, the figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
+According to the ATHLET-NuT coupling design, each column, Figure \ref{fig:matrix-column-distribution}, is transfered to NuT by means of synchronous 3-way handshake procedure, described in Section \ref{sec:athlet-nut-coupling}, right after its evaluation. Thus, Figure \ref{fig:matrix-column-distribution} determines the communication pattern during the Jacobian matrix transfer.\\
 
 
 % listing

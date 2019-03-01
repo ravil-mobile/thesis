@@ -61,7 +61,7 @@ U_{11} & U_{12} \\
 The algorithm starts with an assumption that both matrices $L_{11}$ and $U_{11}$ have already been computed. 
 % size of the matrix is proportional to the size of the cache
 
-Given equation \ref{eq:RightLookingLu}, we can write expressions for $A_{12}$ and $A_{21}$ matrices:
+Given Equation \ref{eq:RightLookingLu}, we can write expressions for $A_{12}$ and $A_{21}$ matrices:
 
 \begin{align} \label{eq:RightLookingLuFirstUpdate}
 A_{12} = L_{11} \cdot U_{12} \\
@@ -86,7 +86,7 @@ To compute \ref{eq:RightLookingLuFirstUpdate} we only have to perform two triang
 % Show limited parallelism
 It is clear the algorithm is purely sequential at the first steps when we compute small $LU$ decomposition. Therefore, it can have significant effect on algorithm strong scaling behavior. It should be mentioned that all three parallel implementations have the same problem i.e. they have an inherently sequential part at the beginning of a step. \\
 
-Figure \ref{fig:lapack-lu-strong-scaling} shows results of strong scaling of dense $LU$ factorization performed for a couple of matrices filled with random numbers with different sizes: namely: $5000 \times 5000$, $10000 \times 10000$ and $15000 \times 15000$. LAPACK and OpenBLAS libraries were used for the test. One can easily notice that performance of dense $LU$ decomposition quickly deteriorates with reduction of the problem size. Additional factor that affects performance is strong scaling behavior of the triangular solve that we will discuss in section \ref{subseq:iterative methods}. 
+Figure \ref{fig:lapack-lu-strong-scaling} shows results of strong scaling of dense $LU$ factorization performed for a couple of matrices filled with random numbers with different sizes: namely: $5000 \times 5000$, $10000 \times 10000$ and $15000 \times 15000$. LAPACK and OpenBLAS libraries were used for the test. One can easily notice that performance of dense $LU$ decomposition quickly deteriorates with reduction of the problem size. Additional factor that affects performance is strong scaling behavior of the triangular solve that we will discuss in Section \ref{subseq:iterative methods}. 
 
 \figpointer{\ref{fig:lapack-lu-strong-scaling}}
 \begin{figure}[htpb]
@@ -113,6 +113,6 @@ Both left, right and Crout parallel matrix factorizations have been efficiently 
 
 It is worth noting that BLAS can be considered as a foundation of LAPACK and ScaLAPACK libraries and, thus, it is the primary source of performance improvement. In particular we have to consider DGEMM, DTRSM BLAS subroutines performance because they, together with unblocked $LU$ factorization, compose the core of parallel $LU$ factorization algorithms as we discussed earlier.\\
 
-There exist special-purpose, hardware-specific BLAS implementations developed by the hardware vendors i.e. IBM, Cray, Intel, AMD as well as open-source tuned implementations such as ATLAS, OpenBLAS, etc. We will come back to that discussion later and pay our close attention to a specific choice of a tuned BLAS library in subsection \ref{subseq:blas-comparison}.\\
+There exist special-purpose, hardware-specific BLAS implementations developed by the hardware vendors i.e. IBM, Cray, Intel, AMD as well as open-source tuned implementations such as ATLAS, OpenBLAS, etc. We will come back to that discussion later and pay our close attention to a specific choice of a tuned BLAS library in Subsection \ref{subseq:blas-comparison}.\\
 
 In spite of all advantages of the direct dense solvers i.e. numerical stability and high ratio of floating point operations per memory access, we cannot consider this group of methods as a solver for time integration due to high complexity and storage costs.
