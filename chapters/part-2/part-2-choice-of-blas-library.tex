@@ -3,7 +3,7 @@
 \label{subseq:blas-comparison}
 
 
-To perform column eliminations of a fully summed block of a frontal matrix, \acrshort{mumps} intensively calls \acrshort{gemm}, \acrshort{trsm} and \acrshort{getrf} subroutines which are parts of \acrshort{blas} and \acrshort{lapack} libraries. Figures \ref{fig:mumps:type-2-frontal-matrix} and  \ref{fig:mumps:steps-of-type-2-factorization} illustrate an application of the \acrshort{blas} subroutines to factorization of a type 2 node.\\
+To perform column eliminations of fully summed blocks of type 2 nodes, \acrshort{mumps} intensively calls \acrshort{gemm}, \acrshort{trsm} and \acrshort{getrf} subroutines  \cite{l2013introduction} which are parts of \acrshort{blas} and \acrshort{lapack} libraries, see figures \ref{fig:mumps:type-2-frontal-matrix} and  \ref{fig:mumps:steps-of-type-2-factorization} as an example. Additionally, MUMPS uses \acrshort{scalapack} library subroutines to perform parallel factorization of the root \cite{mumps-manual}, according to the procedure described in subsection \ref{subseq:mumps-review}. \\
 
 
 \figpointer{\ref{fig:mumps:type-2-frontal-matrix}}
@@ -24,16 +24,25 @@ To perform column eliminations of a fully summed block of a frontal matrix, \acr
 \end{figure}
 
 
-Both \acrshort{blas} and \acrshort{lapack} libraries originate from the Netlib project which is a repository of numerous scientific computing software maintained by AT\&T Bell Laboratories, the University of Tennessee, Oak Ridge National Laboratory and other scintific communities \cite{netlib-overview}.\\
+\acrshort{blas}, \acrshort{lapack} and ScaLAPACK libraries originate from the Netlib project which is a repository of numerous scientific computing software maintained by AT\&T Bell Laboratories, the University of Tennessee, Oak Ridge National Laboratory and other scintific communities \cite{netlib-overview}.\\
 
 
 The goal of \acrshort{blas} library is provision of high efficient implementations of common dense linear algebra kernels achieved by high rates of floating point operations per memory access, low cache and Translation Lookaside Buffer (TLB) miss rates.\\
 
 
-In its turn, \acrshort{lapack} is designed in such a way so that as much as possible computations are performed by calling \acrshort{blas} subroutines. This allows to achieve high efficiency for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc. on modern computers. However, the Netlib \acrshort{blas} implementation is written for an abstract general-purpose central processing unit where hardware parameters are based on market statistics. Hence, it is not possible to achieve the maximum possible performance on specific hardware.\\
+In their turn, both \acrshort{lapack} and \acrshort{scalapack} are designed in such a way so that as much as possible computations are performed by calling \acrshort{blas} subroutines. Figure \ref{fig:netlib:stack-of-libs} represents software dependencies between the libraries. Hence, this software architecture allows to achieve high computational performance for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc., on modern computers and distributed-memory machines by an efficient implementation of \acrshort{blas} library. However, the Netlib \acrshort{blas} implementation is written for an abstract general-purpose central processing unit where hardware parameters are based on market statistics. Therefore, it is not possible to achieve the maximum possible performance on specific hardware.\\
 
 
-Therefore, there exist special-purpose, hardware-specific implementations of the library developed by hardware vendors i.e. IBM, Cray, Intel, AMD, etc., as well as open-source tuned implementations such as ATLAS, OpenBLAS, etc. To achieve full compatibility, the developers consider the Netlib implementation of \acrshort{blas} library as a standard, or a reference, and thus overwrite all its subroutines with additional tuning and optimization. This approach makes it easy to replace one \acrshort{blas} implementation by another one by substituting the corresponding object files during the linking stage. As a result, the source code of an application which calls \acrshort{blas} or \acrshort{lapack} subroutines remains the same without a need to perform any source code modifications.\\
+\figpointer{\ref{fig:netlib:stack-of-libs}}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.55\textwidth]{figures/chapter-2/lapack-scalapack-blas.png}
+\caption{Software dependencies between Netlib libraries, \cite{netlib:lapack-scalapack-general-view}}
+\label{fig:netlib:stack-of-libs}
+\end{figure}
+
+
+There exist special-purpose, hardware-specific implementations of \acrshort{blas} developed by hardware vendors i.e. IBM, Cray, Intel, AMD, etc., as well as open-source tuned implementations such as ATLAS, OpenBLAS, etc. To achieve full compatibility, the developers consider the Netlib implementation as a standard, or a reference, and thus overwrite all its subroutines with additional tuning and optimization. This approach makes it easy to replace one \acrshort{blas} implementation by another one by substituting the corresponding object files during the linking stage. As a result, the source code of an application which calls \acrshort{blas}, \acrshort{lapack} or \acrshort{scalapack} subroutines remains the same without a need to perform any source code modifications.\\
  
 
 Table \ref{table:list-of-blas-implementations} shows commercial and open-source tunned \acrshort{blas} implementations available on the market today.\\
@@ -145,4 +154,4 @@ We assume that, in the general case, lack of type 2 nodes in an assembly tree ca
 Based on the obtained results, comparisons between different matrix sets and our reasoning, we presume that \acrshort{athlet} generates linear systems resulting in such trees where type 1 nodes predominate over the others. We can assume it is due to specifics of numerical spacial and time integration explained in section \ref{sec:athlet-overview}.\\
 
 
-In this subsection, we have shown where and how \acrshort{mumps} utilizes \acrshort{blas} and \acrshort{lapack} libraries. We have compared two tuned \acrshort{blas} implementations with a baseline, Netlib \acrshort{blas}, using two different matrix sets. We have shown the overall statistics of the obtained results and come to the conclusion that \acrshort{mumps}-OpenBLAS configuration is the best one for \acrshort{grs} matrix set. Additionally, we have given reasoning for a noticeable difference between results obtained from different matrix sets as well as we have talked about probable specifics of linear systems generated by \acrshort{athlet}.\\
+In this subsection, we have discussed where and how \acrshort{mumps} utilizes \acrshort{blas}, \acrshort{lapack}  and \acrshort{scalapack} libraries. We have compared two tuned \acrshort{blas} implementations with the baseline, Netlib \acrshort{blas}, using two different matrix sets. We have shown the overall statistics of the obtained results and come to the conclusion that \acrshort{mumps}-OpenBLAS configuration is the best one for \acrshort{grs} matrix set. Additionally, we have given reasoning for a noticeable difference between results obtained from different matrix sets as well as we have talked about probable specifics of linear systems generated by \acrshort{athlet}.\\

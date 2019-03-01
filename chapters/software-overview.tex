@@ -89,10 +89,9 @@ To decrease the cost and preserve sufficient accuracy of numerical integration, 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/introduction-rosenbrock-scheme.png}
-\caption{A general view on the 6-stage W-method implemented in \acrshort{athlet}}
+\caption{A general view on the 6-stage W-method implemented in \acrshort{athlet} (based on \cite{tims-presentation})}
 \label{fig:introduction-w-method-scheme}
 \end{figure}
-
 
 In the general case, a step of the W-method method, implemented in \acrshort{athlet}, can be viewed as a sequence of six stages in the following way. Each stage uses implicit Euler method and exactly one Newton's iteration to evaluate values of vector $y$ at the next integration step $h$ with different accuracy. Then, the obtained values are extrapolated, in order explained in figure \ref{fig:introduction-w-method-scheme}, to achieve desired order of numerical integration. By and large, the algorithm can be expressed in a compact form of equation \ref{eq:athlet-9}.
 

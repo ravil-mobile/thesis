@@ -15,7 +15,7 @@
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {lstlisting}{\numberline {5.1}An example of usage of a PETSc built-in sparse direct linear solver as a sub-preconditioner for a PETSc Block Jacobi preconditioning algorithm}{21}{lstlisting.5.1}
+\contentsline {lstlisting}{\numberline {5.1}An example of usage of a PETSc built-in sparse direct linear solver as a sub-preconditioner for a PETSc Block Jacobi preconditioning algorithm}{22}{lstlisting.5.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {lstlisting}{\numberline {5.2}Pseudocode of an iterative refinement method}{35}{lstlisting.5.2}
 \defcounter {refsection}{0}\relax 
@@ -30,6 +30,8 @@
 \contentsline {lstlisting}{\numberline {6.3}Pseudocode of an auxiliary \textit {Accumulator} class}{84}{lstlisting.6.3}
 \defcounter {refsection}{0}\relax 
 \contentsline {lstlisting}{\numberline {6.4}Pseudocode of a modified client side of the benchmark}{85}{lstlisting.6.4}
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
