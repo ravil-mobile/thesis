@@ -3,46 +3,48 @@
 
 
 % the first choice
-Given an initial guess, iterative methods generate a sequence of successively improving approximated solutions. The methods are preferred for their relatively low computational cost per iteration and storage requirements $O(nnz)$. In essence, the methods make use of simple linear algebra kernels  at each iteration and thus can handle matrix sparsity efficiently.\\
+Given an initial guess, an iterative method generates a sequence of approximate solutions by means of a specific rule. Depending on the method and the given problem, there may exist certain conditions such that the aforementioned sequence eventually converges to the exact solution. The methods are preferred for their relatively low computational cost per iteration and storage requirements $O(nnz)$. In essence, the methods make use of simple linear algebra kernels  at each iteration and thus can handle matrix sparsity efficiently.\\
 
 
 
-The family of iterative methods consists of two distinct classes, namely: stationary and Krylov methods. Nowadays, Krylov methods dominate in the filed of scientific computing because of it is rather fast convergence in case of solving well conditioned systems.\\
+The family of iterative methods consists of two distinct classes, namely: stationary and Krylov methods. Nowadays, Krylov methods dominate in the field of scientific computing because of their rather fast convergence in case of solving well conditioned systems or/and a "good" initial guess.\\
 
 
-The most well-known methods among the Krylov family are Conjugate Gradient (CG) in case of symmetric positive definite matrices, MINimal RESidual method (MINRES) for symmetric indefinite systems and \acrlong{gmres} (\acrshort{gmres}) for non-symmetric systems of linear equations. There also exist different variants of \acrshort{gmres} such as BiConjugate Gradient Method (BiCG), BiConjugate Gradient STABilized Method (BiCGSTAB), etc.\\
+The most well-known methods among the Krylov family are Conjugate Gradient (CG) for symmetric positive definite matrices, MINimal RESidual method (MINRES) for symmetric indefinite systems and \acrlong{gmres} (\acrshort{gmres}) for non-symmetric systems of linear equations. There also exist different variants of CG such as BiConjugate Gradient Method (BiCG), BiConjugate Gradient STABilized Method (BiCGSTAB), etc.\\
 
 
-The key idea is a construction of an approximate solution of a system of linear equations as a linear combination of vectors $b$, $Ab, \:\: A^2b, \:\: A^3b, \dots A^{n}b$. The combination defines a subspace, also known as Krylov subspace $\mathcal{K}_{n}$. At each iteration, the subspace is expanded by adding and evaluating the next vector in the sequence. Essentially, the methods convert solving a system of a linear equations to a minimization problem and search for a solution in the corresponding subspace.\\
+The key idea is a construction of an approximate solution of a system of linear equations as a linear combination of vectors $b$, $Ab, \:\: A^2b, \:\: A^3b, \dots A^{n-1}b$ where, without of lost of generality, the initial guess $x_0$ is equal to zero. The combination defines a subspace, also known as Krylov subspace $\mathcal{K}_{n}$. At each iteration, the subspace is expanded by adding and evaluating the next vector in the sequence. The methods usually define and expand another subspace $\mathcal{L}_{n}$ of the same size as $\mathcal{K}_{n}$ such that $r_{n} = b - Ax_{n} \perp \mathcal{L}_{n}$ which is known as the Petrov-Galerkin condition. A construction of subspace $\mathcal{L}_{n}$ is defined by the methods and based on matrix properties.\\
 
 
-For example, \acrshort{gmres} aims to minimize the Euclidean norm of the residual $r_{m}$ of a solution vector $x_{m}$ in the $m$th Krylov subspace $\mathcal{K}_{m}$. However, the basis vectors of the Krylov subspace $\mathcal{K}_{m}$ are usually close to linearly dependent and, therefore, a solution vector $x_{m}$ is constructed in an orthonormal basis $U_{m}$ which forms the same subspace $\mathcal{K}_{m}$.\\
+Some Krylov methods also have interpretations as minimization problems. For example, \acrshort{gmres} aims to minimize the Euclidean norm of the residual $r_{m}$ of a solution vector $x_{m}$ in the $m$th Krylov subspace $\mathcal{K}_{m}$. However, the basis vectors ($b$, $Ab, \:\: A^2b, \:\: A^3b, \dots A^{m-1}b$) of the $m$th Krylov subspace  are usually close to linearly dependent and, therefore, a solution vector $x_{m}$ is constructed in an orthonormal basis $U_{m}$ which forms the same subspace $\mathcal{K}_{m}$.\\
 
 
 \begin{equation} \label{eq:Gmres-1}
-	r_{m} = \underset{x \in U_m}{min}||Ax_{m} - b||^2 =  \underset{x \in U_m}{min}||AU_m y_{m} - b||^2
+	r_{m} = \underset{x_m \in \mathcal{K}_{m}}{min}||Ax_{m} - b||^2 =  \underset{y_m \in \mathbb{R}^m}{min}||AU_m y_{m} - b||^2
 \end{equation}
 
-where a vector $x$ can be written in the basis $U_m$ as:
+where a vector $x_m$ can be written in the basis $U_m$ as:
 
 \begin{equation} \label{eq:Gmres-2}
-		x = U_{m} y
+		x_m = U_{m} y
 \end{equation}
 
-In the general case, orthogonalization of the basis can be performed in different ways. Saad and Schultz, in work \cite{sparse-la:gmrese-origin}, proposed to use the Arnoldi process for constructing an $l_2$-orthogonal basis. As a result, Equation \ref{eq:Gmres-1} can be written in a form:  \\
+The orthogonalization of the basis can be performed in different ways. Saad and Schultz, in \cite{sparse-la:gmrese-origin}, proposed to use the Arnoldi algorithm, see \cite{krylov:arnoldi-prcess} for details, for constructing an $l_2$-orthogonal basis. As a result, Equation \ref{eq:Gmres-1} can be written as follows:  \\
 
 \begin{equation} \label{eq:Gmres-3}
-	r_{m} = \underset{x \in U_m}{min}||U_{m+1}H_{m+1,m} y_{m} - ||b||u_1||^2 = \\
-	\underset{x \in U_m}{min}||H_{m+1,m} y_{m} - ||b||e_1||^2 
+	r_{m} = \underset{y_m \in \mathbb{R}^m}{min}||U_{m+1}H_{m+1,m} y_{m} - ||b||u_1||^2 = \\
+	\underset{y_m \in \mathbb{R}^m}{min}||H_{m+1,m} y_{m} - ||b||e_1||^2 
 \end{equation}
 
-where $H_{m}$ is an upper Hessenberg matrix i.e. the matrix with zeros below the first sub-diagonal. An application of the Givens rotation algorithm results in computing of the corresponding $QR$ decomposition of the Hessenberg matrix $H_{m}$. After the substitution of matrix $H_{m}$ with the decomposition and some mathematical transformations, Equation \ref{eq:Gmres-3} can be written as follows:\\
+where $H_{m+1,m}$ is a $(m+1) \times m$ Hessenberg matrix with non-zero entries defined by the Arnoldi algorithm.\\
+
+An application of the Givens rotation algorithm results in computing the corresponding $QR$ decomposition of matrix $H_{m+1,m}$. After substitution of the matrix with the corresponding $QR$ decomposition and some mathematical transformations, Equation \ref{eq:Gmres-3} can be written as follows:\\
 
  
 \begin{equation} \label{eq:Gmres-4}
 	r_{m} = \\
-	\underset{x \in U_m}{min}||Q^{T}Ry_{m} - ||b||e_{1}||^2 = \\
-	\underset{x \in U_m}{min}||\Big(\begin{array}{c c}R_m \\ 0 \\\end{array}\Big) y_{m} - \Big(\begin{array}{c c} \tilde{b_m} \\ \tilde{b_{n-m}} \\\end{array}\Big)||^2
+	\underset{y_m \in \mathbb{R}^m}{min}||Q^{T}Ry_{m} - ||b||e_{1}||^2 = \\
+	\underset{y_m \in \mathbb{R}^m}{min}||\Big(\begin{array}{c c}R_m \\ 0 \\\end{array}\Big) y_{m} - \Big(\begin{array}{c c} \tilde{b_m} \\ \tilde{b_{n-m}} \\\end{array}\Big)||^2
 \end{equation}
 
 Now, the minimization problem \ref{eq:Gmres-4} can be solved as:\\
@@ -58,7 +60,7 @@ Given the decomposition of a vector in  the orthonormal basis $U_{m}$, Equation 
 \end{equation}
 
 
-A solution significantly improves with growth of subspace $\mathcal{K}_{m}$. This, as a result, leads to a considerable increase of computational cost and storage space. Therefore, the algorithm usually runs till 20 - 50 column vector evaluations of the corresponding Krylov subspace and restarts using a computed approximate solution as an initial guess for the next iteration.\\
+A solution significantly improves with growth of subspace $\mathcal{K}_{m}$. This, as a direct consequence, leads to a considerable increase of a computational cost and storage space. Therefore, the algorithm usually runs till 20 - 50 column vector evaluations of the corresponding Krylov subspace and restarts using a computed approximate solution as an initial guess for the next iteration.\\
 
 
 \subsubsection{Parallelization Aspects}
@@ -66,10 +68,10 @@ A solution significantly improves with growth of subspace $\mathcal{K}_{m}$. Thi
 
 
 % data parallelism
-In the general case, iterative methods usually make use of dot and matrix-vector products for solving systems of linear equations. Applications of these linear algebra kernels allow to efficiently handle sparsity of linear systems and thus reduce computational complexity of the methods. Additionally, it allows to distribute vectors and matrices across multiple compute-units and solve systems of equations in parallel efficiently exploiting data parallelism. Hence, the main drop of parallel performance mainly comes from process-communication overheads.\\
+In the general case, iterative methods usually make use of dot and matrix-vector products for solving systems of linear equations. Applications of these linear algebra kernels allow to efficiently handle sparsity of linear systems and thus reduce computational complexity of the methods. Additionally, it allows to distribute vectors and matrices across multiple compute-units and solve systems of equations in parallel, efficiently exploiting data-based parallelism. Hence, the main drop of parallel performance mainly comes from process-communication overheads.\\
 
 
-However, some methods can have sequential parts that may effect on parallel performance as well. For instance, a triangular solve operation,  Equation \ref{eq:Gmres-5}, of the \acrshort{gmres} method is usually computed in a single processor because of its small size which depends on the number of iterations before the restart. Hence, if the underlying system of equations is relatively small then such sequential operations can become a bottleneck in solving the corresponding system.\\
+However, some methods can have sequential parts that may affect on parallel performance as well. For instance, a triangular solve operation,  Equation \ref{eq:Gmres-5}, of the \acrshort{gmres} method is usually computed in a single processor because of its small size which depends on the number of iterations before the restart. Hence, if the underlying system of equations is relatively small then such sequential operations can become a bottleneck in solving the corresponding system.\\
 
 
 %In such cases, these operations can become a bottleneck if the underlying system of equations is relatively small as well. \\
@@ -102,18 +104,18 @@ However, some methods can have sequential parts that may effect on parallel perf
 \subsubsection{Preconditioners}
 \label{subseq:iterative-preconditioners}
 % start discussion about preconditioning
-The most important criteria of Krylov methods is convergence. The convergence of iterative methods strongly depends on a matrix and, in particular, on its condition number. For instance, Equation \ref{eq:Gmres-7} shows dependence of an error reduction in the solution on the corresponding matrix condition number in case of CG method. It can be clearly observed that a big condition number results in a very slow error reduction and, therefore, in a slow convergence rate.\\
+The most important criterion of Krylov methods is convergence. In case of a "bad" initial guess $x_{0}$, the convergence of iterative methods strongly depends on an involved matrix and, in particular, on its condition number. For instance, Equation \ref{eq:Gmres-7} shows dependence of an error reduction in the solution on the corresponding matrix condition number in case of the CG method. It can be clearly observed that a big condition number may  results in a very slow error reduction and, therefore, in a slow convergence rate.\\
 
 \begin{equation} \label{eq:Gmres-7}
 	|| e^i ||_A \leq 2 ( \frac{\sqrt k - 1}{\sqrt k + 1} )^i || e^0 ||_A
 \end{equation}
 
-where $k = \frac{\lambda_{max}}{\lambda_{min}}$ - matrix condition number\\
+where $k = \frac{\lambda_{max}}{\lambda_{min}}$ - a matrix condition number\\
 
 %1. In practice, a system of equation is preconditioned with a matrix $P$ which allows to lower the condition number of the modified matrix.\\
 
 In practice, a linear transformation, known as preconditioning, is applied to the original system of equations in order
-to reduce its condition number. As a result, the solution process of the modified system is accelerated. The
+to reduce its condition number. As a result, the solution process of the modified system can be accelerated. The
 transformation can be applied in different ways. For instance, Equations \ref{eq:pcn-1} and \ref{eq:pcn-2} show applications of a preconditioning matrix $P$ from left and right sides, respectively.\\
 
 
@@ -127,10 +129,10 @@ transformation can be applied in different ways. For instance, Equations \ref{eq
 \end{equation}
 
 
-In the general case, a good preconditioning algorithm has to result in \textit{low computational cost, low storage space and a low condition number of the transformed system}. Additionally, computations of large linear systems require an algorithm to be adapted for parallel execution as well.\\
+In the general case, a good preconditioning algorithm should result in \textit{a low computational cost, low storage space and a low condition number of the transformed system}. Additionally, computations of large linear systems require an algorithm to be adapted for parallel executions as well.\\
 
 
-There exist numerous techniques to compute a preconditioner $P$ for a given a matrix $A$ e.g. (point) Jacobi, Block-Jacobi, incomplete $LU$ decomposition (ILU), multilevel ILU (ILU(p)), threshold ILU (ILUT), incomplete Cholesky factorization (IC), sparse approximate inverse (SPAI), multigrid as a preconditioner, etc. Practice has been shown that some techniques can work particularly well for matrices derived from a certain \acrshort{pde} or a system of \acrshort{pde}s e.g. Poisson, Navier\-Stokes, etc., and discretized in a certain way. However, \textit{sometimes it can take a quite considerable amount of time to tune a particular preconditioning algorithm in order fulfill all above listed requirements}.\\
+There exist numerous techniques to compute a preconditioner $P$ for given a matrix $A$ e.g. (point) Jacobi, Block-Jacobi, incomplete $LU$ decomposition (ILU), multilevel ILU (ILU(p)), threshold ILU (ILUT), incomplete Cholesky factorization (IC), sparse approximate inverse (SPAI), multigrid as a preconditioner, etc. Experience has shown that some techniques can work particularly well for matrices derived from a certain \acrshort{pde} or a system of \acrshort{pde}s e.g. Poisson, Navier\-Stokes, etc., and discretized in a certain way. However, \textit{sometimes it can take a quite considerable amount of time to tune a particular preconditioning algorithm in order fulfill all above listed requirements}.\\
 
 
 As it can be clearly observed from Table \ref{table:grs-matrix-set}, all matrices contained in \acrshort{grs} matrix set are very ill-conditioned and, as a result, require suitable linear transformations. \acrshort{petsc} provides various preconditioning methods as well as access to some external preconditioning libraries. Table \ref{table:preconditioners} contains a list of some widely-used preconditioning algorithms available in \acrshort{petsc}, capable to run in parallel on distributed-memory machines, as well as their short descriptions and tuning parameters.\\
@@ -157,11 +159,11 @@ BoomerAMG                                                  & hypre              
 Detailed descriptions of all tuning parameters listed in Table \ref{table:preconditioners} can be found in either \acrshort{petsc} or Hypre users’ manuals, \cite{balay2018petsc} and \cite{falgout2010hypre}, respectively.\\
 
 
-It is worth mentioning both block Jacobi and additive Schwarz algorithms 
-split the original system into smaller blocks where each block is usually computed on a single processor. Therefore, these algorithms require an explicit specification of another preconditioning algorithm  or a linear solver, called as sub-preconditioner, for local block computations. As an example, code Listing \ref{lst:petsc-preconditioner-setups} shows an example of usage of a \textit{sequential} \acrshort{petsc} built-in $LU$ matrix decomposition subroutine as a sub-preconditioner for the block Jacobi algorithm. As a result, the number of tuning parameters for these two algorithms can grow significantly.\\
+It is worth mentioning that both block Jacobi and additive Schwarz algorithms 
+split the original system into smaller blocks where each block is usually computed on a single processor. Therefore, these algorithms require an explicit specification of another preconditioning algorithm  or a linear solver, called as sub-preconditioner, for local block computations. As an example, code Listing \ref{lst:petsc-preconditioner-setups} shows an example of usage of the \textit{sequential} \acrshort{petsc} built-in $LU$ matrix decomposition subroutine as a sub-preconditioner for the block Jacobi algorithm. As a result, the number of tuning parameters for these two algorithms can grow significantly.\\
 
 
-\begin{lstlisting}[language=python, caption={An example of usage of a PETSc built-in sparse direct linear solver as a sub-preconditioner for a PETSc Block Jacobi preconditioning algorithm}, frame=single, label={lst:petsc-preconditioner-setups}]
+\begin{lstlisting}[language=python, caption={An example of usage of the PETSc built-in sparse direct linear solver as a sub-preconditioner for the Block Jacobi preconditioning algorithm}, frame=single, label={lst:petsc-preconditioner-setups}]
 -pc_bjacobi_blocks 4
 -sub_pc_type lu
 -pc_factor_mat_ordering_type rcm

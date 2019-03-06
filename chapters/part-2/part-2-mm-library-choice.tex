@@ -1,9 +1,11 @@
 \label{subseq:mm-library-choice}
 
-Fair to say, there is no single algorithm or software that is the best for all types of linear systems \cite{list-of-sparse-direct-solvers}.\\
+\epigraph{\textit{Fair to say, there is no single algorithm or software that is the best for all types of linear systems}}{--- \citeauthor{list-of-sparse-direct-solvers}, \cite{list-of-sparse-direct-solvers}}
+
+%Fair to say, there is no single algorithm or software that is the best for all types of linear systems \cite{list-of-sparse-direct-solvers}.\\
 
 
-Nowadays, there exist many different avaliable sparse direct solvers. Some of them are tunned for specific linear systems whereas others are targeted for the most general cases \cite{list-of-sparse-direct-solvers}. Some of them handle tree-task and node-data parallelism in different ways even within the same library depending on sizes of frontal matrices and other criteria \cite{wsmp}, \cite{mumps-manual}, \cite{superlu-manual}. Hence, parallel performance of a direct sparse method depends heavily on its specific implementation. Table \ref{table:mm-library-spec} represents a short summary of almost all available libraries capable to run on distributed-memory machines, at the time of writing, based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
+Nowadays, there exist many different and avaliable sparse direct solvers. Some of them are tunned for specific linear systems whereas others are targeted for the most general cases \cite{list-of-sparse-direct-solvers}. Some of them handle tree-task and node-data parallelism in different ways even within the same library depending on sizes of frontal matrices and other criteria \cite{wsmp}, \cite{mumps-manual}, \cite{superlu-manual}. Hence, parallel performance of a direct sparse method depends heavily on its specific implementation. Table \ref{table:mm-library-spec} represents a short summary of almost all available libraries capable to run on distributed-memory machines, at the time of writing, based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
 
 
 \begin{table}[ht]
@@ -14,11 +16,11 @@ Nowadays, there exist many different avaliable sparse direct solvers. Some of th
 Package & Method             & Matrix Types                 & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}PETSc\\ Interface\end{tabular}} & License      \\ \hline
 Clique       & Multifrontal       & Symmetric      & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Not \\ Officially\end{tabular}} & Open  \\ \hline
 MF2          & Multifrontal       & \begin{tabular}[c]{@{}c@{}}Symmetric\\ pattern\end{tabular} & No              & -            \\ \hline
-DSCPACK      & Multifrontal       & SPD                          & No              & Open* \\ \hline
+DSCPACK      & Multifrontal       & SPD                          & No              & Open \\ \hline
 MUMPS        & Multifrontal       & General                      & Yes             & Open  \\ \hline
 PaStiX       & Left looking & General                      & Yes             & Open  \\ \hline
-PSPASES      & Multifrontal       & SPD                          & No              & Open* \\ \hline
-SPOOLES      & Left-looking       & \begin{tabular}[c]{@{}c@{}}Symmetric\\ pattern\end{tabular} & No              & Open* \\ \hline
+PSPASES      & Multifrontal       & SPD                          & No              & Open \\ \hline
+SPOOLES      & Left-looking       & \begin{tabular}[c]{@{}c@{}}Symmetric\\ pattern\end{tabular} & No              & Open \\ \hline
 SuperLU\_DIST & Right-looking      & General                      & Yes             & Open  \\ \hline
 symPACK      & Left-Right looking & SPD                          & No              & Open  \\ \hline
 S+           & Right-lookin       & General                      & No              & -            \\ \hline
@@ -27,17 +29,19 @@ PARDISO         & Multifrontal       & General                      & No        
 
 WSMP         & Multifrontal       & General                      & No              & Commercial   \\ \hline
 \end{tabular}
-\caption{A list of direct sparse linear solvers adapted for distributed-memory computations, \cite{list-of-sparse-direct-solvers}, \cite{petsc-web-page}.\\}
-where SPD - Symmetric Positive Definite; 
-Open* - an interface is not officially supported by the \acrshort{petsc} team
+\caption[A list of direct sparse linear solvers adapted for distributed-memory computations]{A list of direct sparse linear solvers adapted for distributed-memory computations, \cite{list-of-sparse-direct-solvers}, \cite{petsc-web-page}, where SPD - Symmetric Positive Definite}
+
 \label{table:mm-library-spec}
 \end{table}
 
 
-It can be clearly observed, from Table \ref{table:mm-library-spec}, that only \acrshort{mumps}, PaStiX and SuperLU\_DIST cover all requirements induced by \acrshort{grs}, see Chapter \ref{chapter:problem-statment}, in particular: open-source license and a direct interface to \acrshort{petsc}. It is interesting to notice that all libraries, mentioned above, are implementations of different sparse direct methods, namely: multi-frontal (\acrshort{mumps}), left-looking (PaStiX) and right-locking (SuperLU\_DIST). Moreover, PaStiX and SuperLU\_DIST use only static pivoting \cite{pastix-manual}, \cite{superlu-manual} whereas \acrshort{mumps} provides a full implementation of the threshold pivoting strategy \cite{mumps-manual}, described in Subsection \ref{subseq:pivot-hadling}.\\
+It can be clearly observed, from Table \ref{table:mm-library-spec}, that only \acrshort{mumps}, PaStiX and SuperLU\_DIST cover requirements induced by \acrshort{grs}, see Chapter \ref{chapter:problem-statment}, in particular: open-source license and a direct interface to \acrshort{petsc}. Additionally, each development group of these solvers provides technical support for its software package. Therefore, it indirectly means that the solvers are maintainable. It is interesting to notice that all libraries, mentioned above, are implementations of different sparse direct methods, namely: multifrontal (\acrshort{mumps}), left-looking (PaStiX) and right-locking (SuperLU\_DIST). Moreover, PaStiX and SuperLU\_DIST use only static pivoting \cite{pastix-manual}, \cite{superlu-manual} whereas \acrshort{mumps} provides a full implementation of the threshold pivoting strategy \cite{mumps-manual}, described in Subsection \ref{subseq:pivot-hadling}.\\
 
 
-To compare the libraries, a couple of flat-\acrshort{mpi} tests were performed using \acrshort{grs} matrix set on \gls{hw1} machine. \acrshort{petsc} library was compiled and configured with \acrshort{mumps} (version 5.1.2), PasTiX (version 6.0.0) and SuperLU\_DIST (version 5.4) packages using their default parameter settings. An internal built-in \acrshort{petsc} profiler was used to measure execution time.  A time limit of 15 minutes was set up for each test-case to prevent blocking of a cluster compute-node from an unexpected long program execution. Results are summarized in Tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc} where numerical values are given in seconds.\\
+To compare the libraries, a couple of flat-\acrshort{mpi} tests were performed using \acrshort{grs} matrix set and  \gls{hw1} compute-cluster. From now onwards, we refer to a flat-\acrshort{mpi} test as parallel factorizations of a matrix performed with varying values of the \acrshort{mpi} process count from 1 to 20 and conducted on a single compute-cluster node.\\
+
+
+\acrshort{petsc} library was compiled and configured with \acrshort{mumps} (version 5.1.2), PasTiX (version 6.0.0) and SuperLU\_DIST (version 5.4) packages using their default parameter settings. An internal built-in \acrshort{petsc} profiler was used to measure execution time.  A time limit of 15 minutes was set up for each test-case to prevent blocking of a cluster compute-node from an unexpected long program execution. Results are summarized in Tables \ref{table:lc-cube-5-result}, \ref{table:lc-cube-64-result}, \ref{table:lc-k3-18-result} and in appendix \ref{app:app-lc} where numerical values are given in seconds.\\
 
 
 
@@ -118,8 +122,8 @@ To complete comparison and evaluate parallel performance SuperLU\_DIST library, 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/chapter-2/solvers-comparison-5-point-stencil.png}
-\caption{Comparisons of parallel performance of 5 point-stencil Poisson matrix (1000000  equations) factorization using 
-\acrshort{mumps}, PasTiX and SuperLU\_DIST libraries with their default parameter settings}
+\caption{Comparisons of parallel performance of \acrshort{mumps}, PasTiX and SuperLU\_DIST libraries during 5 point-stencil Poisson matrix (1000000  equations) factorizations
+}
 \label{fig:5-point-stencil-solvers-comparison}
 \end{figure}
 
@@ -128,7 +132,7 @@ To complete comparison and evaluate parallel performance SuperLU\_DIST library, 
 According to the initial and additional tests, \acrshort{mumps} library showed the best parallel performance and scaling in contrast to the other solvers. No abnormal behavior during its operation was detected. In some cases, it only required to increase a multiplicative factor of estimated working space which was used to hold frontal matrices and factors $L$ and $U$ in memory. PaStiX was the second fastest solver according to the results of testing. However,  it was often considerably slower than \acrshort{mumps}. At the same time, SuperLU\_DIST showed the worst results. Additionally, as it was mentioned above, we experienced some technical problems during operation of this library.\\
 
 
-A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in work \cite{wsmp}, came to nearly the same outcome, as we did, comparing parallel performance of WSMP, \acrshort{mumps} and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving  systems of linear equations in contrast to the other solvers used in their work. It needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that a selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
+A literature review showed quite contradictory results and conclusions. For example, \citeauthor{wsmp}, in \cite{wsmp}, came to nearly the same inference with respect to \acrshort{mumps}, as we did, comparing parallel performance of WSMP, \acrshort{mumps} and SuperLU\_DIST libraries using their matrix set. However, \citeauthor{mm-comparison-of-packages} showed, in \cite{mm-comparison-of-packages}, that SuperLU\_DIST spent the least amount of time on solving  systems of linear equations in contrast to the other solvers used in their work. It is needless to say that both research groups used different matrix sets and hardware. Nevertheless, it reveals a quite important fact that a selection of a particular method and its implementation can depend heavily on a specific matrix set.\\
 
 
-In this section, we compared different sparse direct methods and their concrete implementations using their default parameter settings with regard to \acrshort{grs} matrix set. Based on the obtained results and literature review, \acrshort{mumps} library was chosen for the following study. In Section \ref{subseq:mumps-review}, we make an overview of the library and its specific traits. \\
+In this section, we have compared different sparse direct methods and their concrete implementations using their default parameter settings with regard to \acrshort{grs} matrix set. Based on the obtained results and literature review, \acrshort{mumps} library is chosen for the rest of the study. In Section \ref{subseq:mumps-review}, we make an overview of the library and its specific traits. \\

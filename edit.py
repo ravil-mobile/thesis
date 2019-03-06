@@ -14,14 +14,22 @@ replace=[("table", "Table"),
          ("listing", "Listing"),
         ]
 
+#replace=[("definition", "Definition"),]
 
-for root, dirs, files in os.walk("."):
-    for filename in files:
-        if filename[-3:] == 'tex':
-            for item in replace:
+def replace_in_file(file_path, replace):
+    for item in replace:
 
-                what_word, with_word = item
+        what_word, with_word = item
+        bash_command = f'vim -c "%s/{what_word}/{with_word}/gc" {file_path}'
+        print(bash_command)
+        os.system(f'{bash_command}')
+            
 
-                bash_command = f'vim -c %s/{what_word}/{with_word}/gc {root}/{filename}'
-                subprocess.run(bash_command.split())
-                
+
+#for root, dirs, files in os.walk("."):
+#    for filename in files:
+#        if filename[-3:] == 'tex':
+#            replace_in_file(f'{root}/{filename}', replace)
+
+replace_in_file(file_path="./chapters/part-2/part-2-hybrid-method-description.tex",
+                replace=replace)

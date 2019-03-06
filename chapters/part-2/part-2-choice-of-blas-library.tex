@@ -3,7 +3,7 @@
 \label{subseq:blas-comparison}
 
 
-To perform column eliminations of fully summed blocks of type 2 nodes, \acrshort{mumps} intensively calls \acrshort{gemm}, \acrshort{trsm} and \acrshort{getrf} subroutines  \cite{l2013introduction} which are parts of \acrshort{blas} and \acrshort{lapack} libraries, see Figures \ref{fig:mumps:type-2-frontal-matrix} and  \ref{fig:mumps:steps-of-type-2-factorization} as an example. Additionally, MUMPS uses \acrshort{scalapack} library subroutines to perform parallel factorization of the root \cite{mumps-manual}, according to the procedure described in Subsection \ref{subseq:mumps-review}. \\
+To perform column eliminations of fully summed blocks of type 2 nodes, \acrshort{mumps} intensively calls \acrshort{gemm}, \acrshort{trsm} and \acrshort{getrf} subroutines  \cite{l2013introduction} which are parts of \acrshort{blas} and \acrshort{lapack} libraries, see Figures \ref{fig:mumps:type-2-frontal-matrix} and  \ref{fig:mumps:steps-of-type-2-factorization} as an example. Additionally, MUMPS uses \acrshort{scalapack} library subroutines to perform parallel factorization of the root \cite{mumps-manual}, according to the procedure described in Section \ref{subseq:mumps-review}. \\
 
 
 \figpointer{\ref{fig:mumps:type-2-frontal-matrix}}
@@ -24,20 +24,20 @@ To perform column eliminations of fully summed blocks of type 2 nodes, \acrshort
 \end{figure}
 
 
-\acrshort{blas}, \acrshort{lapack} and ScaLAPACK libraries originate from the Netlib project which is a repository of numerous scientific computing software maintained by AT\&T Bell Laboratories, the University of Tennessee, Oak Ridge National Laboratory and other scintific communities \cite{netlib-overview}.\\
+\acrshort{blas}, \acrshort{lapack} and ScaLAPACK libraries originate from the Netlib project which is a repository of numerous scientific computing software maintained by AT\&T Bell Laboratories, the University of Tennessee, Oak Ridge National Laboratory and other scintific communities, \cite{netlib-overview}.\\
 
 
 The goal of \acrshort{blas} library is provision of high efficient implementations of common dense linear algebra kernels achieved by high rates of floating point operations per memory access, low cache and Translation Lookaside Buffer (TLB) miss rates.\\
 
 
-In their turn, both \acrshort{lapack} and \acrshort{scalapack} are designed in such a way so that as much as possible computations are performed by calling \acrshort{blas} subroutines. Figure \ref{fig:netlib:stack-of-libs} represents software dependencies between the libraries. Hence, this software architecture allows to achieve high computational performance for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc., on modern computers and distributed-memory machines by an efficient implementation of \acrshort{blas} library. However, the Netlib \acrshort{blas} implementation is written for an abstract general-purpose central processing unit where hardware parameters are based on market statistics. Therefore, it is not possible to achieve the maximum possible performance on specific hardware.\\
+Both \acrshort{lapack} and \acrshort{scalapack} are designed in such a way so that as much as possible computations are performed by calling \acrshort{blas} subroutines. Figure \ref{fig:netlib:stack-of-libs} represents software dependencies between the libraries. Hence, this software architecture allows to achieve high computational performance for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc., on modern computers and distributed-memory machines by an efficient implementation of \acrshort{blas} library. However, the Netlib \acrshort{blas} implementation is written for an abstract general-purpose central processing unit where hardware parameters are based on market statistics. Therefore, it is not possible to achieve the maximum possible performance on specific hardware.\\
 
 
 \figpointer{\ref{fig:netlib:stack-of-libs}}
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.55\textwidth]{figures/chapter-2/lapack-scalapack-blas.png}
-\caption{Software dependencies between Netlib libraries, \cite{netlib:lapack-scalapack-general-view}}
+\caption[Software dependencies between Netlib libraries]{Software dependencies between Netlib libraries, \cite{netlib:lapack-scalapack-general-view}}
 \label{fig:netlib:stack-of-libs}
 \end{figure}
 
@@ -68,7 +68,7 @@ PDLIB/SX                                                             & BLAS libr
 SCSL                                                                 & BLAS implementations for SGI's Irix workstations                                                                                                            & \begin{tabular}[c]{@{}c@{}}proprietary\\ license\end{tabular} \\ \hline
 \begin{tabular}[c]{@{}c@{}}Sun\\ Performance \\ Library\end{tabular} & \begin{tabular}[c]{@{}c@{}}Optimized BLAS and LAPACK for SPARC, Core \\ and AMD64 architectures under \\ Solaris 8, 9, and 10 as well as Linux\end{tabular} & \begin{tabular}[c]{@{}c@{}}proprietary\\ license\end{tabular} \\ \hline
 \end{tabular}
-\caption{Commercial and open source \acrshort{blas} libraries \cite{wiki:blas-implementations}}
+\caption[Commercial and open source \acrshort{blas} libraries]{Commercial and open source \acrshort{blas} libraries \cite{wiki:blas-implementations}}
 \label{table:list-of-blas-implementations}
 \end{table}
 
@@ -105,7 +105,7 @@ Among all libraries listed in Table \ref{table:list-of-blas-implementations} the
 
 
 
-The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of \acrshort{grs} matrix set. On average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice Intel MKL library turns out to be slower than the default Netlib \acrshort{blas} implementation for small- and medium-sized \acrshort{grs} matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, show significant performance gain in comparison to the standard Netlib \acrshort{blas} implementation in case of SuiteSparse matrix set. The libraries reduce the execution time by almost \textbf{50\%} on an average. In opposite to \acrshort{grs} matrix set, it turns out that Intel MKL is often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of the comparison are summarized in Tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
+The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of \acrshort{grs} matrix set. On average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice that Intel MKL library turns out to be slower than the default Netlib \acrshort{blas} implementation for small- and medium-sized \acrshort{grs} matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, show significant performance gain in comparison to the standard Netlib \acrshort{blas} implementation in case of SuiteSparse matrix set. The libraries reduce the execution time by almost \textbf{50\%} on an average. In opposite to \acrshort{grs} matrix set, it turns out that Intel MKL is often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of the comparison are summarized in Tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
 
 
 \begin{table}[h!]
@@ -146,7 +146,7 @@ x104                                                  & 41.82                   
 \end{table}
 
 
-It can be clearly observed from the tables that test-cases derived from \acrshort{grs} matrix set demonstrate insignificant improvements in execution time in constant to the tests generated with SuiteSparse matrix set. This may be explained by relatively small numbers of type 2 nodes in assembly trees resulted from \acrshort{grs} test-cases. In this case, the trees are mainly formed by the root and type 1 nodes. As it was mentioned in Subsection \ref{subseq:mumps-review}, type 1 nodes are grouped in subtrees and each subtree is processed by a single \acrshort{mpi} process. According to the documentation, it is not clear whether \acrshort{mumps} calls \acrshort{blas} subroutines while processing a type 1 node. Even if it is a case performance of \acrshort{blas} can be limited because of small sizes of frontal matrices of such nodes.\\
+It can be clearly observed from the tables that test-cases derived from \acrshort{grs} matrix set demonstrate insignificant improvements in execution time in contrast to the tests generated with SuiteSparse matrix set. This may be explained by relatively small numbers of type 2 nodes in assembly trees resulted from \acrshort{grs} test-cases. In this case, the trees are mainly formed with the root and type 1 nodes. As it was mentioned in Section \ref{subseq:mumps-review}, type 1 nodes are grouped in subtrees and each subtree is processed by a single \acrshort{mpi} process. According to the documentation, it is not clear whether \acrshort{mumps} calls \acrshort{blas} subroutines while processing a type 1 node. Even if it is a case performance of \acrshort{blas} can be limited because of small sizes of frontal matrices of such nodes.\\
 
 We assume that, in the general case, lack of type 2 nodes in an assembly tree can be due to an inefficient amalgamation process of the corresponding elimination tree resulted from the matrix sparsity pattern.\\
 

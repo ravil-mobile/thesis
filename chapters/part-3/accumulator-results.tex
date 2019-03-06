@@ -20,7 +20,7 @@ Figure \ref{fig:benchmark:results-cube-64} represents results of the benchmarks 
 \end{figure}
 
 
-Figure \ref{fig:benchmark:results-comm-pattern} shows that \textit{accumulator} approach results in more than \textbf{6} times drop, from \textbf{344} to \textbf{51}, of the total number of data transfers and resulting resource acquisitions, within the range depicted on the graphs. According to \textit{BM2} benchmark, the accumulation effect reduces the run-time by almost \textbf{9\%} by means of more efficient utilization of intra-node interconnection. The obtained results  also demonstrate that overall, accumulative effect of both accumulation and non-blocking data transfers reduces the run-time of \textit{BM1} benchmark in more than \textbf{26\%}. Table \ref{table:benchmark:performance-gain} summarizes results obtained for all three client-server distributions within the same range of the recorded communication pattern displayed in Figure \ref{table:benchmark:performance-gain}.\\
+Figure \ref{fig:benchmark:results-comm-pattern} shows that \textit{accumulator} approach results in more than \textbf{6} times drop, from \textbf{344} to \textbf{51}, of the total number of data transfers and resulting resource acquisitions, within the range depicted on the graphs. According to \textit{BM2} benchmark, the accumulation effect reduces the run-time by almost \textbf{9\%} by means of more efficient utilization of intra-node interconnection. The obtained results  also demonstrate that overall accumulative effect of both accumulation and non-blocking data transfers reduces the run-time of \textit{BM1} benchmark in more than \textbf{26\%}. Table \ref{table:benchmark:performance-gain} summarizes results obtained for all three client-server distributions within the same range of the recorded communication pattern displayed in Figure \ref{table:benchmark:performance-gain}.\\
 
 
 \begin{table}[ht]
@@ -40,13 +40,13 @@ between nodes                                            & -2.06   & 3.20    \\ 
 It turns out that \textit{BM2} benchmark is slower than the original \acrshort{athlet} approach in  approximately \textbf{2\%} in case of  inter-node communication. However, non-blocking data broadcasts, according to \textit{BM1} benchmark, help to alleviate the slow-down and achieve almost \textbf{3\%} of improvement.\\
 
 
-Unimpressive results of non-blocking  inter-node communication can be explained by specifics of the benchmark design. In particular, time spent on generation of random matrix elements was not enough to overlap time spent on non-blocking data transfers in case of \textit{cube-64} test-case, see Figure \ref{fig:benchmark:results-cube-64-inter-node-comm}. Hence, the execution control was probably suspended by \acrshort{mpi} library at each subsequent call of \textit{MPI\_Wait()} function.\\
+Unimpressive results of non-blocking  inter-node communication can be explained by specifics of the benchmark design. In particular, time spent on generation of random matrix elements was not enough to overlap time spent on non-blocking data transfers in case of \textit{cube-64} test-case, see Figure \ref{fig:benchmark:results-cube-64-inter-node-comm}. Thus, the execution control was probably suspended by \acrshort{mpi} library at each subsequent call of \textit{MPI\_Wait()} function.\\
 
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/chapter-3/benchmark-result-non-blocking-inter-node-comm.png}
-  \caption{A comparison of \textit{BM1} benchmark with the original implementation running a recorded part of \textit{cube-64} communication pattern between two compute-nodes}
+  \caption{A comparison of \textit{BM1} benchmark with the original \acrshort{athlet}-\acrshort{nut} implementation running a recorded part of \textit{cube-64} communication pattern between two compute-nodes}
 \label{fig:benchmark:results-cube-64-inter-node-comm}
 \end{figure}
 
