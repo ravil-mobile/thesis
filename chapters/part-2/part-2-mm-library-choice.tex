@@ -8,7 +8,7 @@
 Nowadays, there exist many different and avaliable sparse direct solvers. Some of them are tunned for specific linear systems whereas others are targeted for the most general cases \cite{list-of-sparse-direct-solvers}. Some of them handle tree-task and node-data parallelism in different ways even within the same library depending on sizes of frontal matrices and other criteria \cite{wsmp}, \cite{mumps-manual}, \cite{superlu-manual}. Hence, parallel performance of a direct sparse method depends heavily on its specific implementation. Table \ref{table:mm-library-spec} represents a short summary of almost all available libraries capable to run on distributed-memory machines, at the time of writing, based on works \cite{list-of-sparse-direct-solvers} and \cite{petsc-web-page}.\\
 
 
-\begin{table}[ht]
+\begin{table}[!ht]
 \small
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -45,7 +45,7 @@ To compare the libraries, a couple of flat-\acrshort{mpi} tests were performed u
 
 
 
-\begin{table}[ht]
+\begin{table}[!ht]
 \centering
 \begin{tabular}{|c|c|c|c|l|c|c|c|c|}
 \cline{1-4} \cline{6-9}
@@ -61,12 +61,12 @@ MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \
 9   & 7.50E-02 & 8.28E-02 & 5.02E-01 &  & 19  & 8.58E-02 & 1.33E-01 & 5.47E-01 \\ \cline{1-4} \cline{6-9} 
 10  & 7.22E-02 & 8.52E-02 & 4.64E-01 &  & 20  & 8.64E-02 & 1.49E-01 & 3.39E-01 \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Comparisons of parallel performance of  \textit{cube-5} matrix factorization using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default parameter settings}
+\caption{Comparisons of parallel performance of  \textit{cube-5} matrix factorizations using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default parameter settings}
 \label{table:lc-cube-5-result}
 \end{table}
 
 
-\begin{table}[ht]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|c|c|c|c|l|c|c|c|c|}
 \cline{1-4} \cline{6-9}
@@ -82,12 +82,12 @@ MPI & MUMPS    & PaStiX   & SuperLU  &  & MPI & MUMPS    & PaStiX   & SuperLU  \
 9   & 7.93E-01 & 8.35E-01 & time-out &  & 19  & 8.04E-01 & 8.65E-01 & time-out \\ \cline{1-4} \cline{6-9} 
 10  & 8.07E-01 & 8.15E-01 & time-out &  & 20  & 6.85E-01 & 8.87E-01 & time-out \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Comparisons of parallel performance of  \textit{cube-64} matrix factorization using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default parameter settings}
+\caption{Comparisons of parallel performance of  \textit{cube-64} matrix factorizations using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default parameter settings}
 \label{table:lc-cube-64-result}
 \end{table}
 
 
-\begin{table}[h!]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|c|c|c|c|l|c|c|c|c|}
 \cline{1-4} \cline{6-9}
@@ -103,7 +103,7 @@ MPI & MUMPS    & PaStiX   & SuperLU &  & MPI & MUMPS    & PaStiX   & SuperLU \\ 
 9   & 1.95E+01 & 4.08E+01 & crashed &  & 19  & 1.52E+01 & 3.31E+01 & crashed \\ \cline{1-4} \cline{6-9} 
 10  & 1.91E+01 & 3.81E+01 & crashed &  & 20  & 1.38E+01 & 3.16E+01 & crashed \\ \cline{1-4} \cline{6-9} 
 \end{tabular}
-\caption{Comparisons of parallel performance of \textit{k3-18} matrix factorization using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default parameter settings}
+\caption{Comparisons of parallel performance of \textit{k3-18} matrix factorizations using \acrshort{mumps}, PasTiX and SuperLU\_DIST solvers with their default parameter settings}
 \label{table:lc-k3-18-result}
 \end{table}
 
@@ -118,10 +118,10 @@ To complete comparison and evaluate parallel performance SuperLU\_DIST library, 
 
 
 
-\figpointer{\ref{fig:5-point-stencil-solvers-comparison}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:5-point-stencil-solvers-comparison}}
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=0.85\textwidth]{figures/chapter-2/solvers-comparison-5-point-stencil.png}
+  \includegraphics[width=0.975\textwidth]{figures/chapter-2/solvers-comparison-5-point-stencil.png}
 \caption{Comparisons of parallel performance of \acrshort{mumps}, PasTiX and SuperLU\_DIST libraries during 5 point-stencil Poisson matrix (1000000  equations) factorizations
 }
 \label{fig:5-point-stencil-solvers-comparison}

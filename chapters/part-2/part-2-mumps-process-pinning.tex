@@ -10,12 +10,12 @@ However, due to the fact that \acrshort{mumps} uses both task and data paralleli
 
 Therefore, a couple of flat-\acrshort{mpi} tests were carried out using both \acrshort{grs} and SuiteSparse matrix sets in order to investigate an influence of different pinning strategies on \acrshort{mumps} parallel performance. For this group of tests, \acrshort{mumps} was ran with the default parameter settings but with a specific fill-in reducing algorithm assigned to each test-case according to Tables \ref{table:GRS-ordering-assignment} and \ref{table:SuiteSparse-ordering-assignment}. The tests were performed on both \gls{hw1} and \gls{hw2} machines. A comparison between different hardware also allows to investigate an influence of different numbers of independent system buses within a compute-node on parallel performance of \acrshort{mumps} since \gls{hw1} and \gls{hw2} machines have 2 and 4 \acrshort{numa} domains, respectively. Results are shown in Figures \ref{fig:mumps-close-vs-spread-1}, \ref{fig:mumps-close-vs-spread-2}, \ref{fig:mumps-close-vs-spread-3} and in appendix \ref{app:mm-mumps-process-pinning}. Each graph depicts the total execution time of \acrshort{mumps} spent on a test-case i.e. time spent on the analysis, factorization and solution phases.\\
 
-\figpointer{\ref{fig:mumps-close-vs-spread-1}}
+%\figpointer{\ref{fig:mumps-close-vs-spread-1}}
 \begin{figure}[htpb]
 \centering
 	\begin{tabular}{cc}
-	\subfloat[HW1 - pwr-3d]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/pwr-3d.png}} &
-		\subfloat[HW2 - pwr-3d]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/pwr-3d.png}} \\
+	\subfloat[HW1 - pwr-3d]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/ordering/pwr-3d.png}} &
+	\subfloat[HW2 - pwr-3d]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/pwr-3d.png}} \\
 		\subfloat[HW1 - cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/grs-cluster/cube-64.png}} &
 		\subfloat[HW2 - cube-64]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/spread-vs-close/linux-cluster/cube-64.png}} \\
 	\end{tabular}
@@ -25,7 +25,7 @@ Therefore, a couple of flat-\acrshort{mpi} tests were carried out using both \ac
 
 
 
-\figpointer{\ref{fig:mumps-close-vs-spread-2}}
+%\figpointer{\ref{fig:mumps-close-vs-spread-2}}
 \begin{figure}[htpb]
 \centering
 	\begin{tabular}{cc}
@@ -41,7 +41,7 @@ Therefore, a couple of flat-\acrshort{mpi} tests were carried out using both \ac
 
 
 
-\figpointer{\ref{fig:mumps-close-vs-spread-3}}
+%\figpointer{\ref{fig:mumps-close-vs-spread-3}}
 \begin{figure}[htpb]
 \centering
 	\begin{tabular}{cc}
@@ -62,7 +62,7 @@ It is also important to investigate performance gain around saturation points i.
 
 
 
-\begin{table}[htpb]
+\begin{table}[!htpb]
 \centering
 \small
 \begin{tabular}{c|c|c|c|c|c|c|c|c|c|}
@@ -82,7 +82,7 @@ It is also important to investigate performance gain around saturation points i.
 
 
 
-\begin{table}[htpb]
+\begin{table}[!htpb]
 \centering
 \small
 \begin{tabular}{c|c|c|c|c|c|c|c|c|c|}

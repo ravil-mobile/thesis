@@ -13,7 +13,7 @@ Besides \acrshort{grs} matrix set, a second set was  used for verification of te
 The main matrix properties as well as matrix sparsity patterns are shown in Tables \ref{table:grs-matrix-set}, \ref{table:suite-sparse-matrix-set} and appendix \ref{app:sparsity-patterns}.\\
 
 
-\begin{table}[ht]
+\begin{table}[!ht]
 \small
 \centering
 \begin{tabular}{|c|c|c|c|c|c|}
@@ -33,7 +33,7 @@ k3-18    & 1155955 & 7204723  & 6.2327  & 1.947e+12                             
 
 
 
-\begin{table}[ht]
+\begin{table}[!h]
 \centering
 \small
 \begin{tabular}{|c|c|c|c|c|c|c|}
@@ -62,7 +62,7 @@ Approximations of condition numbers, shown in Tables \ref{table:grs-matrix-set} 
 Two different hardware were available for this study. The first machine was a compute-cluster installed in \acrshort{grs} (\gls{hw1}) which was the main target. Additionally, \acrshort{lrz} CoolMUC-2 Linux cluster (\gls{hw2}) was used every time when some ambiguous results were obtained in order to check whether a problem was hardware, software or algorithmic specific. Table \ref{table:hardware-spec} shows compute-node specifications of both compute-clusters.\\
 
 
-\begin{table}
+\begin{table}[!h]
 \centering
 \small
 \begin{tabular}{|l|c|c|}
@@ -99,10 +99,10 @@ RAM per node, GB   & 128 &  64 \\ \hline
 For this study, OpenMPI implementation of the \acrshort{mpi} standard was used because of its open-source license and comprehensive documentation. The library has many options for processes pinning which was intensively used during the study.\\
 
 
-To make process pinning explicit and deterministic, a python script was developed to automatically generate rank-files based on the number of \acrshort{mpi} processes, \acrshort{openmp} threads per \acrshort{mpi} process, the maximum number of processing elements and the number of \acrshort{numa} domains. The scrip always leaves appropriate gaps between \acrshort{mpi} processes to allow each process to fork the corresponding number of threads within a parallel region.\\
+To make process pinning explicit and deterministic, a Python script was developed to automatically generate rank-files based on the number of \acrshort{mpi} processes, \acrshort{openmp} threads per \acrshort{mpi} process, the maximum number of processing elements and the number of \acrshort{numa} domains. The scrip always leaves appropriate gaps between \acrshort{mpi} processes to allow each process to fork the corresponding number of threads within a parallel region.\\
 
 
-\begin{figure}[h!]
+\begin{figure}[!h]
 \centering
 	\begin{tabular}{cc}
 			\subfloat[\textit{Spread} mode]{\includegraphics[width=0.45\textwidth]{figures/chapter-2/spread-mode.png}} &

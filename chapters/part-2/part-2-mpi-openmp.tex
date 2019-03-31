@@ -57,12 +57,12 @@ As an initial test, we compared an influence of both Intel MKL and OpenBLAS libr
 
 During the testing, we found that sometimes execution time of \acrshort{mumps}-OpenBLAS configuration abnormality increased. For instance, in case of parallel factorization of matrix \textit{cube-645}, the increase reached almost \textbf{450\%} in contrast to the pure sequential execution. \\
 
-\figpointer{\ref{fig:mumps-openblas-anomalies}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:mumps-openblas-anomalies}}
+\begin{figure}[!h]
 \centering
 	\begin{tabular}{cc}
-		\subfloat[k3-18]{\includegraphics[width=0.4\textwidth]{figures/chapter-2/openmp-mpi/anomalies-k3-18.png}} &
-		\subfloat[cube-645]{\includegraphics[width=0.4\textwidth]{figures/chapter-2/openmp-mpi/anomalies-cube-645.png}} \\
+		\subfloat[k3-18]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/openmp-mpi/anomalies-k3-18.png}} &
+		\subfloat[cube-645]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/openmp-mpi/anomalies-cube-645.png}} \\
 	\end{tabular}
 	\caption[Anomalies of parallel executions of \acrshort{mumps}-OpenBLAS configuration during factorizations of large-sized \acrshort{grs} matrices]{Anomalies of parallel executions of \acrshort{mumps}-OpenBLAS configuration during factorizations of large-sized \acrshort{grs} matrices running with 2 \acrshort{openmp} threads per \acrshort{mpi} process}
 	\label{fig:mumps-openblas-anomalies}
@@ -72,10 +72,10 @@ During the testing, we found that sometimes execution time of \acrshort{mumps}-O
 Multiple conflicts between application and system threads were observed using \textit{htop} software as an interactive process viewer. Figure \ref{fig:mumps:openblas-thread-conflcit} shows a snapshot taken during factorization of matrix \textit{k3-18} running with 1 \acrshort{mpi} process and 20 threads.\\
 
 
-\figpointer{\ref{fig:mumps:openblas-thread-conflcit}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:mumps:openblas-thread-conflcit}}
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=0.75\textwidth]{figures/chapter-2/openmp-mpi/thread-conflict.png}
+  \includegraphics[width=0.70\textwidth]{figures/chapter-2/openmp-mpi/thread-conflict.png}
 \caption[Thread conflicts of \acrshort{mumps}-OpenBLAS configuration detected during parallel factorization of  matrix \textit{k3-18}]{Thread conflicts of \acrshort{mumps}-OpenBLAS configuration detected during parallel factorization of matrix \textit{k3-18}, where green - application threads, red - system threads}
 \label{fig:mumps:openblas-thread-conflcit}
 \end{figure}
@@ -90,6 +90,7 @@ Only common mixed \acrshort{mpi}/\acrshort{openmp} strategies were tested in ord
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[h!]
 \centering
+\small
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
 \begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 MPI\\ 1 thread\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 MPI\\ 2 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}4 MPI\\ 5 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}2 MPI\\ 10 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}1 MPI\\ 20 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}Gain\\ w.r.t.\\ flat-MPI\end{tabular} \\ \hline
@@ -108,6 +109,7 @@ pwr-3d                                                & 0.130                   
 
 \begin{table}[h!]
 \centering
+\small
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
 \begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 MPI\\ 1 thread\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 MPI\\ 2 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}4 MPI\\ 5 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}2 MPI\\ 10 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}1 MPI\\ 20 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}Gain\\ w.r.t.\\ flat-MPI\end{tabular} \\ \hline
@@ -126,6 +128,7 @@ pwr-3d                                                & 0.234                   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[h!]
 \centering
+\small
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
 \begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 MPI\\ 1 thread\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 MPI\\ 2 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}4 MPI\\ 5 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}2 MPI\\ 10 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}1 MPI\\ 20 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}Gain\\ w.r.t.\\ flat-MPI\end{tabular} \\ \hline
@@ -148,6 +151,7 @@ Geo\_1438                                             & 478.101                 
 
 \begin{table}[h!]
 \centering
+\small
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
 \begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 MPI\\ 1 thread\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 MPI\\ 2 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}4 MPI\\ 5 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}2 MPI\\ 10 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}1 MPI\\ 20 threads\end{tabular} & \begin{tabular}[c]{@{}c@{}}Gain\\ w.r.t\\ flat-MPI\end{tabular} \\ \hline
@@ -190,4 +194,4 @@ These contradictory results obtained from two different matrix sets second our r
 
 
 
-In this Subsection, we have discussed how \acrshort{mumps} adopts hybrid parallel computing. As it is in case of fill reducing reordering algorithm selection, Subsection \ref{subseq:fill-in-reordering}, it is not possible to find an optimal mixed \acrshort{mpi}/\acrshort{openmp} strategy in advance without performance testing. We have come to the conclusion that flat-\acrshort{mpi} mode is the best one for \acrshort{grs} matrix set and provided our reasoning for that. Generally speaking, there are 3 reasons to use this mode in our case. Firstly, the mode always resulted in more efficient hardware utilization. Secondly,  \acrshort{mumps}-Intel MKL configuration running with optimal hybrid \acrshort{mpi}/\acrshort{openmp} strategies can deteriorate performance gain obtained with \acrshort{mumps}-OpenBLAS flat-\acrshort{mpi} configuration, shown in Subsection \ref{subseq:blas-comparison}. Finally, efficient utilization of flat-\acrshort{mpi} strategy only demands to find an optimal \acrshort{mpi} process count i.e the saturation point on a performance graph. Hence, it leads to a significant reduction of testing due to a reduced number of parameters which are needed to be taken into account.\\
+In this subsection, we have discussed how \acrshort{mumps} adopts hybrid parallel computing. As it is in case of fill reducing reordering algorithm selection, Subsection \ref{subseq:fill-in-reordering}, it is not possible to find an optimal mixed \acrshort{mpi}/\acrshort{openmp} strategy in advance without performance testing. We have come to the conclusion that flat-\acrshort{mpi} mode is the best one for \acrshort{grs} matrix set and provided our reasoning for that. Generally speaking, there are 3 reasons to use this mode in our case. Firstly, the mode always resulted in more efficient hardware utilization. Secondly,  \acrshort{mumps}-Intel MKL configuration running with optimal hybrid \acrshort{mpi}/\acrshort{openmp} strategies can deteriorate performance gain obtained with \acrshort{mumps}-OpenBLAS flat-\acrshort{mpi} configuration, shown in Subsection \ref{subseq:blas-comparison}. Finally, efficient utilization of flat-\acrshort{mpi} strategy only demands to find an optimal \acrshort{mpi} process count i.e the saturation point on a performance graph. Hence, it leads to a significant reduction of testing due to a reduced number of parameters which are needed to be taken into account.\\

@@ -3,22 +3,22 @@
 \label{subseq:blas-comparison}
 
 
-To perform column eliminations of fully summed blocks of type 2 nodes, \acrshort{mumps} intensively calls \acrshort{gemm}, \acrshort{trsm} and \acrshort{getrf} subroutines  \cite{l2013introduction} which are parts of \acrshort{blas} and \acrshort{lapack} libraries, see Figures \ref{fig:mumps:type-2-frontal-matrix} and  \ref{fig:mumps:steps-of-type-2-factorization} as an example. Additionally, MUMPS uses \acrshort{scalapack} library subroutines to perform parallel factorization of the root \cite{mumps-manual}, according to the procedure described in Section \ref{subseq:mumps-review}. \\
+To perform column eliminations of fully summed blocks of type 2 nodes, \acrshort{mumps} intensively calls \acrshort{gemm}, \acrshort{trsm} and \acrshort{getrf} subroutines  \cite{l2013introduction} which are parts of \acrshort{blas} and \acrshort{lapack} libraries, see Figures \ref{fig:mumps:type-2-frontal-matrix} and  \ref{fig:mumps:steps-of-type-2-factorization} as an example. Additionally, MUMPS uses \acrshort{scalapack} library subroutines to perform parallel factorization of the root \cite{mumps-manual}, according to the procedure described in Section \ref{subseq:mumps-review}. 
 
 
-\figpointer{\ref{fig:mumps:type-2-frontal-matrix}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:mumps:type-2-frontal-matrix}}
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/chapter-2/mumps-type-2-frontal-matrix.png}
+  \includegraphics[width=0.380\textwidth]{figures/chapter-2/mumps-type-2-frontal-matrix.png}
 \caption{One dimensional block column distribution of a type 2 node in \acrshort{mumps}}
 \label{fig:mumps:type-2-frontal-matrix}
 \end{figure}
 
 
-\figpointer{\ref{fig:mumps:steps-of-type-2-factorization}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:mumps:steps-of-type-2-factorization}}
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=0.85\textwidth]{figures/chapter-2/mumps-type-2-part-1.png}
+  \includegraphics[width=0.725\textwidth]{figures/chapter-2/mumps-type-2-part-1.png}
 \caption{An example of type 2 node factorization implemented in \acrshort{mumps}}
 \label{fig:mumps:steps-of-type-2-factorization}
 \end{figure}
@@ -33,8 +33,8 @@ The goal of \acrshort{blas} library is provision of high efficient implementatio
 Both \acrshort{lapack} and \acrshort{scalapack} are designed in such a way so that as much as possible computations are performed by calling \acrshort{blas} subroutines. Figure \ref{fig:netlib:stack-of-libs} represents software dependencies between the libraries. Hence, this software architecture allows to achieve high computational performance for operations such as $LU$, $QR$, $SVD$ decompositions, triangular solve, etc., on modern computers and distributed-memory machines by an efficient implementation of \acrshort{blas} library. However, the Netlib \acrshort{blas} implementation is written for an abstract general-purpose central processing unit where hardware parameters are based on market statistics. Therefore, it is not possible to achieve the maximum possible performance on specific hardware.\\
 
 
-\figpointer{\ref{fig:netlib:stack-of-libs}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:netlib:stack-of-libs}}
+\begin{figure}[!h]
   \centering
   \includegraphics[width=0.55\textwidth]{figures/chapter-2/lapack-scalapack-blas.png}
 \caption[Software dependencies between Netlib libraries]{Software dependencies between Netlib libraries, \cite{netlib:lapack-scalapack-general-view}}
@@ -77,8 +77,8 @@ SCSL                                                                 & BLAS impl
 Among all libraries listed in Table \ref{table:list-of-blas-implementations} there were only four available in \gls{hw1} machine environment, namely: Netlib \acrshort{blas}, Intel MKL, OpenBLAS and ATLAS. However, installation of ATLAS requires to switch off dynamic frequency scaling, also called CPU throttling, to allow ATLAS configuration routines to find the best loop transformation parameters for specific hardware. In order to turn off CPU throttling, one has to reboot the entire machine and make appropriate changes in Basic Input/Output System (BIOS). This fact made ATLAS library not suitable for the study and we excluded it from our primary list of candidates. Moreover, during installation, one has to explicitly specify the number of \acrshort{openmp} threads that are going to be forked once a \acrshort{blas} subroutine is called. This means there is no way to change the number of threads per \acrshort{mpi} process in run-time without re-installation of the library. Thus, only 3 versions of \acrshort{mumps}-\acrshort{petsc} (linked with Netlib \acrshort{blas}, Intel MKL and OpenBLAS) library were compiled, installed and tested using both \acrshort{grs} and SuiteSparse matrix sets and 1 thread per \acrshort{mpi} process i.e. flat-\acrshort{mpi} mode. Results of testing were obtained on \gls{hw1} machine and are represented in Figures \ref{fig:mumps-blas-configuration-1}, \ref{fig:mumps-blas-configuration-2} and appendix \ref{app:app-blas-configuration}.\\
 
 
-\figpointer{\ref{fig:mumps-blas-configuration-1}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:mumps-blas-configuration-1}}
+\begin{figure}[!htpb]
 \centering
 	\begin{tabular}{cc}
 		\subfloat[k3-18]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/k3-18.png}} &
@@ -91,12 +91,12 @@ Among all libraries listed in Table \ref{table:list-of-blas-implementations} the
 \end{figure}
 
 
-\figpointer{\ref{fig:mumps-blas-configuration-2}}
-\begin{figure}[htpb]
+%\figpointer{\ref{fig:mumps-blas-configuration-2}}
+\begin{figure}[!htpb]
 \centering
 	\begin{tabular}{cc}
-		\subfloat[cube-5]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/cube-5.png}} &
-		\subfloat[pwr-3d]{\includegraphics[width=0.43\textwidth]{figures/chapter-2/blas-configuration/pwr-3d.png}} \\
+		\subfloat[cube-5]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/cube-5.png}} &
+		\subfloat[pwr-3d]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/pwr-3d.png}} \\
 		\subfloat[PFlow\_742]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/PFlow_742.png}} & \subfloat[torso3]{\includegraphics[width=0.48\textwidth]{figures/chapter-2/blas-configuration/torso3.png}} \\
 	\end{tabular}
 	\caption{Comparisons of parallel factorizations of \acrshort{grs} and SuiteSparse matrix sets performed on \gls{hw1} machine using  MUMPS solver linked to different \acrshort{blas} implementations}
@@ -108,11 +108,11 @@ Among all libraries listed in Table \ref{table:list-of-blas-implementations} the
 The tests show that OpenBLAS outperforms both Netlib and Intel MKL libraries in case of \acrshort{grs} matrix set. On average, OpenBLAS is about \textbf{13\%} faster than the default Netlib implementation and approximately \textbf{21\%} faster than Intel MKL library. It is interesting to notice that Intel MKL library turns out to be slower than the default Netlib \acrshort{blas} implementation for small- and medium-sized \acrshort{grs} matrices in almost \textbf{52\%} and \textbf{2\%}, respectively. At the same time, both tuned libraries, OpenBLAS and Intel MKL, show significant performance gain in comparison to the standard Netlib \acrshort{blas} implementation in case of SuiteSparse matrix set. The libraries reduce the execution time by almost \textbf{50\%} on an average. In opposite to \acrshort{grs} matrix set, it turns out that Intel MKL is often faster than OpenBLAS for almost all test-cases from SuiteSparse matrix set. However, the difference between them is negligibly small. The result of the comparison are summarized in Tables \ref{table:mumps-blas-performance-gain-grs} and \ref{table:mumps-blas-performance-gain-suitesprase}.\\
 
 
-\begin{table}[h!]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-\begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}Performance\\ gain of \\ OpenBLAS \\ relatively to \\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Performance\\ gain of\\ IntelMKL\\ relatively to\\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Performance\\ gain of\\ OpenBLAS\\ relatively to\\ Intel MKL \%\end{tabular} \\ \hline
+\begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average\\performance\\ gain of \\ OpenBLAS \\ relatively to \\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average\\performance\\ gain of\\ IntelMKL\\ relatively to\\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average\\performance\\ gain of\\ OpenBLAS\\ relatively to\\ Intel MKL \%\end{tabular} \\ \hline
 pwr-3d                                                & 14.607                                                                                                  & -56.249                                                                                              & 44.695                                                                                                  \\ \hline
 cube-5                                                & 13.569                                                                                                  & -47.797                                                                                              & 39.931                                                                                                  \\ \hline
 cube-64                                               & 4.385                                                                                                   & -5.483                                                                                               & 9.323                                                                                                   \\ \hline
@@ -126,11 +126,11 @@ k3-18                                                 & 29.914                  
 
 
 
-\begin{table}[h!]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-\begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}Performance\\ gain of \\ OpenBLAS \\ relatively to \\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Performance\\ gain of\\ IntelMKL\\ relatively to\\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Performance\\ gain of\\ OpenBLAS\\ relatively to\\ Intel MKL \%\end{tabular} \\ \hline
+\begin{tabular}[c]{@{}c@{}}Matrix\\ Name\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average\\performance\\ gain of \\ OpenBLAS \\ relatively to \\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average\\performance\\ gain of\\ IntelMKL\\ relatively to\\ Netlib \%\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average\\performance\\ gain of\\ OpenBLAS\\ relatively to\\ Intel MKL \%\end{tabular} \\ \hline
 cant                                                  & 26.981                                                                                                  & 25.964                                                                                               & 1.233                                                                                                   \\ \hline
 consph                                                & 67.617                                                                                                  & 68.252                                                                                               & -2.327                                                                                                  \\ \hline
 CurlCurl\_3                                           & 78.804                                                                                                  & 79.37                                                                                                & -3.371                                                                                                  \\ \hline
